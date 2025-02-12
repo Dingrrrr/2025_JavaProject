@@ -143,7 +143,6 @@ public class LoginScreen extends JFrame {
 					flag1 = true;
 					flag2 = true;
 					warningLabel.setVisible(true);
-					
 				}
 			}
 		});

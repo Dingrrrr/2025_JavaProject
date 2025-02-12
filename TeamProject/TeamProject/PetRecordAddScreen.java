@@ -20,7 +20,6 @@ public class PetRecordAddScreen extends JFrame {
 	private JButton petAddRcButton;
 	TPMgr mgr;
 	HRBean bean;
-	static int pet_id;
 
 	public PetRecordAddScreen(PetBean pb) {
 		setTitle("프레임 설정");
@@ -45,9 +44,9 @@ public class PetRecordAddScreen extends JFrame {
 				
 				if (source == petAddRcButton) {
 					System.out.println("기입완료 버튼 클릭됨");
+					BigDecimal height = new BigDecimal(0);
+					BigDecimal weight = new BigDecimal(0);
 					try {
-						BigDecimal height = new BigDecimal(0);
-						BigDecimal weight = new BigDecimal(0);
 						if(!petHeightTField.getText().trim().isEmpty()){
 							height = new BigDecimal(petHeightTField.getText());
 						}
@@ -64,7 +63,7 @@ public class PetRecordAddScreen extends JFrame {
 					bean.setCheckup_status(petChecksTField.getText().trim());
 					bean.setDate(petMtTimeTField.getText().trim());
 					mgr.addPet(StaticData.user_id, pb);
-					pet_id = mgr.showPetId(StaticData.user_id, pb);
+					StaticData.pet_id = mgr.showPetId(StaticData.user_id, pb);
 					mgr.addHRPet(StaticData.pet_id, bean);
 					new PetAddMainScreen();
 				} else if(source == backLabel) {
