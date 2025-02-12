@@ -14,8 +14,10 @@ public class AlbumAddDialog extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, addButtonLabel, grayFrameLabel;
 	private JLabel diaryTagLabel, diaryWritelabel;
-	private JTextField  diaryTagTField, diaryWriteTField;
+	private JTextArea diaryWriteArea;
+	private JTextField  diaryTagTField;
 	private JButton SaveButton;
+	private JScrollPane scrollpane;
 
 	public AlbumAddDialog() {
 		setTitle("프레임 설정");
@@ -69,13 +71,15 @@ public class AlbumAddDialog extends JFrame {
 				add(diaryWritelabel);
 
 				// 다이어리 설명 텍스트 필드 추가
-				diaryWriteTField = new JTextField();
-				diaryWriteTField.setBounds(15, 420, 318, 130);
-				diaryWriteTField.setText("");
-				diaryWriteTField.setBorder(BorderFactory.createCompoundBorder(
+				diaryWriteArea = new JTextArea();
+				diaryWriteArea.setBounds(15, 420, 318, 130);
+				diaryWriteArea.setText("");
+				diaryWriteArea.setLineWrap(true);
+				diaryWriteArea.setWrapStyleWord(true);
+				diaryWriteArea.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
-				add(diaryWriteTField);
+				add(diaryWriteArea);
 				
 				// 저장 버튼
 				SaveButton = new RoundedButton("저장");
@@ -123,7 +127,7 @@ public class AlbumAddDialog extends JFrame {
 		closeLabel.setBounds(315, 7, 28, 28);
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
-
+		
 		setVisible(true);
 	}
 

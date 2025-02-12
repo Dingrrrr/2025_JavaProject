@@ -41,6 +41,7 @@ public class LoginScreen extends JFrame {
 	private JPasswordField pw_textField;
 	private JButton loginButton;
 	private JLabel registerLabel, warningLabel;
+	static String id;
 	boolean flag1 = true, flag2 = true;
 	TPMgr mgr;
 
@@ -134,6 +135,8 @@ public class LoginScreen extends JFrame {
 						new PetAddMainScreen();
 					else
 						new UserHomeScreen();
+					id = id_textField.getText().trim();
+					new PetHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -166,6 +169,8 @@ public class LoginScreen extends JFrame {
 						new PetAddMainScreen();
 					else
 						new UserHomeScreen();
+					id = id_textField.getText().trim();
+					new PetHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
