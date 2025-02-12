@@ -289,7 +289,7 @@ public class TPMgr {
 			pstmt.setString(3, bean.getPet_species());
 			pstmt.setString(4, bean.getPet_age());
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
+			if(rs.next()) {
 				pet_id = rs.getInt("pet_id");
 			}
 
