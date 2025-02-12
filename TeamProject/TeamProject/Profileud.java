@@ -3,8 +3,6 @@ package TeamProject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -24,110 +22,84 @@ public class Profileud extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		try {
-			image = ImageIO.read(new File("TeamProject/phone_frame.png"));
+			image = ImageIO.read(new File("dproject/phone_frame.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// 🔹 공통 마우스 클릭 이벤트 리스너
-		MouseAdapter commonMouseListener = new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Object source = e.getSource(); // 클릭된 컴포넌트 확인
-
-				if (source == backLabel) {
-					System.out.println("뒤로가기 클릭됨");
-				} else if (source == delLabel) {
-					System.out.println("유저 프로필 사진 삭제 클릭됨!");
-				} else if (source == addButton) {
-					System.out.println("유저 프로필 사진 추가 클릭됨!");
-				} else if (source == updataButton) {
-					System.out.println("유저 정보 수정 버튼 클릭됨!");
-				} else if (source == fisButton) {
-					System.out.println("유저 정보 완료 버튼 클릭됨!");
-				}
-			}
-		};
-
 		// 뒤로가기 아이콘
-		backLabel = createScaledImageLabel("TeamProject/back_Button.png", 40, 40);
-		backLabel.setBounds(25, 120, 40, 40);
-		backLabel.addMouseListener(commonMouseListener);
+		backLabel = createScaledImageLabel("dproject/back_Button.png", 40, 40);
+		backLabel.setBounds(30, 115, 40, 40);
 		add(backLabel);
 
 		// 삭제 아이콘
-		delLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
-		delLabel.setBounds(332, 180, 28, 28);
-		delLabel.addMouseListener(commonMouseListener);
+		delLabel = createScaledImageLabel("dproject/delete_button.png", 28, 28);
+		delLabel.setBounds(332, 115, 28, 28);
 		add(delLabel);
 
 		// 메인 프로필 이미지
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
-		profileLabel.setBounds(70, 189, 270, 270);
+		profileLabel = createScaledImageLabel("dproject/profile.png", 270, 270);
+		profileLabel.setBounds(66, 126, 270, 270);
 		add(profileLabel);
 
 		// 추가 버튼
 		addButton = new JButton("추가");
-		addButton.setBounds(277, 450, 80, 35);
+		addButton.setBounds(269, 396, 91, 43);
 		addButton.setBackground(new Color(91, 91, 91));
 		addButton.setForeground(Color.WHITE);
-		addButton.addMouseListener(commonMouseListener);
 		add(addButton);
 
 		// 이름
 		nameLabel = new JLabel("이름");
-		nameLabel.setBounds(43, 469, 32, 60);
+		nameLabel.setBounds(34, 415, 32, 60);
 		nameLabel.setForeground(Color.BLACK);
 		add(nameLabel);
 
 		nameField = new JTextField();
-		nameField.setBounds(43, 510, 220, 40);
+		nameField.setBounds(33, 461, 220, 40);
 		add(nameField);
 
 		// 비밀번호
 		pwLabel = new JLabel("비밀번호");
-		pwLabel.setBounds(43, 539, 65, 60);
+		pwLabel.setBounds(33, 501, 65, 60);
 		pwLabel.setForeground(Color.BLACK);
 		add(pwLabel);
 
 		pwField = new JPasswordField();
-		pwField.setBounds(43, 580, 320, 40);
+		pwField.setBounds(33, 547, 320, 40);
 		add(pwField);
 
 		// 이메일
 		emailLabel = new JLabel("이메일");
-		emailLabel.setBounds(43, 609, 49, 60);
+		emailLabel.setBounds(35, 587, 49, 60);
 		emailLabel.setForeground(Color.BLACK);
 		add(emailLabel);
 
 		emailField = new JTextField();
-		emailField.setBounds(43, 650, 320, 40);
+		emailField.setBounds(35, 636, 320, 40);
 		add(emailField);
 
 		// 휴대폰 번호
 		phoneLabel = new JLabel("휴대폰 번호");
-		phoneLabel.setBounds(43, 679, 86, 60);
+		phoneLabel.setBounds(33, 679, 86, 60);
 		phoneLabel.setForeground(Color.BLACK);
 		add(phoneLabel);
 
 		phoneField = new JTextField();
-		phoneField.setBounds(43, 720, 320, 40);
+		phoneField.setBounds(33, 728, 320, 40);
 		add(phoneField);
 
 		// 수정 버튼
 		updataButton = new JButton("수정");
-		updataButton.setBounds(98, 770, 91, 43);
+		updataButton.setBounds(75, 780, 91, 43);
 		updataButton.setBackground(new Color(91, 91, 91));
 		updataButton.setForeground(Color.WHITE);
-		updataButton.addMouseListener(commonMouseListener);
 		add(updataButton);
 
 		// 완료 버튼
 		fisButton = new JButton("완료");
-		fisButton.setBounds(215, 770, 91, 43);
+		fisButton.setBounds(232, 780, 91, 43);
 		fisButton.setBackground(new Color(91, 91, 91));
 		fisButton.setForeground(Color.WHITE);
-		fisButton.addMouseListener(commonMouseListener);
 		add(fisButton);
 
 		// JPanel 추가

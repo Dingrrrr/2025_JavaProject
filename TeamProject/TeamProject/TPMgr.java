@@ -273,34 +273,6 @@ public class TPMgr {
 		return vlist;
 	}
 	
-	//반려동물 아이디 출력
-	public int showPetId(String id, PetBean bean) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = null;
-		int pet_id = -1;
-		try {
-			con = pool.getConnection();
-			sql = "select pet_id from pet where user_id = ? and pet_name = ? and pet_species = ? and pet_age = ?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, id);
-			pstmt.setString(2, bean.getPet_name());
-			pstmt.setString(3, bean.getPet_species());
-			pstmt.setString(4, bean.getPet_age());
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				pet_id = rs.getInt("pet_id");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			pool.freeConnection(con, pstmt, rs);
-		}
-		return pet_id;
-	}
-	
 	//반려동물 정보 추가(선택 사항)
 	public void addHRPet(int pet_id, HRBean bean) {
 		Connection con = null;
