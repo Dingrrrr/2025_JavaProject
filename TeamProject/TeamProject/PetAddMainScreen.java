@@ -28,7 +28,7 @@ public class PetAddMainScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		vlist = mgr.showPet("skrjsdl03");
+		vlist = mgr.showPet(StaticData.user_id);
 		bean = (PetBean)vlist.elementAt(0);
 
 		try {
@@ -171,6 +171,6 @@ public class PetAddMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetAddMainScreen();
+		new LoginScreen();
 	}
 }

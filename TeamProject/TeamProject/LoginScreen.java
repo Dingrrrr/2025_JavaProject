@@ -130,7 +130,10 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
-					new UserHomeScreen();
+					if(mgr.isPet(StaticData.user_id))
+						new PetAddMainScreen();
+					else
+						new UserHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -159,7 +162,10 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
-					new UserHomeScreen();
+					if(mgr.isPet(StaticData.user_id))
+						new PetAddMainScreen();
+					else
+						new UserHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);

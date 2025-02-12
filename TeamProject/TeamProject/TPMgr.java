@@ -301,6 +301,29 @@ public class TPMgr {
 		return pet_id;
 	}
 	
+	//반려동물를 이미 추가했는지 여부(있으면 true 출력)
+	public boolean isPet(String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from pet where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
 	//반려동물 정보 추가(선택 사항)
 	public void addHRPet(int pet_id, HRBean bean) {
 		Connection con = null;
