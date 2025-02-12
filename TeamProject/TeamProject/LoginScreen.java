@@ -41,7 +41,6 @@ public class LoginScreen extends JFrame {
 	private JPasswordField pw_textField;
 	private JButton loginButton;
 	private JLabel registerLabel, warningLabel;
-	static String id;
 	boolean flag1 = true, flag2 = true;
 	TPMgr mgr;
 
@@ -130,7 +129,7 @@ public class LoginScreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
-					id = id_textField.getText().trim();
+					StaticData.user_id = id_textField.getText().trim();
 					new UserHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
@@ -159,7 +158,7 @@ public class LoginScreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
-					id = id_textField.getText().trim();
+					StaticData.user_id = id_textField.getText().trim();
 					new UserHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");

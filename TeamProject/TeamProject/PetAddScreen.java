@@ -21,7 +21,6 @@ public class PetAddScreen extends JFrame {
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
 	TPMgr mgr;
 	PetBean bean;
-	static int pet_id;
 
 	public PetAddScreen() {
 		setTitle("프레임 설정");
@@ -62,9 +61,7 @@ public class PetAddScreen extends JFrame {
 						bean.setPet_name(petNameTField.getText().trim());
 						bean.setPet_species(petSpecTField.getText().trim());
 						bean.setPet_age(petBirthTField.getText().trim());
-						mgr.addPet(LoginScreen.id, bean);
-						pet_id = mgr.showPetId(LoginScreen.id, bean);
-						new PetRecordAddScreen();
+						new PetRecordAddScreen(bean);
 					}
 				}
 			}

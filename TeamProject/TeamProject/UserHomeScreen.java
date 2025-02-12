@@ -47,7 +47,6 @@ public class UserHomeScreen extends JFrame {
 							new UpdateUserScreen();
 						} else if (source == addButtonLabel) {
 							System.out.println("➕ 추가 버튼 클릭됨!");
-							System.out.println("➕ 추가 버튼 클릭됨!");
 							if(pc==null) {
 								pc = new PetChooseDialog();
 								//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
@@ -85,7 +84,7 @@ public class UserHomeScreen extends JFrame {
 		add(addButtonLabel);
 
 		// 환영 문구
-		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(LoginScreen.id) + "님");
+		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(StaticData.user_id) + "님");
 		welcomeLabel.setBounds(155, 401, 134, 20);
 		welcomeLabel.setForeground(Color.BLACK);
 		add(welcomeLabel);

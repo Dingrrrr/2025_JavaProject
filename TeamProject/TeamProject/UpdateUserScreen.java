@@ -29,7 +29,7 @@ public class UpdateUserScreen extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
-		UserBean bean = mgr.showUser(LoginScreen.id);
+		UserBean bean = mgr.showUser(StaticData.user_id);
 		
 
 		try {
@@ -67,7 +67,7 @@ public class UpdateUserScreen extends JFrame {
 						bb.setEmail(emailField.getText().trim());
 						bb.setPhone(phoneField.getText().trim());
 //						bb.setUser_image();
-						if(mgr.userUpd(LoginScreen.id, bb)) {
+						if(mgr.userUpd(StaticData.user_id, bb)) {
 							nameField.setEnabled(false);
 							pwField.setEnabled(false);
 							emailField.setEnabled(false);
@@ -198,7 +198,7 @@ public class UpdateUserScreen extends JFrame {
 					bb.setEmail(emailField.getText().trim());
 					bb.setPhone(phoneField.getText().trim());
 //					bb.setUser_image();
-					if(mgr.userUpd(LoginScreen.id, bb)) {
+					if(mgr.userUpd(StaticData.user_id, bb)) {
 						nameField.setEnabled(false);
 						pwField.setEnabled(false);
 						emailField.setEnabled(false);

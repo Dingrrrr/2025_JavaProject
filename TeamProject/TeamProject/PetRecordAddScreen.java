@@ -20,8 +20,9 @@ public class PetRecordAddScreen extends JFrame {
 	private JButton petAddRcButton;
 	TPMgr mgr;
 	HRBean bean;
+	static int pet_id;
 
-	public PetRecordAddScreen() {
+	public PetRecordAddScreen(PetBean pb) {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
@@ -62,7 +63,9 @@ public class PetRecordAddScreen extends JFrame {
 					bean.setVaccination_status(petVsTField.getText().trim());
 					bean.setCheckup_status(petChecksTField.getText().trim());
 					bean.setDate(petMtTimeTField.getText().trim());
-					mgr.addHRPet(PetAddScreen.pet_id, bean);
+					mgr.addPet(StaticData.user_id, pb);
+					pet_id = mgr.showPetId(StaticData.user_id, pb);
+					mgr.addHRPet(StaticData.pet_id, bean);
 					new PetAddMainScreen();
 				} else if(source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
