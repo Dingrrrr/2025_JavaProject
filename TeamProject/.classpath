@@ -5,6 +5,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin"/>
+=======
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="lib" path="C:/Java/mysql-connector-j-8.0.32.jar"/>
+	<classpathentry kind="output" path=""/>
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 </classpath>
