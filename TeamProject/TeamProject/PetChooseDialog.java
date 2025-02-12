@@ -38,6 +38,7 @@ public class PetChooseDialog extends JFrame {
 					dispose(); // 창 닫기
 				} else if (source == dogLabel) {
 					System.out.println("강아지 선택 아이콘 클릭됨");
+					new PetAddScreen();
 				} else if (source == catLabel) {
 					System.out.println("고양이 선택 아이콘 클릭됨");
 				}
