@@ -3,8 +3,6 @@ package TeamProject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import member3.ZipcodeFrame;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

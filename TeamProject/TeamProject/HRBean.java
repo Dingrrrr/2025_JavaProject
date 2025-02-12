@@ -14,7 +14,6 @@ public class HRBean {
 	private String date;
 	private Timestamp hr_date;
 	
-	
 	public int getRecord_id() {
 		return record_id;
 	}
@@ -69,5 +68,5 @@ public class HRBean {
 	public void setHr_date(Timestamp hr_date) {
 		this.hr_date = hr_date;
 	}
-	
 }
+

@@ -2,7 +2,7 @@ package TeamProject;
 
 public class VoteMgrBean {
 	private int vote_id;
-	private String vt_user_id;
+	private String vt_user_id; 
 	
 	public int getVote_id() {
 		return vote_id;

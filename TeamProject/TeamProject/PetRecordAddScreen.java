@@ -37,10 +37,7 @@ public class PetRecordAddScreen extends JFrame {
 				
 				if (source == petAddRcButton) {
 					System.out.println("기입완료 버튼 클릭됨");
-				} else if (source == backLabel) {
-					System.out.println("뒤로가기 버튼 클릭됨");
-				}
-				
+				} 
 			}
 		};
 

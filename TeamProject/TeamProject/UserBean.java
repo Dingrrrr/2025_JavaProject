@@ -8,7 +8,6 @@ public class UserBean {
 	private String phone;
 	private String user_image;
 	
-	
 	public String getUser_id() {
 		return user_id;
 	}
@@ -45,6 +44,4 @@ public class UserBean {
 	public void setUser_image(String user_image) {
 		this.user_image = user_image;
 	}
-	
-	
 }
