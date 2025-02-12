@@ -12,6 +12,7 @@ public class AlbumScreen extends JFrame{
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, addButtonLabel,photoLabel, homeLabel, commuLabel, voteLabel  ;
 	private JLabel additionLabel, welcomeLabel1, welcomeLabel2, welcomeLabel3;
+	private AlbumAddDialog pc;
 	
 	
 	public AlbumScreen() {
@@ -38,6 +39,14 @@ public class AlbumScreen extends JFrame{
 					System.out.println("👤 프로필 클릭됨!");
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
+					if(pc==null) {
+						pc = new AlbumAddDialog();
+						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX()+25, getY()+150);
+					}else {
+						pc.setLocation(getX()+25, getY()+150);
+						pc.setVisible(true);
+					}
 				}else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
 				}else if (source == homeLabel) {
