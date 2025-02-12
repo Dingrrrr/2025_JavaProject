@@ -13,6 +13,7 @@ public class AlbumMainScreen2 extends JFrame {
     private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
     private JPanel albumPanel; // 앨범 패널
     private JScrollPane scrollPane; // 스크롤 패널
+    private AlbumAddDialog pc;
 
     public AlbumMainScreen2() {
         setTitle("프레임 설정");
@@ -26,6 +27,80 @@ public class AlbumMainScreen2 extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+     // 🔹 공통 마우스 클릭 이벤트 리스너
+     		MouseAdapter commonMouseListener = new MouseAdapter() {
+     			@Override
+     			public void mouseClicked(MouseEvent e) {
+     				Object source = e.getSource(); // 클릭된 컴포넌트 확인
+
+     				if (source == alarmLabel) {
+     					System.out.println("🔔 알람 클릭됨!");
+     				} else if (source == profileLabel) {
+     					System.out.println("👤 프로필 클릭됨!");
+     				} else if (source == addButtonLabel) {
+     					System.out.println("➕ 추가 버튼 클릭됨!");
+     					if (pc == null) {
+     						pc = new AlbumAddDialog();
+     						pc.setLocation(getX() + 25, getY() + 150);
+     					} else {
+     						pc.setLocation(getX() + 25, getY() + 150);
+     						pc.setVisible(true);
+     					}
+     				} else if (source == photoLabel) {
+     					System.out.println("앨범 & 일기 버튼 클릭됨");
+     				} else if (source == homeLabel) {
+     					System.out.println("홈 버튼 클릭됨");
+     				} else if (source == commuLabel) {
+     					System.out.println("커뮤 버튼 클릭됨");
+     				} else if (source == voteLabel) {
+     					System.out.println("투표 버튼 클릭됨");
+     				}
+     			}
+     		};
+
+     		// 🔹 알람 아이콘
+     		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
+     		alarmLabel.setBounds(280, 120, 40, 40);
+     		alarmLabel.addMouseListener(commonMouseListener);
+     		add(alarmLabel);
+
+     		// 🔹 상단 프로필 아이콘
+     		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+     		profileLabel.setBounds(330, 120, 40, 40);
+     		profileLabel.addMouseListener(commonMouseListener);
+     		add(profileLabel);
+
+     		// 🔹 추가 버튼
+     		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 80, 80);
+     		addButtonLabel.setBounds(290, 685, 80, 80);
+     		addButtonLabel.addMouseListener(commonMouseListener);
+     		add(addButtonLabel);
+
+     		// 🔹 앨범 & 일기 버튼
+     		photoLabel = createScaledImageLabel("TeamProject/photo.png", 60, 60);
+     		photoLabel.setBounds(37, 785, 60, 60);
+     		photoLabel.addMouseListener(commonMouseListener);
+     		add(photoLabel);
+
+     		// 🔹 홈 버튼
+     		homeLabel = createScaledImageLabel("TeamProject/home.png", 58, 58);
+     		homeLabel.setBounds(125, 787, 58, 58);
+     		homeLabel.addMouseListener(commonMouseListener);
+     		add(homeLabel);
+
+     		// 🔹 커뮤니티 버튼
+     		commuLabel = createScaledImageLabel("TeamProject/commu.png", 58, 58);
+     		commuLabel.setBounds(215, 788, 58, 58);
+     		commuLabel.addMouseListener(commonMouseListener);
+     		add(commuLabel);
+
+     		// 🔹 투표 버튼
+     		voteLabel = createScaledImageLabel("TeamProject/vote.png", 55, 55);
+     		voteLabel.setBounds(305, 789, 55, 55);
+     		voteLabel.addMouseListener(commonMouseListener);
+     		add(voteLabel);
+        
 
         // 🔹 배경 패널
         JPanel panel = new JPanel() {
@@ -58,10 +133,15 @@ public class AlbumMainScreen2 extends JFrame {
         albumPanel.setLayout(new GridLayout(0, 2, 10, 10)); // 2열 배치
         albumPanel.setBackground(Color.WHITE);
 
-        // 🔹 스크롤 패널 추가 (0, 161 ~ 874, 782 영역에 배치)
+        // 🔹 스크롤 패널 추가
         scrollPane = new JScrollPane(albumPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBounds(22, 165, 375, 615);
+        scrollPane.setBounds(22, 165, 357, 615);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        
+     // 🔹 스크롤 기능 유지하면서 스크롤바 숨기기
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 마우스 휠 속도 설정
         panel.add(scrollPane);
 
         // 🔹 추가 버튼
