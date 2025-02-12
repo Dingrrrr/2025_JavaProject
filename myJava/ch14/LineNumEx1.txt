@@ -1,0 +1,37 @@
+1:package ch14;
+2:
+3:import java.io.BufferedReader;
+4:import java.io.FileOutputStream;
+5:import java.io.FileReader;
+6:import java.io.PrintStream;
+7:
+8:public class LineNumEx1 {
+9:
+10:	public static void main(String[] args) {
+11:		try {
+12:			FileReader fr = new FileReader("ch14/LineNumEx1.java");
+13:			BufferedReader br = new BufferedReader(fr);
+14:			FileOutputStream fos = new FileOutputStream("ch14/LineNumEx1.txt");
+15:			//다목적 출력스트림
+16:			PrintStream ps = new PrintStream(fos);
+17:			int i = 1;
+18:			String str ="";
+19:			while(true) {
+20:				str = br.readLine();
+21:				if(str == null) break;
+22:				str = i+ ":"+ str;
+23:				//System.out.println(str);
+24:				ps.println(str);
+25:				i++;
+26:			}
+27:			ps.close();
+28:			fos.close();
+29:			br.close();
+30:			fr.close();
+31:			System.out.println("End");
+32:		} catch (Exception e) {
+33:			e.printStackTrace();
+34:		}
+35:	}
+36:
+37:}
