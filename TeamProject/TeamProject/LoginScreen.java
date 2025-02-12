@@ -131,7 +131,7 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					id = id_textField.getText().trim();
-					new PetHomeScreen();
+					new UserHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -153,14 +153,14 @@ public class LoginScreen extends JFrame {
 		// 로그인 버튼 추가
 		loginButton = new RoundedButton("로그인");
 		loginButton.setBounds(61, 625, 281, 58); // (x, y, 너비, 높이)
-		loginButton.setBackground(new Color(91, 91, 91)); // 버튼 배경 색 (회색)
+		loginButton.setBackground(new Color(0, 123, 255)); // 버튼 배경 색 (파란색)
 		loginButton.setForeground(Color.WHITE); // 버튼 텍스트 색 (하얀색)
 		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					id = id_textField.getText().trim();
-					new PetHomeScreen();
+					new UserHomeScreen();
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);

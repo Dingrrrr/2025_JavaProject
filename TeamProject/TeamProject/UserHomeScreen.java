@@ -2,10 +2,9 @@ package TeamProject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import member3.ZipcodeFrame;
-
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -17,6 +16,7 @@ public class UserHomeScreen extends JFrame {
 	private JButton logoutButton;
 	private JLabel welcomeLabel, additionLabel;
 	private PetChooseDialog pc;
+	TPMgr mgr = new TPMgr();
 
 	public UserHomeScreen() {
 		setTitle("프레임 설정");
@@ -41,9 +41,12 @@ public class UserHomeScreen extends JFrame {
 							System.out.println("🔔 알람 클릭됨!");
 						} else if (source == profileLabel) {
 							System.out.println("👤 프로필 클릭됨!");
+							new UpdateUserScreen();
 						} else if (source == mainProfileLabel) {
 							System.out.println("🖼️ 메인 프로필 클릭됨!");
+							new UpdateUserScreen();
 						} else if (source == addButtonLabel) {
+							System.out.println("➕ 추가 버튼 클릭됨!");
 							System.out.println("➕ 추가 버튼 클릭됨!");
 							if(pc==null) {
 								pc = new PetChooseDialog();
@@ -64,13 +67,13 @@ public class UserHomeScreen extends JFrame {
 		add(alarmLabel);
 
 		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);		//mgr에서 showUser을 통해 이미지 출력
 		profileLabel.setBounds(330, 120, 40, 40);
 		profileLabel.addMouseListener(commonMouseListener);
 		add(profileLabel);
 
 		// 🔹 메인 프로필 이미지
-		mainProfileLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
+		mainProfileLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);	//mgr에서 showUser을 통해 이미지 출력
 		mainProfileLabel.setBounds(101, 178, 200, 200);
 		mainProfileLabel.addMouseListener(commonMouseListener);
 		add(mainProfileLabel);
@@ -82,7 +85,7 @@ public class UserHomeScreen extends JFrame {
 		add(addButtonLabel);
 
 		// 환영 문구
-		welcomeLabel = new JLabel("어서오세요, OO님");
+		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(LoginScreen.id) + "님");
 		welcomeLabel.setBounds(155, 401, 134, 20);
 		welcomeLabel.setForeground(Color.BLACK);
 		add(welcomeLabel);
@@ -94,10 +97,16 @@ public class UserHomeScreen extends JFrame {
 		add(additionLabel);
 
 		// 로그아웃 버튼
-		logoutButton = new JButton("로그아웃");
+		logoutButton = new RoundedButton("로그아웃");
 		logoutButton.setBounds(126, 750, 150, 58);
 		logoutButton.setBackground(new Color(91, 91, 91));
 		logoutButton.setForeground(Color.WHITE);
+		logoutButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new LoginScreen();
+			}
+		});
 		add(logoutButton);
 
 		// JPanel 추가
@@ -146,6 +155,6 @@ public class UserHomeScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new UserHomeScreen();
+		new LoginScreen();
 	}
 }
