@@ -39,11 +39,14 @@ public class UserHomeScreen extends JFrame {
 
 						if (source == alarmLabel) {
 							System.out.println("🔔 알람 클릭됨!");
+							dispose();
 						} else if (source == profileLabel) {
 							System.out.println("👤 프로필 클릭됨!");
+							dispose();
 							new UpdateUserScreen();
 						} else if (source == mainProfileLabel) {
 							System.out.println("🖼️ 메인 프로필 클릭됨!");
+							dispose();
 							new UpdateUserScreen();
 						} else if (source == addButtonLabel) {
 							System.out.println("➕ 추가 버튼 클릭됨!");
@@ -78,8 +81,8 @@ public class UserHomeScreen extends JFrame {
 		add(mainProfileLabel);
 
 		// 🔹 추가 버튼
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 92, 92);
-		addButtonLabel.setBounds(155, 604, 92, 92);
+		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
+		addButtonLabel.setBounds(280, 730, 70, 70);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
 
@@ -97,12 +100,13 @@ public class UserHomeScreen extends JFrame {
 
 		// 로그아웃 버튼
 		logoutButton = new RoundedButton("로그아웃");
-		logoutButton.setBounds(126, 750, 150, 58);
+		logoutButton.setBounds(30, 122, 85, 36);
 		logoutButton.setBackground(new Color(91, 91, 91));
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				dispose();
 				new LoginScreen();
 			}
 		});

@@ -85,6 +85,7 @@ public class RegisterScreen extends JFrame {
 						Object source = e.getSource(); // 클릭된 컴포넌트 확인
 
 						if (source == backLabel) {
+							dispose();
 							new LoginScreen();
 						} 
 					}
@@ -234,6 +235,7 @@ public class RegisterScreen extends JFrame {
 							bean.setEmail(email_textField.getText().trim());
 							bean.setPhone(phone_textField.getText().trim());
 							mgr.register(bean);
+							dispose();
 							new LoginScreen();
 						}
 					}

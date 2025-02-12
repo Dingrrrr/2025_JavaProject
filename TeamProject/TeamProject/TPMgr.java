@@ -256,7 +256,7 @@ public class TPMgr {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			while(rs.next()) {
 				PetBean bean = new PetBean();
 				bean.setPet_id(rs.getInt("pet_id"));
 				bean.setPet_name(rs.getString("pet_name"));
