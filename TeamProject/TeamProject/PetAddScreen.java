@@ -45,7 +45,13 @@ public class PetAddScreen extends JFrame {
 				
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-					new UserHomeScreen();
+					if(mgr.isPet(StaticData.user_id)) {		//반려동물 정보가 있는 경우
+						dispose();
+						new PetAddMainScreen();
+					} else {
+						dispose();						
+						new UserHomeScreen();
+					}
 				} else if (source == deleteLabel) {
 					System.out.println("반려동물 프로필 사진 삭제 클릭됨!");
 					bean.setPet_image("");

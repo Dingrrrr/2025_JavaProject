@@ -30,7 +30,6 @@ public class UpdateUserScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		UserBean bean = mgr.showUser(StaticData.user_id);
-		
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png"));
@@ -46,7 +45,13 @@ public class UpdateUserScreen extends JFrame {
 
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-					new UserHomeScreen();
+					if(mgr.isPet(StaticData.user_id)) {		//반려동물 정보가 있는 경우
+						dispose();
+						new PetAddMainScreen();
+					} else {
+						dispose();						
+						new UserHomeScreen();
+					}
 				} else if (source == delLabel) {
 					System.out.println("유저 프로필 사진 삭제 클릭됨!");
 				} else if (source == addButton) {
@@ -188,25 +193,6 @@ public class UpdateUserScreen extends JFrame {
 		fisButton.setBackground(new Color(91, 91, 91));
 		fisButton.setForeground(Color.WHITE);
 		fisButton.addMouseListener(commonMouseListener);
-		fisButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(flag) {
-					UserBean bb = new UserBean();
-					bb.setUsername(nameField.getText().trim());
-					bb.setPassword(pwField.getText().trim());
-					bb.setEmail(emailField.getText().trim());
-					bb.setPhone(phoneField.getText().trim());
-//					bb.setUser_image();
-					if(mgr.userUpd(StaticData.user_id, bb)) {
-						nameField.setEnabled(false);
-						pwField.setEnabled(false);
-						emailField.setEnabled(false);
-						phoneField.setEnabled(false);
-					}
-				}
-			}
-		});
 		add(fisButton);
 		
 		nameField.setEnabled(false);
