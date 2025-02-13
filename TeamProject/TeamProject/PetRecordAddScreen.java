@@ -7,6 +7,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+<<<<<<< HEAD
+=======
+import java.math.BigDecimal;
+import java.util.Stack;
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 
 public class PetRecordAddScreen extends JFrame {
 	private BufferedImage image;
@@ -15,8 +20,19 @@ public class PetRecordAddScreen extends JFrame {
 	private JLabel petHeightLabel, petWeightabel, petMtLabel, petVsLabel, petChecksLabel, petMtTimeLabel;
 	private JTextField petHeightTField, petWeightTField, petMtTField, petVsTField, petChecksTField, petMtTimeTField;
 	private JButton petAddRcButton;
+<<<<<<< HEAD
+=======
+	private JFrame previousFrame;  // 이전 프레임 저장
+	int pet_id;
+	TPMgr mgr;
+	HRBean bean;
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 
+<<<<<<< HEAD
 	public PetRecordAddScreen() {
+=======
+	public PetRecordAddScreen(PetBean pb, JFrame previousFrame) {
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
@@ -37,7 +53,39 @@ public class PetRecordAddScreen extends JFrame {
 				
 				if (source == petAddRcButton) {
 					System.out.println("기입완료 버튼 클릭됨");
+<<<<<<< HEAD
 				} 
+=======
+					BigDecimal height = new BigDecimal(0);
+					BigDecimal weight = new BigDecimal(0);
+					try {
+						if(!petHeightTField.getText().trim().isEmpty()){
+							height = new BigDecimal(petHeightTField.getText());
+						}
+						if(!petWeightTField.getText().trim().isEmpty()) {
+							weight = new BigDecimal(petWeightTField.getText());
+						}
+						bean.setHeight(height);
+						bean.setWeight(weight);
+					} catch (Exception e2) {	//텍스트 필드값이 숫자가 아닌 경우
+						e2.printStackTrace();
+					}
+					bean.setMedical_history(petMtTField.getText().trim());
+					bean.setVaccination_status(petVsTField.getText().trim());
+					bean.setCheckup_status(petChecksTField.getText().trim());
+					bean.setDate(petMtTimeTField.getText().trim());
+					mgr.addPet(StaticData.user_id, pb);
+					pet_id = mgr.showPetId(StaticData.user_id, pb);
+					System.out.println(pet_id);
+					mgr.addHRPet(pet_id, bean);
+					dispose();
+					new PetAddMainScreen();
+				} else if(source == backLabel) {
+					System.out.println("뒤로가기 버튼 클릭됨");	
+					dispose();
+					previousFrame.setVisible(true);
+				}
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 			}
 		};
 

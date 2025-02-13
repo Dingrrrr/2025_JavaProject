@@ -13,6 +13,7 @@ public class PetChooseDialog extends JFrame {
 	private JLabel closeLabel;
 	private JLabel chooseLabel;
 	private JLabel dogLabel, catLabel;
+	
 
 	public PetChooseDialog() {
 		setTitle("프레임 설정");
@@ -21,6 +22,7 @@ public class PetChooseDialog extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBackground(new Color(0, 0, 0, 0)); // 투명 배경 설정
+		
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -38,6 +40,11 @@ public class PetChooseDialog extends JFrame {
 					dispose(); // 창 닫기
 				} else if (source == dogLabel) {
 					System.out.println("강아지 선택 아이콘 클릭됨");
+<<<<<<< HEAD
+=======
+					dispose();
+					new PetAddScreen();
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				} else if (source == catLabel) {
 					System.out.println("고양이 선택 아이콘 클릭됨");
 				}
@@ -98,6 +105,5 @@ public class PetChooseDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetChooseDialog();
 	}
 }

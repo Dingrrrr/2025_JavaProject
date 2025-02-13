@@ -73,7 +73,7 @@ public class LoginScreen extends JFrame {
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 		    ));
 		id_textField.setBounds(60, 466, 281, 64); // (x, y, 너비, 높이)
-		id_textField.setText(" 아이디를 입력하세요");
+		id_textField.setText("아이디를 입력하세요");
 		id_textField.setForeground(Color.GRAY);
 		id_textField.addFocusListener(new FocusListener() {
 			@Override
@@ -102,14 +102,14 @@ public class LoginScreen extends JFrame {
 		pw_textField.setBorder(BorderFactory.createCompoundBorder(
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 추가
 		    ));
-		pw_textField.setText(" 비밀번호를 입력하세요"); // 기본 텍스트로 '아이디' 설정
+		pw_textField.setText("비밀번호를 입력하세요"); // 기본 텍스트로 '아이디' 설정
 		pw_textField.setForeground(Color.GRAY);
 		pw_textField.setEchoChar((char) 0);
 		pw_textField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(pw_textField.getPassword().length == 0) {
-					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setText("비밀번호를 입력하세요");
 					pw_textField.setForeground(Color.GRAY);
 					pw_textField.setEchoChar((char) 0);
 					flag2 = true;
@@ -129,19 +129,31 @@ public class LoginScreen extends JFrame {
 		pw_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					id = id_textField.getText().trim();
 					new PetHomeScreen();
+=======
+				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
+					StaticData.user_id = id_textField.getText().trim();
+					if(mgr.isPet(StaticData.user_id)) {
+						dispose();
+						new PetAddMainScreen();		//반려동물 정보가 이미 있는 경우
+					}
+					else {
+						dispose();
+						new UserHomeScreen();			//반려동물 정보가 없는 경우
+					}
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				} else {
-					id_textField.setText(" 아이디를 입력하세요");
+					id_textField.setText("아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
-					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setText("비밀번호를 입력하세요");
 					pw_textField.setForeground(Color.GRAY);
 					pw_textField.setEchoChar((char) 0);
 					flag1 = true;
 					flag2 = true;
 					warningLabel.setVisible(true);
-					
 				}
 			}
 		});
@@ -158,13 +170,26 @@ public class LoginScreen extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					id = id_textField.getText().trim();
 					new PetHomeScreen();
+=======
+				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
+					StaticData.user_id = id_textField.getText().trim();
+					if(mgr.isPet(StaticData.user_id)) {
+						dispose();
+						new PetAddMainScreen();		//이미 반려동물 정보가 있을 경우				
+					}
+					else {
+						dispose();
+						new UserHomeScreen();			//반려동물 정보가 없는 경우
+					}
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				} else {
-					id_textField.setText(" 아이디를 입력하세요");
+					id_textField.setText("아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
-					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setText("비밀번호를 입력하세요");
 					pw_textField.setForeground(Color.GRAY);
 					pw_textField.setEchoChar((char) 0);
 					flag1 = true;
@@ -181,6 +206,7 @@ public class LoginScreen extends JFrame {
 		registerLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				dispose();
 				new RegisterScreen();
 			}
 		});
@@ -235,9 +261,7 @@ public class LoginScreen extends JFrame {
 		}
 	}
 
-	
-	
-	
+
 	public static void main(String[] args) {
 		new LoginScreen();
 	}

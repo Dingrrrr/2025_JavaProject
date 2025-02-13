@@ -39,7 +39,11 @@ import java.util.Vector;
 public class DBConnectionMgr {
     private Vector connections = new Vector(10);
     private String _driver = "com.mysql.cj.jdbc.Driver",
+<<<<<<< HEAD
     _url = "jdbc:mysql://localhost:3306/mydb?characterEncoding=UTF-8&serverTimezone=UTC",
+=======
+    _url = "jdbc:mysql://localhost:3306/teamproject?characterEncoding=UTF-8&serverTimezone=Asia/Seoul",
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
     _user = "root",
     _password = "1234";
     

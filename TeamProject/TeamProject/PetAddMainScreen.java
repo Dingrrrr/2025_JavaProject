@@ -20,16 +20,28 @@ public class PetAddMainScreen extends JFrame {
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
 	Vector<PetBean> vlist;
-	PetBean bean;
+	PetBean bean[] = new PetBean[2];
+	private PetChooseDialog pc;
+	
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
+<<<<<<< HEAD
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		vlist = mgr.showPet(LoginScreen.id);
 		bean = (PetBean)vlist.elementAt(0);
+=======
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		vlist = mgr.showPet(StaticData.user_id);
+		try {
+			bean[0] = (PetBean)vlist.elementAt(0);
+			bean[1] = (PetBean)vlist.elementAt(1);
+		} catch (Exception e) {}
+		
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -47,10 +59,24 @@ public class PetAddMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(PetAddMainScreen.this);
 				} else if (source == mainProfileLabel) {
 					System.out.println("🖼️ 메인 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(PetAddMainScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
+					if(pc==null) {
+						pc = new PetChooseDialog();
+						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX()+25, getY()+300);
+					}else {
+						pc.setLocation(getX()+25, getY()+300);
+						pc.setVisible(true);
+					}
+					//동물 선택 다이어로그가 켜지면 뒤에 로그아웃, 알림, 사용자 정보 수정 버튼 비활성화
+					
 				}
 			}
 		};
@@ -79,50 +105,101 @@ public class PetAddMainScreen extends JFrame {
 		welcomeLabel.setForeground(Color.BLACK);
 		add(welcomeLabel);
 		
+		//한 사용자당 반려동물은 2마리로 제한
+			
 		//반려견 프로필
-		petProfileLabel = createScaledImageLabel("TeamProject/pet_profile.png", 150, 150);
-		petProfileLabel.setBounds(37, 471, 150, 150);
+		petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
+		petProfileLabel.setBounds(37, 461, 150, 150);
+		petProfileLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				StaticData.pet_id = bean[0].getPet_id();
+				new PetHomeScreen(StaticData.pet_id);
+			}
+		});
 		add(petProfileLabel);
-		
+				
 		//반려견 이름
-		petNameLabel = new JLabel("이름 : " + bean.getPet_name());
-		petNameLabel.setBounds(222, 492, 146, 26);
+		petNameLabel = new JLabel("이름 : " + bean[0].getPet_name());
+		petNameLabel.setBounds(222, 482, 146, 26);
 		petNameLabel.setForeground(Color.BLACK);
 		add(petNameLabel);
-		
+				
 		//반려견 종
-		petSpeciesLabel = new JLabel("종 : " + bean.getPet_species());
-		petSpeciesLabel.setBounds(222, 522, 146, 26);
+		petSpeciesLabel = new JLabel("종 : " +bean[0].getPet_species());
+		petSpeciesLabel.setBounds(222, 512, 146, 26);
 		petSpeciesLabel.setForeground(Color.BLACK);
 		add(petSpeciesLabel);
-		
+				
 		//반려견 생년월일
-		petAgeLabel = new JLabel("나이 : " + bean.getPet_age());
-		petAgeLabel.setBounds(222, 552, 146, 26);
+		petAgeLabel = new JLabel("나이 : " + bean[0].getPet_age());
+		petAgeLabel.setBounds(222, 542, 146, 26);
 		petAgeLabel.setForeground(Color.BLACK);
 		add(petAgeLabel);
-		
+				
 		//반려견 성별
-		petGenderLabel = new JLabel("성별 : " + bean.getPet_gender());
-		petGenderLabel.setBounds(222, 582, 146, 26);
+		petGenderLabel = new JLabel("성별 : " + bean[0].getPet_gender());
+		petGenderLabel.setBounds(222, 572, 146, 26);
 		petGenderLabel.setForeground(Color.BLACK);
 		add(petGenderLabel);
 		
+		if(bean[1] != null) {	//두 마리일 경우
+			
+			//반려견 프로필
+			petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
+			petProfileLabel.setBounds(37, 667, 150, 150);
+			petProfileLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					dispose();
+					StaticData.pet_id = bean[1].getPet_id();
+					new PetHomeScreen(StaticData.pet_id);
+				}
+			});
+			add(petProfileLabel);
+			
+			//반려견 이름
+			petNameLabel = new JLabel("이름 : " + bean[1].getPet_name());
+			petNameLabel.setBounds(222, 688, 146, 26);
+			petNameLabel.setForeground(Color.BLACK);
+			add(petNameLabel);
+			
+			//반려견 종
+			petSpeciesLabel = new JLabel("종 : " +bean[1].getPet_species());
+			petSpeciesLabel.setBounds(222, 718, 146, 26);
+			petSpeciesLabel.setForeground(Color.BLACK);
+			add(petSpeciesLabel);
+			
+			//반려견 생년월일
+			petAgeLabel = new JLabel("나이 : " + bean[1].getPet_age());
+			petAgeLabel.setBounds(222, 748, 146, 26);
+			petAgeLabel.setForeground(Color.BLACK);
+			add(petAgeLabel);
+			
+			//반려견 성별
+			petGenderLabel = new JLabel("성별 : " + bean[1].getPet_gender());
+			petGenderLabel.setBounds(222, 778, 146, 26);
+			petGenderLabel.setForeground(Color.BLACK);
+			add(petGenderLabel);
+		}
+		
 		//반려견 추가 버튼
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 92, 92);
-		addButtonLabel.setBounds(155, 664, 92, 92);
+		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
+		addButtonLabel.setBounds(280, 730, 70, 70);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
 		
 		// 로그아웃 버튼
-		logoutButton = new JButton("로그아웃");
-		logoutButton.setBounds(126, 760, 150, 58);
+		logoutButton = new RoundedButton("로그아웃");
+		logoutButton.setBounds(30, 122, 85, 36);
 		logoutButton.setBackground(new Color(91, 91, 91));
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				dispose();
+				new LoginScreen();
 			}
 		});
 		add(logoutButton);
@@ -142,7 +219,7 @@ public class PetAddMainScreen extends JFrame {
 				g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
 				g.drawLine(22, 165, 379, 165);
 				g.drawLine(22, 443, 379, 443);
-				g.drawLine(22, 649, 379, 649);
+				g.drawLine(22, 639, 379, 639);
 			}
 		};
 
@@ -171,6 +248,6 @@ public class PetAddMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetAddMainScreen();
+		new LoginScreen();
 	}
 }

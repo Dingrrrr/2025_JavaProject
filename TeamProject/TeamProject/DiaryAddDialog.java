@@ -17,6 +17,7 @@ public class DiaryAddDialog extends JFrame {
 	private JTextField  DiaryTitleTField;
 	private JTextArea DiaryWriteTArea;
 	private JButton SaveButton;
+<<<<<<< HEAD
 
 	public DiaryAddDialog() {
 		setTitle("프레임 설정");
@@ -81,6 +82,76 @@ public class DiaryAddDialog extends JFrame {
 				
 				JScrollPane scrollPane = new JScrollPane(DiaryWriteTArea);
 				scrollPane.setBounds(15, 160, 318, 250); // 텍스트 영역 크기와 위치 설정
+=======
+	private JScrollPane scrollPane;
+
+	public DiaryAddDialog() {
+		setTitle("프레임 설정");
+		setSize(350, 500);
+		setUndecorated(true);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
+		try {
+			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// 🔹 공통 마우스 클릭 이벤트 리스너
+		MouseAdapter commonMouseListener = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Object source = e.getSource(); // 클릭된 컴포넌트 확인
+				if (source == closeLabel) {
+					System.out.println("닫기 버튼 클릭됨");
+					dispose(); // 창 닫기
+				} else if (source == SaveButton) {
+					System.out.println("저장 버튼클릭됨");
+				}
+			}
+		};
+		
+				// 일기 제목 라벨
+				DiaryTitleLabel = new JLabel("제목");
+				DiaryTitleLabel.setBounds(15, 20, 48, 60);
+				DiaryTitleLabel.setForeground(Color.black);
+				add(DiaryTitleLabel);
+
+				// 일기 제목 텍스트 필드 추가
+				DiaryTitleTField = new JTextField();
+				DiaryTitleTField.setBounds(15, 70, 318, 40);
+				DiaryTitleTField.setText("");
+				DiaryTitleTField.setBorder(BorderFactory.createCompoundBorder(
+				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+				    ));
+				add(DiaryTitleTField);
+
+				// 일기 내용 라벨
+				DiaryWritelabel = new JLabel("내용");
+				DiaryWritelabel.setBounds(15, 110, 48, 60);
+				DiaryWritelabel.setForeground(Color.black);
+				add(DiaryWritelabel);
+
+				// 일기 내용 텍스트 필드 추가
+				DiaryWriteTArea = new JTextArea();
+				DiaryWriteTArea.setBounds(15, 160, 318, 250);
+				DiaryWriteTArea.setText("");
+				DiaryWriteTArea.setLineWrap(true);
+				DiaryWriteTArea.setWrapStyleWord(true);
+				DiaryWriteTArea.setBorder(BorderFactory.createCompoundBorder(
+				        new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+				    ));
+				
+				scrollPane = new JScrollPane(DiaryWriteTArea);
+				scrollPane.setBounds(15, 160, 318, 250); // 텍스트 영역 크기와 위치 설정
+				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(
+							new RoundedBorder(0), new EmptyBorder(0, 0, 0, 0)
+						));
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				add(scrollPane); // JScrollPane을 프레임에 추가
 				
 				// 저장 버튼

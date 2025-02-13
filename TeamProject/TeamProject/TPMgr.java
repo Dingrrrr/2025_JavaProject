@@ -3,6 +3,7 @@ package TeamProject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 public class TPMgr {
@@ -256,7 +257,7 @@ public class TPMgr {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			while(rs.next()) {
 				PetBean bean = new PetBean();
 				bean.setPet_id(rs.getInt("pet_id"));
 				bean.setPet_name(rs.getString("pet_name"));
@@ -272,7 +273,89 @@ public class TPMgr {
 		}
 		return vlist;
 	}
+<<<<<<< HEAD
 	
+=======
+	
+	//반려동물 아이디 출력
+	public int showPetId(String id, PetBean bean) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		int pet_id = -1;
+		try {
+			con = pool.getConnection();
+			sql = "select pet_id from pet where user_id = ? and pet_name = ? and pet_species = ? and pet_age = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, bean.getPet_name());
+			pstmt.setString(3, bean.getPet_species());
+			pstmt.setString(4, bean.getPet_age());
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				pet_id = rs.getInt("pet_id");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return pet_id;
+	}
+	
+	//반려동물를 이미 추가했는지 여부(있으면 true 출력)
+	public boolean isPet(String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from pet where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
+	//반려동물 한마리의 정보 출력
+	public PetBean showOnePet(int id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		PetBean bean = new PetBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from pet where pet_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setPet_name(rs.getString("pet_name"));
+				bean.setPet_species(rs.getString("pet_species"));
+				bean.setPet_age(rs.getString("pet_age"));
+				bean.setPet_gender(rs.getString("pet_gender"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
+	}
+	
+>>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 	//반려동물 정보 추가(선택 사항)
 	public void addHRPet(int pet_id, HRBean bean) {
 		Connection con = null;
@@ -306,7 +389,7 @@ public class TPMgr {
 		boolean flag = false;
 		try {
 			con = pool.getConnection();
-			sql = "update user set weight = ?, height = ?, medical_history = ?, vaccination_status = ?, checkup_status = ?, date = ?, hr_date = ? where record_id = ?";
+			sql = "update health_record set weight = ?, height = ?, medical_history = ?, vaccination_status = ?, checkup_status = ?, date = ? where record_id = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setBigDecimal(1, bean.getWeight());
 			pstmt.setBigDecimal(2, bean.getHeight());
@@ -314,8 +397,7 @@ public class TPMgr {
 			pstmt.setString(4, bean.getVaccination_status());
 			pstmt.setString(5, bean.getCheckup_status());
 			pstmt.setString(6, bean.getDate());
-			pstmt.setTimestamp(7, bean.getHr_date());
-			pstmt.setInt(8, record_id);
+			pstmt.setInt(7, record_id);
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -348,6 +430,61 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//반려동물 레코드 아이디를 출력(선택 사항)
+	public int showHRPetId(Timestamp ts) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		int record_id = -1;
+		try {
+			con = pool.getConnection();
+			sql = "select record_id from health_record where hr_date = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setTimestamp(1, ts);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				record_id = rs.getInt("record_id");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return record_id;
+	}
+	
+	//한 반려동물의 정보를 출력(선택 사항)
+	public HRBean showOneHRPet(int record_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		HRBean bean = new HRBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from health_record where record_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, record_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setHeight(rs.getBigDecimal("height"));
+				bean.setWeight(rs.getBigDecimal("weight"));
+				bean.setMedical_history(rs.getString("medical_history"));
+				bean.setVaccination_status(rs.getString("vaccination_status"));;
+				bean.setCheckup_status(rs.getString("checkup_status"));
+				bean.setDate(rs.getString("date"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
+	}
+	
+	
 	//반려동물 정보 화면에 출력(선택 사항)
 	public Vector<HRBean> showHRPet(int pet_id){
 		Connection con = null;
@@ -357,7 +494,7 @@ public class TPMgr {
 		Vector<HRBean> vlist = new Vector<HRBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from health_record where pet_id = ?";
+			sql = "select * from health_record where pet_id = ? ORDER BY hr_date DESC;";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
 			rs = pstmt.executeQuery();
@@ -378,6 +515,29 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return vlist;
+	}
+	
+	//앨범 존재 유무(이미 앨범이 있으면 true 출력)
+	public boolean isAlbum(int pet_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from album where pet_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
 	}
 	
 	//앨범 추가
@@ -458,7 +618,7 @@ public class TPMgr {
 		Vector<AlbumBean> vlist = new Vector<AlbumBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from album where pet_id = ?";
+			sql = "select * from album where pet_id = ? ORDER BY album_date DESC;";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
 			rs = pstmt.executeQuery();
