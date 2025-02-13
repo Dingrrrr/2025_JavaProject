@@ -53,11 +53,11 @@ public class PetAddMainScreen extends JFrame {
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
-					new UpdateUserScreen();
+					new UpdateUserScreen(PetAddMainScreen.this);
 				} else if (source == mainProfileLabel) {
 					System.out.println("🖼️ 메인 프로필 클릭됨!");
 					dispose();
-					new UpdateUserScreen();
+					new UpdateUserScreen(PetAddMainScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {
@@ -69,6 +69,7 @@ public class PetAddMainScreen extends JFrame {
 						pc.setVisible(true);
 					}
 					//동물 선택 다이어로그가 켜지면 뒤에 로그아웃, 알림, 사용자 정보 수정 버튼 비활성화
+					
 				}
 			}
 		};
