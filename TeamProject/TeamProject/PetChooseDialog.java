@@ -13,6 +13,7 @@ public class PetChooseDialog extends JFrame {
 	private JLabel closeLabel;
 	private JLabel chooseLabel;
 	private JLabel dogLabel, catLabel;
+	
 
 	public PetChooseDialog() {
 		setTitle("프레임 설정");
@@ -21,6 +22,7 @@ public class PetChooseDialog extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBackground(new Color(0, 0, 0, 0)); // 투명 배경 설정
+		
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기

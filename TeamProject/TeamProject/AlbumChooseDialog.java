@@ -14,6 +14,7 @@ public class AlbumChooseDialog extends JFrame {
 	private JLabel chooseLabel;
 	private JLabel albumLabel, diaryLabel;
 	private JLabel albumintroLabel, diaryintroLabel;
+	TPMgr mgr;
 	
 	public AlbumChooseDialog() {
 		setTitle("프레임 설정");
@@ -22,6 +23,7 @@ public class AlbumChooseDialog extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBackground(new Color(0, 0, 0, 0)); // 투명 배경 설정
+		mgr = new TPMgr();
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png"));
@@ -39,6 +41,12 @@ public class AlbumChooseDialog extends JFrame {
 							dispose(); // 창 닫기
 						} else if (source == albumLabel) {
 							System.out.println("앨범 선택 아이콘 클릭됨");
+							dispose();
+							if(mgr.isAlbum(StaticData.pet_id)) {	//이미 앨범이 있으면 실행
+								new AlbumMainScreen();
+							} else {	//DB에 앨범이 없으면 실행
+								new AlbumScreen();
+							}
 						} else if (source == diaryLabel) {
 							System.out.println("일기 선택 아이콘 클릭됨");
 						}
