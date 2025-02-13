@@ -22,7 +22,6 @@ public class AlbumResultDialog extends JFrame {
 	public AlbumResultDialog() {
 		setTitle("프레임 설정");
 		setSize(350, 620);
-		
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

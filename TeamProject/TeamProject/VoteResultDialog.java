@@ -9,14 +9,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import javax.swing.border.EmptyBorder;
 
-public class VoteAddDialog extends JFrame {
+public class VoteResultDialog extends JFrame {
 	private BufferedImage image;
-	private JLabel votetitleLabel, closeLabel, grayFrameLabel, addButtonLabel;
-	private JButton addButton;
+	private JLabel modifyLabel, closeLabel, grayFrameLabel;
 
-	public VoteAddDialog() {
+	public VoteResultDialog() {
 		setTitle("프레임 설정");
-		setSize(350, 650);
+		setSize(350, 401);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,48 +27,27 @@ public class VoteAddDialog extends JFrame {
 		}
 
 		// 🔹 공통 마우스 클릭 이벤트 리스너
-		MouseAdapter commonMouseListener = new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Object source = e.getSource(); // 클릭된 컴포넌트 확인
-				if (source == closeLabel) {
-					System.out.println("닫기 버튼 클릭됨");
-					dispose(); // 창 닫기
-				} else if (source == addButtonLabel) {
-					System.out.println("+아이콘 클릭됨");
-				} else {
+				MouseAdapter commonMouseListener = new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						Object source = e.getSource(); // 클릭된 컴포넌트 확인
+						if (source == closeLabel) {
+							System.out.println("닫기 버튼 클릭됨");
+							dispose(); // 창 닫기
+						} else  {
 
-				}
+						}
 
-			}
-		};
-
-		// 투표 환영 라벨
-		votetitleLabel = new JLabel("자랑하고 싶은 아이의 사진을 올려주세요!");
-		votetitleLabel.setBounds(70, 110, 306, 30);
-		votetitleLabel.setForeground(Color.BLACK);
-		add(votetitleLabel);
-
-		// 🔹 추가 버튼
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 62, 62);
-		addButtonLabel.setBounds(245, 357, 62, 62);
-		addButtonLabel.addMouseListener(commonMouseListener);
-		add(addButtonLabel);
-		
+					}
+				};
+				
 		// 🔹 회색프레임
 		grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
-		grayFrameLabel.setBounds(38, 150, 280, 280);
+		grayFrameLabel.setBounds(17, 45, 318, 318);
+		grayFrameLabel.addMouseListener(commonMouseListener);
 		add(grayFrameLabel);
 		
-		//올리기 버튼
-		addButton = new RoundedButton("올리기");
-		addButton.setBounds(120, 480, 100, 40);
-		addButton.setBackground(new Color(91, 91, 91));
-		addButton.setForeground(Color.WHITE);
-		addButton.addMouseListener(commonMouseListener);
-		add(addButton);
 		
-
 		// JPanel 추가
 		JPanel panel = new JPanel() {
 			@Override
@@ -77,7 +55,7 @@ public class VoteAddDialog extends JFrame {
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(350, 620, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(350, 401, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 			}
@@ -93,7 +71,12 @@ public class VoteAddDialog extends JFrame {
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
 		
-		
+		//🔹 수정 버튼 이미지 추가
+		modifyLabel = createScaledImageLabel("Teamproject/modify_icon.png", 28, 28);
+		modifyLabel.setBounds(275, 7, 28, 28);
+		modifyLabel.addMouseListener(commonMouseListener);
+		panel.add(modifyLabel);
+
 		setVisible(true);
 	}
 
@@ -104,6 +87,6 @@ public class VoteAddDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new VoteAddDialog();
+		new VoteResultDialog();
 	}
 }
