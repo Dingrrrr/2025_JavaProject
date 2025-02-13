@@ -22,6 +22,7 @@ public class PetAddMainScreen extends JFrame {
 	Vector<PetBean> vlist;
 	PetBean bean[] = new PetBean[2];
 	private PetChooseDialog pc;
+	JFrame previousFrame;
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");

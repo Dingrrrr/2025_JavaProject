@@ -9,7 +9,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 public class AlbumChooseDialog extends JFrame {
-	
 	private BufferedImage image;
 	private JLabel closeLabel;
 	private JLabel chooseLabel;
