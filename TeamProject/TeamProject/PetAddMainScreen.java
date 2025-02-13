@@ -101,6 +101,13 @@ public class PetAddMainScreen extends JFrame {
 		//반려견 프로필
 		petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
 		petProfileLabel.setBounds(37, 471, 150, 150);
+		petProfileLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+//				new PetRecordModifyScreen(bean.);
+			}
+		});
 		add(petProfileLabel);
 				
 		//반려견 이름
@@ -126,11 +133,18 @@ public class PetAddMainScreen extends JFrame {
 		petGenderLabel.setBounds(222, 582, 146, 26);
 		petGenderLabel.setForeground(Color.BLACK);
 		add(petGenderLabel);
+		
 		if(bean[1] != null) {	//두 마리일 경우
 			
 			//반려견 프로필
 			petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
 			petProfileLabel.setBounds(37, 677, 150, 150);
+			petProfileLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					super.mouseClicked(e);
+				}
+			});
 			add(petProfileLabel);
 			
 			//반려견 이름
