@@ -37,6 +37,8 @@ public class AlbumScreen extends JFrame{
 					System.out.println("🔔 알람 클릭됨!");
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(AlbumScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {
@@ -49,8 +51,11 @@ public class AlbumScreen extends JFrame{
 					}
 				}else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+					new AlbumChooseDialog();
 				}else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
+					dispose();
+					new PetAddMainScreen();
 				}else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 				}else if (source == voteLabel) {

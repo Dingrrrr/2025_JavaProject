@@ -47,6 +47,8 @@ public class AlbumResultDialog extends JFrame {
 					System.out.println("저장 버튼클릭됨");
 				}else if (source == modifyLabel) {
 					System.out.println("수정 버튼클릭됨");
+					diaryTagTField.setEnabled(true);
+					diaryWriteArea.setEnabled(true);
 				}
 			}
 		};
@@ -60,12 +62,11 @@ public class AlbumResultDialog extends JFrame {
 				// 앨범 태그 텍스트 필드 추가
 				diaryTagTField = new JTextField();
 				diaryTagTField.setBounds(15, 355, 318, 40);
-				diaryTagTField.setText("");
 				diaryTagTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
 				add(diaryTagTField);
-				
+				diaryTagTField.setEnabled(false);
 				
 
 				// 앨범 설명 라벨
@@ -77,12 +78,13 @@ public class AlbumResultDialog extends JFrame {
 				// 앨범 설명 텍스트 필드 추가
 				diaryWriteArea = new JTextArea();
 				diaryWriteArea.setBounds(15, 420, 318, 130);
-				diaryWriteArea.setText("");
 				diaryWriteArea.setLineWrap(true);
 				diaryWriteArea.setWrapStyleWord(true);
 				diaryWriteArea.setBorder(BorderFactory.createCompoundBorder(
 						new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15)
 					));
+				add(diaryWriteArea);
+				diaryWriteArea.setEnabled(false);
 				
 				
 				// 스크롤 기능

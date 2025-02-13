@@ -18,6 +18,7 @@ public class UserHomeScreen extends JFrame {
 	private PetChooseDialog pc;
 	TPMgr mgr = new TPMgr();
 
+
 	public UserHomeScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
