@@ -130,10 +130,14 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
-					if(mgr.isPet(StaticData.user_id))
-						new PetAddMainScreen();
-					else
-						new UserHomeScreen();
+					if(mgr.isPet(StaticData.user_id)) {
+						dispose();
+						new PetAddMainScreen();		//반려동물 정보가 이미 있는 경우
+					}
+					else {
+						dispose();
+						new UserHomeScreen();			//반려동물 정보가 없는 경우
+					}
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -143,7 +147,6 @@ public class LoginScreen extends JFrame {
 					flag1 = true;
 					flag2 = true;
 					warningLabel.setVisible(true);
-					
 				}
 			}
 		});
@@ -162,10 +165,14 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
-					if(mgr.isPet(StaticData.user_id))
-						new PetAddMainScreen();
-					else
-						new UserHomeScreen();
+					if(mgr.isPet(StaticData.user_id)) {
+						dispose();
+						new PetAddMainScreen();		//이미 반려동물 정보가 있을 경우				
+					}
+					else {
+						dispose();
+						new UserHomeScreen();			//반려동물 정보가 없는 경우
+					}
 				} else {
 					id_textField.setText(" 아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -186,6 +193,7 @@ public class LoginScreen extends JFrame {
 		registerLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				dispose();
 				new RegisterScreen();
 			}
 		});

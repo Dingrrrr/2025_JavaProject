@@ -1,6 +1,10 @@
 package TeamProject;
 
 import javax.swing.*;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +17,23 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
+class RoundedBorder extends AbstractBorder {
+    private int radius;
+
+    public RoundedBorder(int radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(Color.GRAY); // 테두리 색상
+        g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius); // 둥근 테두리 그리기
+        g2.dispose();
+    }
+}
+
 public class LoginScreen extends JFrame {
 	private BufferedImage image;
 	private BufferedImage logoImage;
@@ -21,6 +42,7 @@ public class LoginScreen extends JFrame {
 	private JButton loginButton;
 	private JLabel registerLabel, warningLabel;
 	static String id;
+	boolean flag1 = true, flag2 = true;
 	TPMgr mgr;
 
 	public LoginScreen() {
@@ -43,14 +65,67 @@ public class LoginScreen extends JFrame {
 			e.printStackTrace();
 		}
 
+
 		// 텍스트 필드 추가
 		id_textField = new JTextField();
+		id_textField.setOpaque(false);
+		id_textField.setBorder(BorderFactory.createCompoundBorder(
+		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+		    ));
 		id_textField.setBounds(60, 466, 281, 64); // (x, y, 너비, 높이)
-		id_textField.setText("아이디"); // 기본 텍스트로 '아이디' 설정
-
+		id_textField.setText(" 아이디를 입력하세요");
+		id_textField.setForeground(Color.GRAY);
+		id_textField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(id_textField.getText().isEmpty()) {
+					id_textField.setText("아이디를 입력하세요");
+					id_textField.setForeground(Color.GRAY);
+					flag1 = true;
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(flag1) {
+					id_textField.setText("");
+					id_textField.setForeground(Color.BLACK);
+				}
+				flag1 = false;
+			}
+		});
+		
+		
+		
+		
 		pw_textField = new JPasswordField();
-		pw_textField.setBounds(60, 530, 281, 64); // (x, y, 너비, 높이)
-		pw_textField.setText("비밀번호"); // 기본 텍스트로 '아이디' 설정
+		pw_textField.setBounds(60, 535, 281, 64); // (x, y, 너비, 높이)
+		pw_textField.setBorder(BorderFactory.createCompoundBorder(
+		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 추가
+		    ));
+		pw_textField.setText(" 비밀번호를 입력하세요"); // 기본 텍스트로 '아이디' 설정
+		pw_textField.setForeground(Color.GRAY);
+		pw_textField.setEchoChar((char) 0);
+		pw_textField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(pw_textField.getPassword().length == 0) {
+					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setForeground(Color.GRAY);
+					pw_textField.setEchoChar((char) 0);
+					flag2 = true;
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(flag2) {
+					pw_textField.setText("");
+					pw_textField.setForeground(Color.BLACK);
+					pw_textField.setEchoChar('*');
+				}
+				flag2 = false;
+			}
+		});
+		
 		pw_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -58,10 +133,15 @@ public class LoginScreen extends JFrame {
 					id = id_textField.getText().trim();
 					new PetHomeScreen();
 				} else {
-					id_textField.setText("아이디");
-					pw_textField.setText("비밀번호");
-					id_textField.requestFocus();
-					add(warningLabel);
+					id_textField.setText(" 아이디를 입력하세요");
+					id_textField.setForeground(Color.GRAY);
+					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setForeground(Color.GRAY);
+					pw_textField.setEchoChar((char) 0);
+					flag1 = true;
+					flag2 = true;
+					warningLabel.setVisible(true);
+					
 				}
 			}
 		});
@@ -71,12 +151,10 @@ public class LoginScreen extends JFrame {
 		warningLabel.setBounds(61, 580, 250, 60);
 
 		// 로그인 버튼 추가
-		loginButton = new JButton("로그인");
+		loginButton = new RoundedButton("로그인");
 		loginButton.setBounds(61, 625, 281, 58); // (x, y, 너비, 높이)
 		loginButton.setBackground(new Color(0, 123, 255)); // 버튼 배경 색 (파란색)
 		loginButton.setForeground(Color.WHITE); // 버튼 텍스트 색 (하얀색)
-		loginButton.setOpaque(true);
-		loginButton.setContentAreaFilled(true);
 		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -84,9 +162,13 @@ public class LoginScreen extends JFrame {
 					id = id_textField.getText().trim();
 					new PetHomeScreen();
 				} else {
-					id_textField.setText("아이디");
-					pw_textField.setText("비밀번호");
-					id_textField.requestFocus();
+					id_textField.setText(" 아이디를 입력하세요");
+					id_textField.setForeground(Color.GRAY);
+					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setForeground(Color.GRAY);
+					pw_textField.setEchoChar((char) 0);
+					flag1 = true;
+					flag2 = true;
 					warningLabel.setVisible(true);
 				}
 			}
