@@ -3,6 +3,7 @@ package TeamProject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 public class TPMgr {
@@ -324,6 +325,33 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//반려동물 한마리의 정보 출력
+	public PetBean showOnePet(int id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		PetBean bean = new PetBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from pet where pet_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setPet_name(rs.getString("pet_name"));
+				bean.setPet_species(rs.getString("pet_species"));
+				bean.setPet_age(rs.getString("pet_age"));
+				bean.setPet_gender(rs.getString("pet_gender"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
+	}
+	
 	//반려동물 정보 추가(선택 사항)
 	public void addHRPet(int pet_id, HRBean bean) {
 		Connection con = null;
@@ -357,7 +385,7 @@ public class TPMgr {
 		boolean flag = false;
 		try {
 			con = pool.getConnection();
-			sql = "update user set weight = ?, height = ?, medical_history = ?, vaccination_status = ?, checkup_status = ?, date = ?, hr_date = ? where record_id = ?";
+			sql = "update health_record set weight = ?, height = ?, medical_history = ?, vaccination_status = ?, checkup_status = ?, date = ? where record_id = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setBigDecimal(1, bean.getWeight());
 			pstmt.setBigDecimal(2, bean.getHeight());
@@ -365,8 +393,7 @@ public class TPMgr {
 			pstmt.setString(4, bean.getVaccination_status());
 			pstmt.setString(5, bean.getCheckup_status());
 			pstmt.setString(6, bean.getDate());
-			pstmt.setTimestamp(7, bean.getHr_date());
-			pstmt.setInt(8, record_id);
+			pstmt.setInt(7, record_id);
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -399,6 +426,61 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//반려동물 레코드 아이디를 출력(선택 사항)
+	public int showHRPetId(Timestamp ts) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		int record_id = -1;
+		try {
+			con = pool.getConnection();
+			sql = "select record_id from health_record where hr_date = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setTimestamp(1, ts);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				record_id = rs.getInt("record_id");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return record_id;
+	}
+	
+	//한 반려동물의 정보를 출력(선택 사항)
+	public HRBean showOneHRPet(int record_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		HRBean bean = new HRBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from health_record where record_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, record_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setHeight(rs.getBigDecimal("height"));
+				bean.setWeight(rs.getBigDecimal("weight"));
+				bean.setMedical_history(rs.getString("medical_history"));
+				bean.setVaccination_status(rs.getString("vaccination_status"));;
+				bean.setCheckup_status(rs.getString("checkup_status"));
+				bean.setDate(rs.getString("date"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
+	}
+	
+	
 	//반려동물 정보 화면에 출력(선택 사항)
 	public Vector<HRBean> showHRPet(int pet_id){
 		Connection con = null;
@@ -408,7 +490,7 @@ public class TPMgr {
 		Vector<HRBean> vlist = new Vector<HRBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from health_record where pet_id = ?";
+			sql = "select * from health_record where pet_id = ? ORDER BY hr_date DESC;";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
 			rs = pstmt.executeQuery();

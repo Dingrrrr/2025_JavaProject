@@ -22,6 +22,7 @@ public class PetAddMainScreen extends JFrame {
 	Vector<PetBean> vlist;
 	PetBean bean[] = new PetBean[2];
 	private PetChooseDialog pc;
+	JFrame previousFrame;
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -53,11 +54,11 @@ public class PetAddMainScreen extends JFrame {
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
-					new UpdateUserScreen();
+					new UpdateUserScreen(PetAddMainScreen.this);
 				} else if (source == mainProfileLabel) {
 					System.out.println("🖼️ 메인 프로필 클릭됨!");
 					dispose();
-					new UpdateUserScreen();
+					new UpdateUserScreen(PetAddMainScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {
@@ -68,6 +69,8 @@ public class PetAddMainScreen extends JFrame {
 						pc.setLocation(getX()+25, getY()+300);
 						pc.setVisible(true);
 					}
+					//동물 선택 다이어로그가 켜지면 뒤에 로그아웃, 알림, 사용자 정보 수정 버튼 비활성화
+					
 				}
 			}
 		};
@@ -100,60 +103,75 @@ public class PetAddMainScreen extends JFrame {
 			
 		//반려견 프로필
 		petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
-		petProfileLabel.setBounds(37, 471, 150, 150);
+		petProfileLabel.setBounds(37, 461, 150, 150);
+		petProfileLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				new PetHomeScreen(bean[0].getPet_id());
+			}
+		});
 		add(petProfileLabel);
 				
 		//반려견 이름
 		petNameLabel = new JLabel("이름 : " + bean[0].getPet_name());
-		petNameLabel.setBounds(222, 492, 146, 26);
+		petNameLabel.setBounds(222, 482, 146, 26);
 		petNameLabel.setForeground(Color.BLACK);
 		add(petNameLabel);
 				
 		//반려견 종
 		petSpeciesLabel = new JLabel("종 : " +bean[0].getPet_species());
-		petSpeciesLabel.setBounds(222, 522, 146, 26);
+		petSpeciesLabel.setBounds(222, 512, 146, 26);
 		petSpeciesLabel.setForeground(Color.BLACK);
 		add(petSpeciesLabel);
 				
 		//반려견 생년월일
 		petAgeLabel = new JLabel("나이 : " + bean[0].getPet_age());
-		petAgeLabel.setBounds(222, 552, 146, 26);
+		petAgeLabel.setBounds(222, 542, 146, 26);
 		petAgeLabel.setForeground(Color.BLACK);
 		add(petAgeLabel);
 				
 		//반려견 성별
 		petGenderLabel = new JLabel("성별 : " + bean[0].getPet_gender());
-		petGenderLabel.setBounds(222, 582, 146, 26);
+		petGenderLabel.setBounds(222, 572, 146, 26);
 		petGenderLabel.setForeground(Color.BLACK);
 		add(petGenderLabel);
+		
 		if(bean[1] != null) {	//두 마리일 경우
 			
 			//반려견 프로필
 			petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
-			petProfileLabel.setBounds(37, 677, 150, 150);
+			petProfileLabel.setBounds(37, 667, 150, 150);
+			petProfileLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					dispose();
+					new PetHomeScreen(bean[1].getPet_id());
+				}
+			});
 			add(petProfileLabel);
 			
 			//반려견 이름
 			petNameLabel = new JLabel("이름 : " + bean[1].getPet_name());
-			petNameLabel.setBounds(222, 698, 146, 26);
+			petNameLabel.setBounds(222, 688, 146, 26);
 			petNameLabel.setForeground(Color.BLACK);
 			add(petNameLabel);
 			
 			//반려견 종
 			petSpeciesLabel = new JLabel("종 : " +bean[1].getPet_species());
-			petSpeciesLabel.setBounds(222, 728, 146, 26);
+			petSpeciesLabel.setBounds(222, 718, 146, 26);
 			petSpeciesLabel.setForeground(Color.BLACK);
 			add(petSpeciesLabel);
 			
 			//반려견 생년월일
 			petAgeLabel = new JLabel("나이 : " + bean[1].getPet_age());
-			petAgeLabel.setBounds(222, 758, 146, 26);
+			petAgeLabel.setBounds(222, 748, 146, 26);
 			petAgeLabel.setForeground(Color.BLACK);
 			add(petAgeLabel);
 			
 			//반려견 성별
 			petGenderLabel = new JLabel("성별 : " + bean[1].getPet_gender());
-			petGenderLabel.setBounds(222, 788, 146, 26);
+			petGenderLabel.setBounds(222, 778, 146, 26);
 			petGenderLabel.setForeground(Color.BLACK);
 			add(petGenderLabel);
 		}
@@ -193,8 +211,7 @@ public class PetAddMainScreen extends JFrame {
 				g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
 				g.drawLine(22, 165, 379, 165);
 				g.drawLine(22, 443, 379, 443);
-				g.drawLine(22, 649, 379, 649);
-				g.drawLine(22, 855, 379, 855);
+				g.drawLine(22, 639, 379, 639);
 			}
 		};
 

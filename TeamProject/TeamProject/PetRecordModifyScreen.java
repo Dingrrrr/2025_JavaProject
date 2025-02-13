@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.math.BigDecimal;
 
 public class PetRecordModifyScreen extends JFrame {
 	private BufferedImage image;
@@ -15,13 +16,18 @@ public class PetRecordModifyScreen extends JFrame {
 	private JLabel petHeightLabel, petWeightabel, petMtLabel, petVsLabel, petChecksLabel, petMtTimeLabel;
 	private JTextField petHeightTField, petWeightTField, petMtTField, petVsTField, petChecksTField, petMtTimeTField;
 	private JButton petRcModifyButton, petRcDeleteButton;
+	TPMgr mgr;
+	HRBean bean;
+	private String h, w, me, va, ch, da;
 
-	public PetRecordModifyScreen() {
+	public PetRecordModifyScreen(int hrPetId, int petid) {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		bean = mgr.showOneHRPet(hrPetId);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -37,12 +43,55 @@ public class PetRecordModifyScreen extends JFrame {
 
 				if (source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
+					dispose();
+					new PetHomeScreen(petid);
 				} else if (source == modifyLabel) {
 					System.out.println("수정 버튼 클릭됨");
+					petHeightTField.setEnabled(true);
+					petWeightTField.setEnabled(true);
+					petMtTField.setEnabled(true);
+					petVsTField.setEnabled(true);
+					petChecksTField.setEnabled(true);
+					petMtTimeTField.setEnabled(true);
 				} else if (source == petRcModifyButton) {
 					System.out.println("수정 완료 버튼 클릭됨");
+					
+					HRBean bean = new HRBean();
+					h = petHeightTField.getText();
+					w = petWeightTField.getText();
+					me = petMtTField.getText();
+					va = petVsTField.getText();
+					ch = petChecksTField.getText();
+					da = petMtTimeTField.getText();
+					BigDecimal he = new BigDecimal(0);
+					BigDecimal we = new BigDecimal(0);
+					try {
+						he = new BigDecimal(h);
+						we = new BigDecimal(w);
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+					bean.setHeight(he);
+					bean.setWeight(we);
+					bean.setMedical_history(me);
+					bean.setVaccination_status(va);
+					bean.setCheckup_status(ch);
+					bean.setDate(da);
+					
+					mgr.updHRPet(hrPetId, bean);
+					
+					petHeightTField.setEnabled(false);
+					petWeightTField.setEnabled(false);
+					petMtTField.setEnabled(false);
+					petVsTField.setEnabled(false);
+					petChecksTField.setEnabled(false);
+					petMtTimeTField.setEnabled(false);
+					
 				} else if (source == petRcDeleteButton) {
 					System.out.println("삭제 버튼 클릭됨");
+					mgr.delHRPet(hrPetId); 	//삭제 되면 실행
+					dispose();
+					new PetHomeScreen(petid);
 				}
 			}
 		};
@@ -72,9 +121,10 @@ public class PetRecordModifyScreen extends JFrame {
 		add(petHeightLabel);
 
 		// 반려동물 키 텍스트 필드 추가
-		petHeightTField = new JTextField();
+		BigDecimal height = new BigDecimal(bean.getHeight().toString());
+		petHeightTField = new JTextField(height.toString());
 		petHeightTField.setBounds(43, 250, 318, 40);
-		petHeightTField.setText("");
+		petHeightTField.setEnabled(false);
 		add(petHeightTField);
 
 		// 반려동물 몸무게 라벨
@@ -84,9 +134,10 @@ public class PetRecordModifyScreen extends JFrame {
 		add(petWeightabel);
 
 		// 반려동물 몸무게 텍스트 필드 추가
-		petWeightTField = new JTextField();
+		BigDecimal weight = new BigDecimal(bean.getWeight().toString());
+		petWeightTField = new JTextField(weight.toString());
 		petWeightTField.setBounds(43, 335, 318, 40);
-		petWeightTField.setText("");
+		petWeightTField.setEnabled(false);
 		add(petWeightTField);
 
 		// 반려동물 진료 기록 라벨
@@ -96,9 +147,9 @@ public class PetRecordModifyScreen extends JFrame {
 		add(petMtLabel);
 
 		// 반려동물 진료 기록 텍스트 필드 추가
-		petMtTField = new JTextField();
+		petMtTField = new JTextField(bean.getMedical_history());
 		petMtTField.setBounds(43, 420, 318, 40);
-		petMtTField.setText("");
+		petMtTField.setEnabled(false);
 		add(petMtTField);
 
 		// 반려동물 예방접종 상태 라벨
@@ -108,9 +159,9 @@ public class PetRecordModifyScreen extends JFrame {
 		add(petVsLabel);
 
 		// 반려동물 예방접종 상태 텍스트 필드 추가
-		petVsTField = new JTextField();
+		petVsTField = new JTextField(bean.getVaccination_status());
 		petVsTField.setBounds(43, 505, 318, 40);
-		petVsTField.setText("");
+		petVsTField.setEnabled(false);
 		add(petVsTField);
 
 		// 반려동물 체크해야 할 정보 라벨
@@ -120,9 +171,9 @@ public class PetRecordModifyScreen extends JFrame {
 		add(petChecksLabel);
 
 		// 반려동물 체크해야 할 정보 텍스트 필드 추가
-		petChecksTField = new JTextField();
+		petChecksTField = new JTextField(bean.getCheckup_status());
 		petChecksTField.setBounds(43, 590, 318, 40);
-		petChecksTField.setText("");
+		petChecksTField.setEnabled(false);
 		add(petChecksTField);
 
 		// 반려동물 진료 관련 시간 라벨
@@ -132,9 +183,9 @@ public class PetRecordModifyScreen extends JFrame {
 		add(petMtTimeLabel);
 
 		// 반려동물 진료 관련 시간 텍스트 필드 추가
-		petMtTimeTField = new JTextField();
+		petMtTimeTField = new JTextField(bean.getDate());
 		petMtTimeTField.setBounds(43, 675, 318, 40);
-		petMtTimeTField.setText("");
+		petMtTimeTField.setEnabled(false);
 		add(petMtTimeTField);
 
 		// 반려동물 정보 수정 버튼
@@ -197,6 +248,6 @@ public class PetRecordModifyScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetRecordModifyScreen();
+		new LoginScreen();
 	}
 }

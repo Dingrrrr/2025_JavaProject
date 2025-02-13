@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Stack;
 
 public class PetAddScreen extends JFrame {
 	private BufferedImage image;
@@ -45,13 +46,7 @@ public class PetAddScreen extends JFrame {
 				
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-					if(mgr.isPet(StaticData.user_id)) {		//반려동물 정보가 있는 경우
-						dispose();
-						new PetAddMainScreen();
-					} else {
-						dispose();						
-						new UserHomeScreen();
-					}
+					dispose();
 				} else if (source == deleteLabel) {
 					System.out.println("반려동물 프로필 사진 삭제 클릭됨!");
 					bean.setPet_image("");
@@ -67,7 +62,8 @@ public class PetAddScreen extends JFrame {
 						bean.setPet_name(petNameTField.getText().trim());
 						bean.setPet_species(petSpecTField.getText().trim());
 						bean.setPet_age(petBirthTField.getText().trim());
-						new PetRecordAddScreen(bean);
+						dispose();
+						new PetRecordAddScreen(bean, PetAddScreen.this);
 					}
 				}
 			}
