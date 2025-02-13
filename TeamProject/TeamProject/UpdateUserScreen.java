@@ -20,9 +20,10 @@ public class UpdateUserScreen extends JFrame {
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton;
 	boolean flag = false;
+	private JFrame previousFrame;  // 이전 프레임 저장
 	TPMgr mgr;
 
-	public UpdateUserScreen() {
+	public UpdateUserScreen(JFrame previousFrame) {
 		setTitle("회원정보 수정");
 		setSize(402, 874);
 		setUndecorated(true);
@@ -47,7 +48,7 @@ public class UpdateUserScreen extends JFrame {
 					System.out.println("뒤로가기 클릭됨");
 					if(mgr.isPet(StaticData.user_id)) {		//반려동물 정보가 있는 경우
 						dispose();
-						new PetAddMainScreen();
+						previousFrame.setVisible(true);
 					} else {
 						dispose();						
 						new UserHomeScreen();
