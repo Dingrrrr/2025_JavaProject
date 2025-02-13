@@ -16,7 +16,7 @@ public class AlbumResultDialog extends JFrame {
 	private JLabel diaryTagLabel, diaryWritelabel;
 	private JTextArea diaryWriteArea;
 	private JTextField  diaryTagTField;
-	private JButton SaveButton;
+	private JButton SaveButton, modifyButton;
 	private JScrollPane scrollpane;
 	
 	public AlbumResultDialog() {
@@ -100,17 +100,24 @@ public class AlbumResultDialog extends JFrame {
 				
 				// 저장 버튼
 				SaveButton = new RoundedButton("저장");
-				SaveButton.setBounds(115, 565, 100, 40);
+				SaveButton.setBounds(55, 560, 100, 40);
 				SaveButton.setBackground(new Color(91, 91, 91));
 				SaveButton.setForeground(Color.WHITE);
 				SaveButton.addMouseListener(commonMouseListener);
 				add(SaveButton);
-
+				
+				// 수정
+				modifyButton = new RoundedButton("수정");
+				modifyButton.setBounds(200, 560, 100, 40);
+				modifyButton.setBackground(new Color(91, 91, 91));
+				modifyButton.setForeground(Color.WHITE);
+				modifyButton.addMouseListener(commonMouseListener);
+				add(modifyButton);
 
 		
 		// 🔹 추가 버튼
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 92, 92);
-		addButtonLabel.setBounds(130, 125, 92, 92);
+		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 62, 62);
+		addButtonLabel.setBounds(245, 245, 62, 62);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
 		
