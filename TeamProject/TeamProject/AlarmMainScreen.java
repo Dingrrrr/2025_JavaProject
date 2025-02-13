@@ -15,9 +15,10 @@ import java.io.File;
 
 public class AlarmMainScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, backLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
+	private JLabel alarmLabel, profileLabel, backLabel;
 	private JPanel alarmPanel; // 알람 패널
 	private JScrollPane scrollPane; // 스크롤 패널
+	private JButton SendButton;
 
 	public AlarmMainScreen() {
 		setTitle("프레임 설정");
@@ -44,7 +45,7 @@ public class AlarmMainScreen extends JFrame {
 					System.out.println("👤 프로필 클릭됨!");
 				} else if (source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
-				} else if (source == addButtonLabel) {
+				} else if (source == SendButton) {
 					System.out.println("알림 추가 버튼 클릭됨");
 				}
 			}
@@ -67,6 +68,14 @@ public class AlarmMainScreen extends JFrame {
 		backLabel.setBounds(25, 120, 40, 40);
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
+
+		// 🔹 쪽지 보내기 버튼 (화면에 고정)
+		SendButton = new RoundedButton("쪽지 보내기");
+		SendButton.setBounds(140, 792, 120, 40);
+		SendButton.setBackground(new Color(91, 91, 91));
+		SendButton.setForeground(Color.WHITE);
+		SendButton.addMouseListener(commonMouseListener);
+		add(SendButton);
 
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
@@ -103,15 +112,6 @@ public class AlarmMainScreen extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
-
-		// 🔹 추가 버튼 (화면에 고정)
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-		addButtonLabel.setBounds(300, 700, 70, 70);
-		addButtonLabel.addMouseListener(commonMouseListener);
-		addButtonLabel.setOpaque(true);
-		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
-		addButtonLabel.setVisible(true);
-		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
 
 		// 🔹 닫기 버튼
 		JButton closeButton = new JButton("X");

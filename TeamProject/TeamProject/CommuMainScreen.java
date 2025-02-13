@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
@@ -167,18 +168,22 @@ public class CommuMainScreen extends JFrame {
 	private void addCommu() {
 		// 1) 전체 항목을 감싸는 패널
 	    JPanel commuItemPanel = new JPanel();
-	    commuItemPanel.setPreferredSize(new Dimension(353, 120)); // 크기 지정
+	    commuItemPanel.setPreferredSize(new Dimension(353, 99)); // 크기 지정
 	    commuItemPanel.setBackground(Color.WHITE);
-	    commuItemPanel.setBorder(new LineBorder(Color.LIGHT_GRAY, 1)); // 외곽 테두리
+	    commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
 	    commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
 		
 		// 2) 상단 패널 (USER_ID + 날짜)
 	    JPanel topPanel = new JPanel(new BorderLayout());
 	    topPanel.setBackground(Color.WHITE);
+	    topPanel.setPreferredSize(new Dimension(353, 20)); // 가로 353px, 세로 15px
+	    topPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY)); // 아래쪽만 테두리 1px
 
 	    JLabel userIdLabel = new JLabel("User_ID");
+	    userIdLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0)); // 왼쪽에 3px 여백 추가
 
 	    JLabel dateLabel = new JLabel("20xx.xx.xx", SwingConstants.RIGHT);
+	    dateLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3)); // 오른쪽에 3px 여백 추가
 	    topPanel.add(userIdLabel, BorderLayout.WEST);
 	    topPanel.add(dateLabel, BorderLayout.EAST);
 
@@ -187,18 +192,19 @@ public class CommuMainScreen extends JFrame {
 	    separator.setForeground(Color.GRAY);
 
 	    // 4) 본문 패널 (이미지 + 텍스트)
-	    JPanel contentPanel = new JPanel(new BorderLayout(0, 0));
+	    JPanel contentPanel = new JPanel(new BorderLayout(10, 0));
 	    contentPanel.setBackground(Color.WHITE);
 
 	    // 왼쪽 - 이미지
 	    JLabel imageLabel = new JLabel();
-	    imageLabel.setPreferredSize(new Dimension(50, 50));
+	    imageLabel.setPreferredSize(new Dimension(70, 70));
 	    if (image2 != null) {
 	        imageLabel.setIcon(image2);
 	    } else {
 	        imageLabel.setOpaque(true);
 	        imageLabel.setBackground(Color.LIGHT_GRAY); // 이미지 없을 경우 기본 배경
 	    }
+	    contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 3, 0)); // 위, 왼쪽, 아래, 오른쪽 순서
 	    contentPanel.add(imageLabel, BorderLayout.WEST);
 
 	    // 오른쪽 - 제목 & 내용
@@ -211,14 +217,15 @@ public class CommuMainScreen extends JFrame {
 	    JLabel contentLabel = new JLabel("내용");
 
 	    textPanel.add(titleLabel);
+	    textPanel.add(Box.createVerticalStrut(10)); // 10px 간격
 	    textPanel.add(contentLabel);
-
+	    
 	    contentPanel.add(textPanel, BorderLayout.CENTER);
 
 	    // 5) 전체 구성
 	    commuItemPanel.add(topPanel, BorderLayout.NORTH);
 	    commuItemPanel.add(separator, BorderLayout.CENTER);
-	    commuItemPanel.add(contentPanel, BorderLayout.SOUTH);
+	    commuItemPanel.add(contentPanel,BorderLayout.SOUTH);
 	    
 	    commuPanel.add(commuItemPanel);
 		
