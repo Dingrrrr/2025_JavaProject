@@ -62,6 +62,7 @@ public class PetHomeScreen extends JFrame {
 					new PetAddMainScreen();
 				} else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+//					new AlbumChooseDialog();
 				}else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
