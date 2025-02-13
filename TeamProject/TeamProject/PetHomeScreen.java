@@ -51,15 +51,18 @@ public class PetHomeScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(PetHomeScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					dispose();
-					new PetRecordAddScreen(bean);
+					new PetRecordAddScreen(bean, PetHomeScreen.this);
 				} else if(source == backLabel) {
 					dispose();
 					new PetAddMainScreen();
 				} else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+//					new 
 				}else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 				}else if (source == commuLabel) {
@@ -116,6 +119,42 @@ public class PetHomeScreen extends JFrame {
             });
 
             scrollPanel.add(recordPanel);
+            
+            //진료 기록이 하나인 경우
+            if(hrV.size() == 1) {
+                JPanel recordPanel2 = new JPanel();
+                recordPanel2.setLayout(new GridLayout(6, 1));
+                recordPanel2.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                recordPanel2.setBackground(Color.WHITE);
+                recordPanel2.setPreferredSize(new Dimension(360, 120));
+
+                // 🔹 반려동물 진료기록 작성일 라벨
+                JLabel dateLabel2 = new JLabel();
+                
+                // 🔹 반려동물 키 / 몸무게 라벨
+                JLabel whLabel2 = new JLabel();
+                
+                // 🔹 반려동물 진료 기록 설명 라벨
+                JLabel historyLabel2 = new JLabel();
+                
+            	// 🔹 반려동물 예방접종 상태 라벨
+                JLabel vcLabel2 = new JLabel();
+                
+            	// 🔹 반려동물 체크해야 할 정보 라벨
+                JLabel checkLabel2 = new JLabel();
+                
+                // 🔹 반려동물 진료 시간
+                JLabel mtDateLabel2 = new JLabel();
+
+                recordPanel2.add(dateLabel2);
+                recordPanel2.add(whLabel2);
+                recordPanel2.add(historyLabel2);
+                recordPanel2.add(vcLabel2);
+                recordPanel2.add(checkLabel2);
+                recordPanel2.add(mtDateLabel2);
+
+                scrollPanel.add(recordPanel2);
+            }
         }
 
         // 🔹 스크롤 가능한 JScrollPane 생성
@@ -173,36 +212,7 @@ public class PetHomeScreen extends JFrame {
 		petGenderLabel.setBounds(230, 300, 150, 27); // (x, y, 너비, 높이)
 		petGenderLabel.setForeground(Color.BLACK); // 텍스트 색 설정
 		add(petGenderLabel);
-
-//		// 🔹 반려동물 진료기록 작성일 라벨
-//		petRcDateLabel = new JLabel(sdf.format(ts[0]));
-//		petRcDateLabel.setBounds(40, 385, 300, 27); // (x, y, 너비, 높이)
-//		petRcDateLabel.setForeground(Color.BLACK); // 텍스트 색 설정
-//		add(petRcDateLabel);
-//
-//		// 🔹 반려동물 키 / 몸무게 라벨
-//		petRcWHLabel = new JLabel("키: "+ hrB[0].getHeight() + "cm 몸무게:  "+ hrB[0].getWeight() + "kg");
-//		petRcWHLabel.setBounds(40, 420, 300, 27); // (x, y, 너비, 높이)
-//		petRcWHLabel.setForeground(Color.BLACK); // 텍스트 색 설정
-//		add(petRcWHLabel);
-//
-//		// 🔹 반려동물 진료 기록 설명 라벨
-//		petRecordLabel = new JLabel("진료 기록: " + hrB[0].getMedical_history());
-//		petRecordLabel.setBounds(40, 455, 300, 27); // (x, y, 너비, 높이)
-//		petRecordLabel.setForeground(Color.BLACK); // 텍스트 색 설정
-//		add(petRecordLabel);
-//
-//		// 🔹 반려동물 예방접종 상태 라벨
-//		petRcVcLabel = new JLabel("체크해야 할 정보: " + hrB[0].getCheckup_status());
-//		petRcVcLabel.setBounds(40, 490, 300, 27); // (x, y, 너비, 높이)
-//		petRcVcLabel.setForeground(Color.BLACK); // 텍스트 색 설정
-//		add(petRcVcLabel);
-//
-//		// 🔹 반려동물 체크해야 할 정보 라벨
-//		petRcCheckLabel = new JLabel("진료 관련 시간: " + hrB[0].getDate());
-//		petRcCheckLabel.setBounds(40, 525, 300, 27); // (x, y, 너비, 높이)
-//		petRcCheckLabel.setForeground(Color.BLACK); // 텍스트 색 설정
-//		add(petRcCheckLabel);
+		
 
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
