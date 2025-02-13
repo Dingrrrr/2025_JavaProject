@@ -95,5 +95,17 @@
 /UserHomeScreen$2.class
 /UserHomeScreen$3.class
 /UserHomeScreen.class
+<<<<<<< HEAD
+/VoteBean.class
+/VoteMgrBean.class
+/AlbumAddDialog$1.class
+/AlbumAddDialog$2.class
+/AlbumAddDialog.class
+/AlbumMainScreen2$3.class
+/DiaryAddDialog$1.class
+/DiaryAddDialog$2.class
+/DiaryAddDialog.class
+=======
 /UserMainPage$1.class
 /UserMainPage.class
+>>>>>>> branch 'main' of https://github.com/Dingrrrr/2025_JavaProject.git
