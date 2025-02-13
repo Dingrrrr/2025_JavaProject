@@ -13,11 +13,10 @@ import javax.imageio.ImageIO;
 public class AlbumAddDialog extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, addButtonLabel, grayFrameLabel;
-	private JLabel diaryTagLabel, diaryWritelabel;
-	private JTextArea diaryWriteArea;
-	private JTextField  diaryTagTField;
+	private JLabel AlbumTagLabel, AlbumWritelabel;
+	private JTextField  AlbumTagTField;
+	private JTextArea AlbumWriteTArea;
 	private JButton SaveButton;
-	private JScrollPane scrollpane;
 
 	public AlbumAddDialog() {
 		setTitle("프레임 설정");
@@ -25,8 +24,7 @@ public class AlbumAddDialog extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBackground(new Color(0, 0, 0, 0)); // 투명 배경 설정
-
+	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {
@@ -49,37 +47,43 @@ public class AlbumAddDialog extends JFrame {
 			}
 		};
 		
-				// 다이어리	태그 라벨
-				diaryTagLabel = new JLabel("태그");
-				diaryTagLabel.setBounds(15, 315, 48, 60);
-				diaryTagLabel.setForeground(Color.black);
-				add(diaryTagLabel);
+				// 앨범	태그 라벨
+				AlbumTagLabel = new JLabel("태그");
+				AlbumTagLabel.setBounds(15, 315, 48, 60);
+				AlbumTagLabel.setForeground(Color.black);
+				add(AlbumTagLabel);
 
-				// 다이어리 태그 텍스트 필드 추가
-				diaryTagTField = new JTextField();
-				diaryTagTField.setBounds(15, 355, 318, 40);
-				diaryTagTField.setText("");
-				diaryTagTField.setBorder(BorderFactory.createCompoundBorder(
+				// 앨범 태그 텍스트 필드 추가
+				AlbumTagTField = new JTextField();
+				AlbumTagTField.setBounds(15, 355, 318, 40);
+				AlbumTagTField.setText("");
+				AlbumTagTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
-				add(diaryTagTField);
+				add(AlbumTagTField);
 
-				// 다이어리 설명 라벨
-				diaryWritelabel = new JLabel("설명");
-				diaryWritelabel.setBounds(15, 380, 48, 60);
-				diaryWritelabel.setForeground(Color.black);
-				add(diaryWritelabel);
+				// 앨범 설명 라벨
+				AlbumWritelabel = new JLabel("설명");
+				AlbumWritelabel.setBounds(15, 380, 48, 60);
+				AlbumWritelabel.setForeground(Color.black);
+				add(AlbumWritelabel);
 
-				// 다이어리 설명 텍스트 필드 추가
-				diaryWriteArea = new JTextArea();
-				diaryWriteArea.setBounds(15, 420, 318, 130);
-				diaryWriteArea.setText("");
-				diaryWriteArea.setLineWrap(true);
-				diaryWriteArea.setWrapStyleWord(true);
-				diaryWriteArea.setBorder(BorderFactory.createCompoundBorder(
+				// 앨범 설명 텍스트 필드 추가
+				AlbumWriteTArea = new JTextArea();
+				AlbumWriteTArea.setBounds(15, 420, 318, 130);
+				AlbumWriteTArea.setText("");
+				AlbumWriteTArea.setLineWrap(true);
+				AlbumWriteTArea.setWrapStyleWord(true);
+				AlbumWriteTArea.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
-				add(diaryWriteArea);
+				add(AlbumWriteTArea);
+			
+
+				
+				JScrollPane scrollPane = new JScrollPane(AlbumWriteTArea);
+				scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
+				add(scrollPane); // JScrollPane을 프레임에 추가
 				
 				// 저장 버튼
 				SaveButton = new RoundedButton("저장");
@@ -127,7 +131,7 @@ public class AlbumAddDialog extends JFrame {
 		closeLabel.setBounds(315, 7, 28, 28);
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
-		
+
 		setVisible(true);
 	}
 

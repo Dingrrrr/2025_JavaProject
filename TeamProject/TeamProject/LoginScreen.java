@@ -72,7 +72,7 @@ public class LoginScreen extends JFrame {
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 		    ));
 		id_textField.setBounds(60, 466, 281, 64); // (x, y, 너비, 높이)
-		id_textField.setText(" 아이디를 입력하세요");
+		id_textField.setText("아이디를 입력하세요");
 		id_textField.setForeground(Color.GRAY);
 		id_textField.addFocusListener(new FocusListener() {
 			@Override
@@ -101,14 +101,14 @@ public class LoginScreen extends JFrame {
 		pw_textField.setBorder(BorderFactory.createCompoundBorder(
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 추가
 		    ));
-		pw_textField.setText(" 비밀번호를 입력하세요"); // 기본 텍스트로 '아이디' 설정
+		pw_textField.setText("비밀번호를 입력하세요"); // 기본 텍스트로 '아이디' 설정
 		pw_textField.setForeground(Color.GRAY);
 		pw_textField.setEchoChar((char) 0);
 		pw_textField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(pw_textField.getPassword().length == 0) {
-					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setText("비밀번호를 입력하세요");
 					pw_textField.setForeground(Color.GRAY);
 					pw_textField.setEchoChar((char) 0);
 					flag2 = true;
@@ -139,9 +139,9 @@ public class LoginScreen extends JFrame {
 						new UserHomeScreen();			//반려동물 정보가 없는 경우
 					}
 				} else {
-					id_textField.setText(" 아이디를 입력하세요");
+					id_textField.setText("아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
-					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setText("비밀번호를 입력하세요");
 					pw_textField.setForeground(Color.GRAY);
 					pw_textField.setEchoChar((char) 0);
 					flag1 = true;
@@ -174,9 +174,9 @@ public class LoginScreen extends JFrame {
 						new UserHomeScreen();			//반려동물 정보가 없는 경우
 					}
 				} else {
-					id_textField.setText(" 아이디를 입력하세요");
+					id_textField.setText("아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
-					pw_textField.setText(" 비밀번호를 입력하세요");
+					pw_textField.setText("비밀번호를 입력하세요");
 					pw_textField.setForeground(Color.GRAY);
 					pw_textField.setEchoChar((char) 0);
 					flag1 = true;
@@ -248,9 +248,7 @@ public class LoginScreen extends JFrame {
 		}
 	}
 
-	
-	
-	
+
 	public static void main(String[] args) {
 		new LoginScreen();
 	}

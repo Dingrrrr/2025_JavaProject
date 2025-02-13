@@ -68,7 +68,7 @@ public class PetRecordAddScreen extends JFrame {
 					new PetAddMainScreen();
 				} else if(source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
-					dispose();
+//					dispose();
 				}
 			}
 		};
