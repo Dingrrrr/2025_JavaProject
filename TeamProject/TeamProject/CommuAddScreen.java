@@ -47,51 +47,54 @@ public class CommuAddScreen extends JFrame {
 			}
 		};
 		
-				// 커뮤니티 게시글 추가화면 제목 라벨
+		// 커뮤니티 게시글 추가화면 제목 라벨
 		CommuAddTagLabel = new JLabel("제목");
 		CommuAddTagLabel.setBounds(15, 315, 48, 60);
 		CommuAddTagLabel.setForeground(Color.black);
-				add(CommuAddTagLabel);
+		add(CommuAddTagLabel);
 
-				// 커뮤니티 게시글 추가화면 제목 텍스트 필드 추가
-				CommuAddTagTField = new JTextField();
-				CommuAddTagTField.setBounds(15, 355, 318, 40);
-				CommuAddTagTField.setText("");
-				CommuAddTagTField.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				    ));
-				add(CommuAddTagTField);
+		// 커뮤니티 게시글 추가화면 제목 텍스트 필드 추가
+		CommuAddTagTField = new JTextField();
+		CommuAddTagTField.setBounds(15, 355, 318, 40);
+		CommuAddTagTField.setText("");
+		CommuAddTagTField.setBorder(BorderFactory.createCompoundBorder(
+			new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+		));
+		add(CommuAddTagTField);
 
-				// 커뮤니티 게시글 추가화면 설명 라벨
-				CommuAddWritelabel = new JLabel("설명");
-				CommuAddWritelabel.setBounds(15, 380, 48, 60);
-				CommuAddWritelabel.setForeground(Color.black);
-				add(CommuAddWritelabel);
+		// 커뮤니티 게시글 추가화면 설명 라벨
+		CommuAddWritelabel = new JLabel("설명");
+		CommuAddWritelabel.setBounds(15, 380, 48, 60);
+		CommuAddWritelabel.setForeground(Color.black);
+		add(CommuAddWritelabel);
 
-				// 커뮤니티 게시글 추가화면 설명 추가
-				CommuAddWriteTArea = new JTextArea();
-				CommuAddWriteTArea.setBounds(15, 420, 318, 130);
-				CommuAddWriteTArea.setText("");
-				CommuAddWriteTArea.setLineWrap(true);
-				CommuAddWriteTArea.setWrapStyleWord(true);
-				CommuAddWriteTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				    ));
-				add(CommuAddWriteTArea);
-			
-
+		// 커뮤니티 게시글 추가화면 설명 추가
+		CommuAddWriteTArea = new JTextArea();
+		CommuAddWriteTArea.setBounds(15, 420, 318, 130);
+		CommuAddWriteTArea.setText("");
+		CommuAddWriteTArea.setLineWrap(true);
+		CommuAddWriteTArea.setWrapStyleWord(true);
+		CommuAddWriteTArea.setBorder(BorderFactory.createCompoundBorder(
+			new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+		));
 				
-				JScrollPane scrollPane = new JScrollPane(CommuAddWriteTArea);
-				scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
-				add(scrollPane); // JScrollPane을 프레임에 추가
+		JScrollPane scrollPane = new JScrollPane(CommuAddWriteTArea);
+		scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
+		scrollPane.setBorder(BorderFactory.createCompoundBorder(
+			new RoundedBorder(0), new EmptyBorder(0, 0, 0, 0)
+		));
+		add(scrollPane); // JScrollPane을 프레임에 추가
 				
-				// 저장 버튼
-				SaveButton = new RoundedButton("저장");
-				SaveButton.setBounds(115, 565, 100, 40);
-				SaveButton.setBackground(new Color(91, 91, 91));
-				SaveButton.setForeground(Color.WHITE);
-				SaveButton.addMouseListener(commonMouseListener);
-				add(SaveButton);
+		// 저장 버튼
+		SaveButton = new RoundedButton("저장");
+		SaveButton.setBounds(115, 565, 100, 40);
+		SaveButton.setBackground(new Color(91, 91, 91));
+		SaveButton.setForeground(Color.WHITE);
+		SaveButton.addMouseListener(commonMouseListener);
+		add(SaveButton);
 
 
 		
