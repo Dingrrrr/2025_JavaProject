@@ -28,7 +28,7 @@ public class PetAddMainScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		vlist = mgr.showPet("skrjsdl03");
+		vlist = mgr.showPet(LoginScreen.id);
 		bean = (PetBean)vlist.elementAt(0);
 
 		try {
@@ -74,7 +74,7 @@ public class PetAddMainScreen extends JFrame {
 		add(mainProfileLabel);
 		
 		// 환영 문구
-		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(StaticData.user_id) + "님");
+		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(LoginScreen.id) + "님");
 		welcomeLabel.setBounds(135, 401, 134, 20);
 		welcomeLabel.setForeground(Color.BLACK);
 		add(welcomeLabel);
