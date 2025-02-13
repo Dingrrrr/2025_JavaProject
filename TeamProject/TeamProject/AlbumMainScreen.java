@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class AlbumMainScreen extends JFrame {
+	// 수정해봅시다.
+	
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
 	private JPanel albumPanel; // 앨범 패널
