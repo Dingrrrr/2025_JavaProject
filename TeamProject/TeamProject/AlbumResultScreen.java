@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-public class DiaryAddDialog extends JFrame {
+public class AlbumResultScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, addButtonLabel, grayFrameLabel, modifyLabel;
 	private JLabel diaryTagLabel, diaryWritelabel;
@@ -19,7 +19,7 @@ public class DiaryAddDialog extends JFrame {
 	private JButton SaveButton;
 	private JScrollPane scrollpane;
 	
-	public DiaryAddDialog() {
+	public AlbumResultScreen() {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		
@@ -162,6 +162,6 @@ public class DiaryAddDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new DiaryAddDialog();
+		new AlbumResultScreen();
 	}
 }
