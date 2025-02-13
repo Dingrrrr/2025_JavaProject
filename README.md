@@ -1,1 +1,1 @@
-# 2025_JavaProject
+# 2025_Java TeamProject
