@@ -17,6 +17,9 @@ public class AlbumAddDialog extends JFrame {
 	private JTextField AlbumTagTField;
 	private JTextArea AlbumWriteTArea;
 	private JButton SaveButton;
+	private String tags, write;
+	TPMgr mgr;
+	AlbumBean bean;
 
 	public AlbumAddDialog() {
 		setTitle("프레임 설정");
@@ -24,6 +27,9 @@ public class AlbumAddDialog extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		bean = new AlbumBean();
+		String img = "";
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -41,8 +47,17 @@ public class AlbumAddDialog extends JFrame {
 					dispose(); // 창 닫기
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
+					//사진 추가
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
+					tags = AlbumTagTField.getText().trim();
+					write = AlbumWriteTArea.getText().trim();
+					bean.setAlbum_tags(tags);
+					bean.setAlbum_desc(write);
+					bean.setAlbum_image(img);
+					mgr.addAlbum(StaticData.pet_id, bean);
+					dispose();
+					new AlbumMainScreen();
 				}
 			}
 		};
