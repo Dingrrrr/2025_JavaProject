@@ -17,6 +17,7 @@ public class DiaryAddDialog extends JFrame {
 	private JTextField  DiaryTitleTField;
 	private JTextArea DiaryWriteTArea;
 	private JButton SaveButton;
+	private JScrollPane scrollPane;
 
 	public DiaryAddDialog() {
 		setTitle("프레임 설정");
@@ -73,14 +74,17 @@ public class DiaryAddDialog extends JFrame {
 				DiaryWriteTArea.setLineWrap(true);
 				DiaryWriteTArea.setWrapStyleWord(true);
 				DiaryWriteTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+				        new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
-				add(DiaryWriteTArea);
-			
-
 				
-				JScrollPane scrollPane = new JScrollPane(DiaryWriteTArea);
+				scrollPane = new JScrollPane(DiaryWriteTArea);
 				scrollPane.setBounds(15, 160, 318, 250); // 텍스트 영역 크기와 위치 설정
+				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(
+							new RoundedBorder(0), new EmptyBorder(0, 0, 0, 0)
+						));
 				add(scrollPane); // JScrollPane을 프레임에 추가
 				
 				// 저장 버튼
