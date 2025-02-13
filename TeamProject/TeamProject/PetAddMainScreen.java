@@ -22,7 +22,7 @@ public class PetAddMainScreen extends JFrame {
 	Vector<PetBean> vlist;
 	PetBean bean[] = new PetBean[2];
 	private PetChooseDialog pc;
-	JFrame previousFrame;
+	
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -108,7 +108,8 @@ public class PetAddMainScreen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
-				new PetHomeScreen(bean[0].getPet_id());
+				StaticData.pet_id = bean[0].getPet_id();
+				new PetHomeScreen(StaticData.pet_id);
 			}
 		});
 		add(petProfileLabel);
@@ -146,7 +147,8 @@ public class PetAddMainScreen extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					dispose();
-					new PetHomeScreen(bean[1].getPet_id());
+					StaticData.pet_id = bean[1].getPet_id();
+					new PetHomeScreen(StaticData.pet_id);
 				}
 			});
 			add(petProfileLabel);

@@ -513,6 +513,29 @@ public class TPMgr {
 		return vlist;
 	}
 	
+	//앨범 존재 유무(이미 앨범이 있으면 true 출력)
+	public boolean isAlbum(int pet_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from album where pet_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
 	//앨범 추가
 	public void addAlbum(int pet_id, AlbumBean bean) {
 		Connection con = null;
@@ -591,7 +614,7 @@ public class TPMgr {
 		Vector<AlbumBean> vlist = new Vector<AlbumBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from album where pet_id = ?";
+			sql = "select * from album where pet_id = ? ORDER BY album_date DESC;";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
 			rs = pstmt.executeQuery();
