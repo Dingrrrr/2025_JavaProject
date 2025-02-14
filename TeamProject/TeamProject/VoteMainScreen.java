@@ -22,6 +22,7 @@ public class VoteMainScreen extends JFrame {
 	private JPanel votePanel; // 투표 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private VoteAddDialog va;
+	private JButton popularButton, recentButton, oldButton;
 
 	public VoteMainScreen() {
 		setTitle("프레임 설정");
@@ -58,14 +59,20 @@ public class VoteMainScreen extends JFrame {
 					System.out.println("투표 버튼 클릭됨");
 				} else if (source == addButtonLabel) {
 					System.out.println("투표 추가 버튼 클릭됨!");
-					if(va==null) {
+					if (va == null) {
 						va = new VoteAddDialog();
-						va.setLocation(getX()+25, getY()+300);
-					}else {
-						va.setLocation(getX()+25, getY()+300);
+						va.setLocation(getX() + 25, getY() + 300);
+					} else {
+						va.setLocation(getX() + 25, getY() + 300);
 						va.setVisible(true);
 					}
-				}
+				}else if (source == popularButton) {
+					System.out.println("인기순 버튼 클릭됨");
+				} else if (source == recentButton) {
+					System.out.println("최신순 버튼 클릭됨");
+				} else if (source == oldButton) {
+					System.out.println("오래된순 버튼 클릭됨");
+				} 
 			}
 		};
 
@@ -105,6 +112,30 @@ public class VoteMainScreen extends JFrame {
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
 
+		// 인기순 버튼
+		popularButton = new RoundedButton("인기순");
+		popularButton.setBounds(175, 165, 60, 30);
+		popularButton.setBackground(new Color(91, 91, 91));
+		popularButton.setForeground(Color.WHITE);
+		popularButton.addMouseListener(commonMouseListener);
+		add(popularButton);
+
+		// 최신순 버튼
+		recentButton = new RoundedButton("최신순");
+		recentButton.setBounds(245, 165, 60, 30);
+		recentButton.setBackground(new Color(91, 91, 91));
+		recentButton.setForeground(Color.WHITE);
+		recentButton.addMouseListener(commonMouseListener);
+		add(recentButton);
+
+		// 오래된 순 버튼
+		oldButton = new RoundedButton("오래된순");
+		oldButton.setBounds(315, 165, 60, 30);
+		oldButton.setBackground(new Color(91, 91, 91));
+		oldButton.setForeground(Color.WHITE);
+		oldButton.addMouseListener(commonMouseListener);
+		add(oldButton);
+
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
 			@Override
@@ -115,7 +146,6 @@ public class VoteMainScreen extends JFrame {
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				g.setColor(Color.LIGHT_GRAY);
-				g.drawLine(22, 165, 379, 165);
 				g.drawLine(22, 780, 379, 780);
 				g.drawLine(111, 780, 111, 851);
 				g.drawLine(200, 780, 200, 851);
@@ -148,7 +178,7 @@ public class VoteMainScreen extends JFrame {
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		// 이전 코드에서는 scrollPane이 이 부분 앞에 있을 수 있어, 여기에 잘못된 위치에서 접근되고 있었을 가능성이 있습니다.
 		scrollPane = new JScrollPane(votePanel);
-		scrollPane.setBounds(23, 165, 357, 615);
+		scrollPane.setBounds(23, 200, 357, 580);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
