@@ -16,7 +16,7 @@ public class AlbumChooseDialog extends JFrame {
 	private JLabel albumintroLabel, diaryintroLabel;
 	TPMgr mgr;
 	
-	public AlbumChooseDialog() {
+	public AlbumChooseDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 350);
 		setUndecorated(true);
@@ -39,9 +39,11 @@ public class AlbumChooseDialog extends JFrame {
 						if (source == closeLabel) {
 							System.out.println("닫기 버튼 클릭됨");
 							dispose(); // 창 닫기
+							preFrame.setEnabled(true);
 						} else if (source == albumLabel) {
 							System.out.println("앨범 선택 아이콘 클릭됨");
 							dispose();
+							preFrame.dispose();
 							if(mgr.isAlbum(StaticData.pet_id)) {	//이미 앨범이 있으면 실행
 								new AlbumMainScreen();
 							} else {	//DB에 앨범이 없으면 실행
@@ -120,6 +122,6 @@ public class AlbumChooseDialog extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		new AlbumChooseDialog();
+		new LoginScreen();
 	}
 }

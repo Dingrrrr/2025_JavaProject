@@ -62,14 +62,14 @@ public class PetAddMainScreen extends JFrame {
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {
-						pc = new PetChooseDialog();
+						pc = new PetChooseDialog(PetAddMainScreen.this);
 						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
 						pc.setLocation(getX()+25, getY()+300);
 					}else {
 						pc.setLocation(getX()+25, getY()+300);
 						pc.setVisible(true);
 					}
-					//동물 선택 다이어로그가 켜지면 뒤에 로그아웃, 알림, 사용자 정보 수정 버튼 비활성화
+					setEnabled(false);
 					
 				}
 			}

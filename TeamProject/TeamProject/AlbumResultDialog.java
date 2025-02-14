@@ -22,7 +22,7 @@ public class AlbumResultDialog extends JFrame {
 	TPMgr mgr;
 	AlbumBean bean;
 	
-	public AlbumResultDialog(AlbumBean ab) {
+	public AlbumResultDialog(AlbumBean ab, AlbumMainScreen preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		
@@ -60,6 +60,9 @@ public class AlbumResultDialog extends JFrame {
 					diaryTagTField.setEnabled(false);
 					diaryWriteArea.setEnabled(false);
 					addButtonLabel.setEnabled(false);
+					dispose();
+					preFrame.dispose();
+					new AlbumMainScreen();
 				}else if (source == modifyLabel) {
 					System.out.println("수정 버튼클릭됨");
 					diaryTagTField.setEnabled(true);
@@ -70,6 +73,12 @@ public class AlbumResultDialog extends JFrame {
 					System.out.println(StaticData.album_id);
 					if(mgr.delAlbum(StaticData.album_id)) {
 						dispose();
+						preFrame.dispose();
+						if(mgr.isAlbum(StaticData.pet_id)) {
+							new AlbumMainScreen();
+						} else {
+							new AlbumScreen();
+						}
 					}
 				}
 			}
