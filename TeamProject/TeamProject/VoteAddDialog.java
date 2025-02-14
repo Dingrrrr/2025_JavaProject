@@ -13,10 +13,11 @@ public class VoteAddDialog extends JFrame {
 	private BufferedImage image;
 	private JLabel votetitleLabel, closeLabel, grayFrameLabel, addButtonLabel;
 	private JButton addButton;
+	private VotePhotoModifyDialog vpmd;
 
 	public VoteAddDialog() {
 		setTitle("프레임 설정");
-		setSize(350, 650);
+		setSize(350, 500);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,8 +38,16 @@ public class VoteAddDialog extends JFrame {
 					dispose(); // 창 닫기
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
-				} else {
-
+					if(vpmd==null) {
+						vpmd = new VotePhotoModifyDialog();
+						vpmd.setLocation(getX()+1, getY()+340);
+					}else {
+						vpmd.setLocation(getX()+1, getY()+340);
+						vpmd.setVisible(true);
+					}
+				} else if (source == addButton){
+					System.out.println("올리기 버튼 클릭됨");
+					dispose();
 				}
 
 			}
@@ -46,24 +55,24 @@ public class VoteAddDialog extends JFrame {
 
 		// 투표 환영 라벨
 		votetitleLabel = new JLabel("자랑하고 싶은 아이의 사진을 올려주세요!");
-		votetitleLabel.setBounds(70, 110, 306, 30);
+		votetitleLabel.setBounds(70, 50, 306, 30);
 		votetitleLabel.setForeground(Color.BLACK);
 		add(votetitleLabel);
 
 		// 🔹 추가 버튼
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 62, 62);
-		addButtonLabel.setBounds(245, 357, 62, 62);
+		addButtonLabel.setBounds(245, 320, 62, 62);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
 		
 		// 🔹 회색프레임
 		grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
-		grayFrameLabel.setBounds(38, 150, 280, 280);
+		grayFrameLabel.setBounds(38, 110, 280, 280);
 		add(grayFrameLabel);
 		
 		//올리기 버튼
 		addButton = new RoundedButton("올리기");
-		addButton.setBounds(120, 480, 100, 40);
+		addButton.setBounds(120, 420, 100, 40);
 		addButton.setBackground(new Color(91, 91, 91));
 		addButton.setForeground(Color.WHITE);
 		addButton.addMouseListener(commonMouseListener);
@@ -77,7 +86,7 @@ public class VoteAddDialog extends JFrame {
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(350, 620, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(350, 500, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 			}
