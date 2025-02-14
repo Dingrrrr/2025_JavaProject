@@ -22,6 +22,7 @@ public class PetAddScreen extends JFrame {
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
 	TPMgr mgr;
 	PetBean bean;
+	private PetSpeciesSearchDialog pssd;
 
 	public PetAddScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -55,6 +56,13 @@ public class PetAddScreen extends JFrame {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 				} else if (source == petSpSearchButton) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
+					if (pssd == null) {
+						pssd = new PetSpeciesSearchDialog();
+						pssd.setLocation(getX() + 25, getY() + 350);
+					} else {
+						pssd.setLocation(getX() + 25, getY() + 350);
+						pssd.setVisible(true);
+					}
 				} else if (source == nextButton) {
 					System.out.println("다음 단계 버튼 클릭됨!");
 					if(petNameTField.getText().trim().isEmpty()) {
