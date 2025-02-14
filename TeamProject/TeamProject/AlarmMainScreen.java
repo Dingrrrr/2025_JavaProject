@@ -101,7 +101,7 @@ public class AlarmMainScreen extends JFrame {
 		alarmPanel.setBackground(Color.WHITE);
 
 		// 🔹 더미 알람 데이터 추가
-		for (int i = 1; i <= 15; i++) {
+		for (int i = 1; i <= 6; i++) {
 			addAlarm();
 		}
 
@@ -130,46 +130,75 @@ public class AlarmMainScreen extends JFrame {
 	 * 알림 추가 메서드
 	 */
 	private void addAlarm() {
-		// 알람 하나를 담을 패널
-		JPanel alarmItemPanel = new JPanel(null); // 자유 배치(null 레이아웃)
-		alarmItemPanel.setPreferredSize(new Dimension(353, 120)); // 예시로 높이 120
-		alarmItemPanel.setBackground(Color.WHITE);
-		alarmItemPanel.setBorder(new LineBorder(Color.LIGHT_GRAY, 1)); // 바깥 테두리
+	    // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
+	    alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
 
-		// 1) 상단 영역: USER_ID, 날짜
-		JLabel userIdLabel = new JLabel("User_ID");
-		userIdLabel.setBounds(10, 5, 100, 20);
-		alarmItemPanel.add(userIdLabel);
+	    // 알람 항목 패널
+	    JPanel alarmItemPanel = new JPanel();
+	    alarmItemPanel.setPreferredSize(new Dimension(353, 120));
+	    alarmItemPanel.setMaximumSize(new Dimension(353, 120));
+	    alarmItemPanel.setBackground(Color.WHITE);
+	    alarmItemPanel.setBorder(new LineBorder(Color.black, 1));
+	    alarmItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함 레이아웃
 
-		JLabel dateLabel = new JLabel("20XX.XX.XX");
-		dateLabel.setBounds(280, 5, 100, 20);
-		// (가로폭 353 - 73 = 280 위치에 날짜를 놓는 예시)
-		alarmItemPanel.add(dateLabel);
+	    // 1) 상단 영역: USER_ID, 날짜
+	    JPanel topPanel = new JPanel(new BorderLayout());
+	    topPanel.setBackground(Color.WHITE);
+	    topPanel.setPreferredSize(new Dimension(353, 25)); // 상단 패널 높이 증가
 
-		// 구분선(가로줄) : USER_ID와 제목 사이
-		JSeparator sep1 = new JSeparator();
-		sep1.setBounds(0, 30, 353, 1); // 크기와 위치를 명확히 설정
-		sep1.setPreferredSize(new Dimension(353, 1)); // 크기 설정
-		sep1.setForeground(Color.GRAY); // 선 색상 설정
-		sep1.setOpaque(true); // 배경을 설정해 주면 보이게 될 수 있음
-		alarmItemPanel.add(sep1);
+	    JLabel userIdLabel = new JLabel("User_Id");
+	    userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
 
-		// 2) 제목
-		JLabel titleLabel = new JLabel("제목");
-		titleLabel.setBounds(10, 40, 333, 20);
-		alarmItemPanel.add(titleLabel);
+	    JLabel dateLabel = new JLabel("20XX.XX.XX", SwingConstants.RIGHT);
+	    dateLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
 
-		// 3) 내용
-		JLabel contentLabel = new JLabel("내용");
-		// 혹은 JTextArea를 써도 됨
-		contentLabel.setBounds(10, 70, 333, 20);
-		alarmItemPanel.add(contentLabel);
+	    topPanel.add(userIdLabel, BorderLayout.WEST);
+	    topPanel.add(dateLabel, BorderLayout.EAST);
 
-		alarmPanel.add(alarmItemPanel);
+	    // 구분선
+	    JSeparator separator = new JSeparator();
+	    separator.setForeground(Color.GRAY);
 
-		// 각 알람 항목 간에 간격을 둔다
-		alarmPanel.add(Box.createVerticalStrut(5)); // 10px 간격
+	    // 2) 본문 패널 (이미지 + 텍스트)
+	    JPanel contentPanel = new JPanel();
+	    contentPanel.setLayout(new BorderLayout()); // BorderLayout 사용하여 상단 정렬 가능
+	    contentPanel.setBackground(Color.WHITE);
+	    contentPanel.setPreferredSize(new Dimension(353, 70)); // 본문 영역 크기 설정
+
+	 // 제목 & 내용
+	    JPanel textPanel = new JPanel();
+	    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // 세로 배치
+	    textPanel.setBackground(Color.WHITE);
+	    textPanel.setAlignmentY(Component.TOP_ALIGNMENT); // 상단 정렬 유지
+	    textPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0)); // 왼쪽 여백 추가
+
+	    // 제목
+	    JLabel titleLabel = new JLabel("제목");
+	    titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // 왼쪽 정렬
+
+	    // 내용
+	    JLabel contentLabel = new JLabel("내용");
+	    contentLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // 왼쪽 정렬
+
+	    // 제목과 내용 사이 간격 추가
+	    textPanel.add(titleLabel);
+	    textPanel.add(Box.createVerticalStrut(5)); // 제목과 내용 사이 여백
+	    textPanel.add(contentLabel);
+
+	    // textPanel을 contentPanel의 상단에 배치
+	    contentPanel.add(textPanel, BorderLayout.NORTH);
+
+
+	    // 알람 항목을 패널에 추가
+	    alarmItemPanel.add(topPanel, BorderLayout.NORTH);
+	    alarmItemPanel.add(separator, BorderLayout.CENTER);
+	    alarmItemPanel.add(contentPanel, BorderLayout.SOUTH);
+
+	    // 알람 패널에 추가
+	    alarmPanel.add(alarmItemPanel);
+	    alarmPanel.add(Box.createVerticalStrut(5)); // 알람 항목 간 간격 추가
 	}
+
 
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
