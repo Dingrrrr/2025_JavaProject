@@ -2,6 +2,8 @@ package TeamProject;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,12 +22,14 @@ public class PetSpeciesSearchDialog extends JFrame {
 	private JLabel searchLabel;
 	private JButton searchButton;
 	private JTextField searchTextField;
-	private JTextArea searchResultTextArea;
 	private String dogSearch;
+	DefaultListModel<String> dogList;
+	JList<String> searchResultList;
+	JScrollPane scrollPane;
 	TPMgr mgr;
 	Vector<DogBean> vlist;
 
-	public PetSpeciesSearchDialog(JFrame preFrame) {
+	public PetSpeciesSearchDialog(PetAddScreen preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 450);
 		setUndecorated(true);
@@ -53,10 +57,11 @@ public class PetSpeciesSearchDialog extends JFrame {
 					Vector<DogBean> vd = new Vector<DogBean>();
 					System.out.println("검색 버튼 클릭됨");
 					dogSearch = searchTextField.getText().trim();
+					dogSearch = "%"+dogSearch+"%";
 					vd = mgr.showSearchDog(dogSearch);
-					searchResultTextArea.setText("");
+					dogList.removeAllElements();
 					for (DogBean db : vd) {
-						searchResultTextArea.append(db.getDog());
+						dogList.addElement(db.getDog());
 					}
 				}
 			}
@@ -77,6 +82,14 @@ public class PetSpeciesSearchDialog extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("검색 결과 출력 바람");
+				Vector<DogBean> vd = new Vector<DogBean>();
+				dogSearch = searchTextField.getText().trim();
+				dogSearch = "%"+dogSearch+"%";
+				vd = mgr.showSearchDog(dogSearch);
+				dogList.removeAllElements();
+				for (DogBean db : vd) {
+					dogList.addElement(db.getDog());
+				}
 			}
 		});
 		add(searchTextField);
@@ -100,9 +113,9 @@ public class PetSpeciesSearchDialog extends JFrame {
 		 */
 
 		// 검색 결과 리스트 모델 및 JList 생성
-		DefaultListModel<String> dogList = new DefaultListModel<>();
-		JList<String> searchResultList = new JList<>(dogList);
-		JScrollPane scrollPane = new JScrollPane(searchResultList);
+		dogList = new DefaultListModel<>();
+		searchResultList = new JList<>(dogList);
+		scrollPane = new JScrollPane(searchResultList);
 
 		// 스크롤 및 테두리 설정
 		scrollPane.setBounds(15, 95, 318, 330);
@@ -118,6 +131,22 @@ public class PetSpeciesSearchDialog extends JFrame {
 		for (DogBean db : vlist) {
 		    dogList.addElement(db.getDog()); // 리스트에 추가
 		}
+		
+		//클릭한 데이터 이벤트
+		searchResultList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) { // 더블클릭 감지
+                    String selectedItem = searchResultList.getSelectedValue();
+                    if (selectedItem != null) {
+                        dispose();
+                        preFrame.updateSpecies(selectedItem);
+                        preFrame.setEnabled(true);
+                        preFrame.setVisible(true);
+                    }
+                }
+			}
+		});
 
 		// 리스트 스타일 설정
 		searchResultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
