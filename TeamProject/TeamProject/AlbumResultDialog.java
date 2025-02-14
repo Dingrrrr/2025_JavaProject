@@ -16,16 +16,22 @@ public class AlbumResultDialog extends JFrame {
 	private JLabel diaryTagLabel, diaryWritelabel;
 	private JTextArea diaryWriteArea;
 	private JTextField  diaryTagTField;
-	private JButton SaveButton, modifyButton;
+	private JButton SaveButton, delButton;
 	private JScrollPane scrollpane;
+	private String tag, write;
+	TPMgr mgr;
+	AlbumBean bean;
 	
-	public AlbumResultDialog() {
+	public AlbumResultDialog(AlbumBean ab) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		bean = new AlbumBean();
+		bean.setAlbum_image("");
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -43,12 +49,28 @@ public class AlbumResultDialog extends JFrame {
 					dispose(); // 창 닫기
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
+					//new AlbumModifyDialog();
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
+					write = diaryWriteArea.getText().trim();
+					tag = diaryTagTField.getText().trim();
+					bean.setAlbum_desc(write);
+					bean.setAlbum_tags(tag);
+					mgr.updAlbum(StaticData.album_id, bean);
+					diaryTagTField.setEnabled(false);
+					diaryWriteArea.setEnabled(false);
+					addButtonLabel.setEnabled(false);
 				}else if (source == modifyLabel) {
 					System.out.println("수정 버튼클릭됨");
 					diaryTagTField.setEnabled(true);
 					diaryWriteArea.setEnabled(true);
+					addButtonLabel.setEnabled(true);
+				} else if(source == delButton) {
+					System.out.println("삭제 버튼 클릭됨");
+					System.out.println(StaticData.album_id);
+					if(mgr.delAlbum(StaticData.album_id)) {
+						dispose();
+					}
 				}
 			}
 		};
@@ -60,7 +82,7 @@ public class AlbumResultDialog extends JFrame {
 				add(diaryTagLabel);
 
 				// 앨범 태그 텍스트 필드 추가
-				diaryTagTField = new JTextField();
+				diaryTagTField = new JTextField(ab.getAlbum_tags());
 				diaryTagTField.setBounds(15, 355, 318, 40);
 				diaryTagTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
@@ -76,7 +98,7 @@ public class AlbumResultDialog extends JFrame {
 				add(diaryWritelabel);
 
 				// 앨범 설명 텍스트 필드 추가
-				diaryWriteArea = new JTextArea();
+				diaryWriteArea = new JTextArea(ab.getAlbum_desc());
 				diaryWriteArea.setBounds(15, 420, 318, 130);
 				diaryWriteArea.setLineWrap(true);
 				diaryWriteArea.setWrapStyleWord(true);
@@ -107,12 +129,12 @@ public class AlbumResultDialog extends JFrame {
 				add(SaveButton);
 				
 				// 수정
-				modifyButton = new RoundedButton("수정");
-				modifyButton.setBounds(200, 560, 100, 40);
-				modifyButton.setBackground(new Color(91, 91, 91));
-				modifyButton.setForeground(Color.WHITE);
-				modifyButton.addMouseListener(commonMouseListener);
-				add(modifyButton);
+				delButton = new RoundedButton("삭제");
+				delButton.setBounds(200, 560, 100, 40);
+				delButton.setBackground(new Color(91, 91, 91));
+				delButton.setForeground(Color.WHITE);
+				delButton.addMouseListener(commonMouseListener);
+				add(delButton);
 
 		
 		// 🔹 추가 버튼
@@ -120,6 +142,7 @@ public class AlbumResultDialog extends JFrame {
 		addButtonLabel.setBounds(245, 245, 62, 62);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
+		addButtonLabel.setEnabled(false);
 		
 		// 🔹 회색프레임
 		grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
@@ -171,6 +194,6 @@ public class AlbumResultDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new AlbumResultDialog();
+		new LoginScreen();
 	}
 }

@@ -620,6 +620,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				AlbumBean bean = new AlbumBean();
+				bean.setAlbum_id(rs.getInt("album_id"));
 				bean.setAlbum_image(rs.getString("album_image"));
 				bean.setAlbum_tags(rs.getString("album_tags"));
 				bean.setAlbum_date(rs.getTimestamp("album_date"));

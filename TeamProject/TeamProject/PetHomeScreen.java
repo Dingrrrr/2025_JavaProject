@@ -22,6 +22,7 @@ public class PetHomeScreen extends JFrame {
 	TPMgr mgr;
 	PetBean bean;
 	Vector<HRBean> hrV;
+	
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
@@ -34,6 +35,7 @@ public class PetHomeScreen extends JFrame {
 		mgr = new TPMgr();
 		bean = mgr.showOnePet(petId);
 		hrV = mgr.showHRPet(petId);
+		StaticData.pet_id = petId;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기

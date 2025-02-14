@@ -20,7 +20,7 @@ public class AlbumAddDialog extends JFrame {
 	private String tags, write;
 	TPMgr mgr;
 	AlbumBean bean;
-
+	
 	public AlbumAddDialog() {
 		setTitle("프레임 설정");
 		setSize(350, 620);
@@ -58,6 +58,8 @@ public class AlbumAddDialog extends JFrame {
 					mgr.addAlbum(StaticData.pet_id, bean);
 					dispose();
 					new AlbumMainScreen();
+
+					
 				}
 			}
 		};
@@ -167,6 +169,6 @@ public class AlbumAddDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new AlbumAddDialog();
+		new LoginScreen();
 	}
 }
