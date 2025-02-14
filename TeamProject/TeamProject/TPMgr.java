@@ -869,7 +869,7 @@ public class TPMgr {
 			pstmt.setString(1, user_id);
 			pstmt.setString(2, bean.getComu_title());
 			pstmt.setString(3, bean.getComu_content());
-			pstmt.setString(5, bean.getComu_image());
+			pstmt.setString(4, bean.getComu_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -935,7 +935,7 @@ public class TPMgr {
 		Vector<ComuBean> vlist = new Vector<ComuBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from comu_post";
+			sql = "select * from comu_post order by comu_date desc";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {

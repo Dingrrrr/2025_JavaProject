@@ -63,6 +63,8 @@ public class DiaryMainScreen extends JFrame {
 					new PetAddMainScreen();
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
+					dispose();
+					new CommuMainScreen();
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
 				} else if (source == addButtonLabel) {
