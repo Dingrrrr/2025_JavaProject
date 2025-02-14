@@ -352,6 +352,84 @@ public class TPMgr {
 		return bean;
 	}
 	
+	//개 품종 출력
+	public Vector<DogBean> showDog() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<DogBean> vlist = new Vector<DogBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from dog_species";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				DogBean bean = new DogBean();
+				bean.setDog(rs.getString("dog"));
+				vlist.add(bean);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//개 품종 검색 출력
+	public Vector<DogBean> showSearchDog(String dogSearch){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<DogBean> vlist = new Vector<DogBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from dog_species where dog like %?%";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, dogSearch);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				DogBean bean = new DogBean();
+				bean.setDog(rs.getString("dog"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//고양이 품종 출력
+	public Vector<CatBean> showCat() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<CatBean> vlist = new Vector<CatBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from cat_species";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				CatBean bean = new CatBean();
+				bean.setCat(rs.getString("cat"));
+				vlist.add(bean);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
 	//반려동물 정보 추가(선택 사항)
 	public void addHRPet(int pet_id, HRBean bean) {
 		Connection con = null;
