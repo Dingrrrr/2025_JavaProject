@@ -1,29 +1,29 @@
 package TeamProject;
 
 import javax.imageio.ImageIO;
+import javax.sql.CommonDataSource;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public class CommuMainScreen extends JFrame {
-	// 추가중
-	
+public class VoteMainScreen extends JFrame {
 	private BufferedImage image;
 	private ImageIcon image2;
-	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
-	private JPanel commuPanel; // 커뮤니티 게시글 패널
+	private JLabel alarmLabel, profileLabel, voteLabel, addButtonLabel, photoLabel, homeLabel, commuLabel;
+	private JPanel votePanel; // 투표 패널
 	private JScrollPane scrollPane; // 스크롤 패널
+	private VoteAddDialog va;
 
-	public CommuMainScreen() {
+	public VoteMainScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
@@ -46,6 +46,8 @@ public class CommuMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+				} else if (source == voteLabel) {
+					System.out.println("투표 버튼 클릭됨!");
 				} else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
 				} else if (source == homeLabel) {
@@ -55,7 +57,14 @@ public class CommuMainScreen extends JFrame {
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
 				} else if (source == addButtonLabel) {
-					System.out.println("커뮤니티 게시글 추가 버튼 클릭됨");
+					System.out.println("투표 추가 버튼 클릭됨!");
+					if(va==null) {
+						va = new VoteAddDialog();
+						va.setLocation(getX()+25, getY()+300);
+					}else {
+						va.setLocation(getX()+25, getY()+300);
+						va.setVisible(true);
+					}
 				}
 			}
 		};
@@ -122,24 +131,6 @@ public class CommuMainScreen extends JFrame {
 		panel.setLayout(null);
 		add(panel);
 
-		// 🔹 스크롤 가능한 게시글 패널 설정
-		commuPanel = new JPanel();
-		commuPanel.setLayout(new BoxLayout(commuPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
-		commuPanel.setBackground(Color.WHITE);
-
-		// 🔹 더미 게시글 데이터 추가
-		for (int i = 1; i <= 15; i++) {
-			addCommu();
-		}
-
-		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
-		scrollPane = new JScrollPane(commuPanel);
-		scrollPane.setBounds(23, 165, 357, 615);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
-		panel.add(scrollPane);
-
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
 		addButtonLabel.setBounds(300, 700, 70, 70);
@@ -148,6 +139,25 @@ public class CommuMainScreen extends JFrame {
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
 		addButtonLabel.setVisible(true);
 		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
+
+		// 🔹 votePanel 설정 수정
+		votePanel = new JPanel();
+		votePanel.setLayout(new GridLayout(0, 2, 2, 2)); // 2열 정렬
+		votePanel.setBackground(Color.WHITE);
+
+		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
+		// 이전 코드에서는 scrollPane이 이 부분 앞에 있을 수 있어, 여기에 잘못된 위치에서 접근되고 있었을 가능성이 있습니다.
+		scrollPane = new JScrollPane(votePanel);
+		scrollPane.setBounds(23, 165, 357, 615);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		panel.add(scrollPane);
+
+		// 🔹 더미 투표 데이터 추가
+		for (int i = 1; i <= 15; i++) {
+			addVote();
+		}
 
 		// 🔹 닫기 버튼
 		JButton closeButton = new JButton("X");
@@ -163,74 +173,61 @@ public class CommuMainScreen extends JFrame {
 	}
 
 	/**
-	 * 커뮤니티 게시글 추가 메서드
+	 * 투표 추가 메서드
 	 */
-	private void addCommu() {
-		// 1) 전체 항목을 감싸는 패널
-	    JPanel commuItemPanel = new JPanel();
-	    commuItemPanel.setPreferredSize(new Dimension(353, 99)); // 크기 지정
-	    commuItemPanel.setBackground(Color.WHITE);
-	    commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
-	    commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
-		
-		// 2) 상단 패널 (USER_ID + 날짜)
-	    JPanel topPanel = new JPanel(new BorderLayout());
-	    topPanel.setBackground(Color.WHITE);
-	    topPanel.setPreferredSize(new Dimension(353, 20)); // 가로 353px, 세로 15px
-	    topPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY)); // 아래쪽만 테두리 1px
+	/**
+	 * 투표 추가 메서드
+	 */
+	private void addVote() {
+		// 1️⃣ 개별 투표 아이템을 담을 패널 생성
+		JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
+		contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
+		contentPanel.setBackground(Color.WHITE);
 
-	    JLabel userIdLabel = new JLabel("User_ID");
-	    userIdLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0)); // 왼쪽에 3px 여백 추가
+		// 2️⃣ 이미지 라벨 추가 (배경 역할)
+		JLabel imageLabel = new JLabel("투표용 이미지");
+		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		imageLabel.setBounds(0, 0, 176, 150); // 패널 전체 크기 설정
+		imageLabel.setOpaque(true);
+		imageLabel.setBackground(Color.white);
 
-	    JLabel dateLabel = new JLabel("20xx.xx.xx", SwingConstants.RIGHT);
-	    dateLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3)); // 오른쪽에 3px 여백 추가
-	    topPanel.add(userIdLabel, BorderLayout.WEST);
-	    topPanel.add(dateLabel, BorderLayout.EAST);
+		// contentPanel의 아랫부분에만 검정색 테두리 추가
+		Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
+		imageLabel.setBorder(blackBottomBorder);
 
-	    // 3) 구분선
-	    JSeparator separator = new JSeparator();
-	    separator.setForeground(Color.GRAY);
+		if (image2 != null) {
+			imageLabel.setIcon(image2);
+		}
 
-	    // 4) 본문 패널 (이미지 + 텍스트)
-	    JPanel contentPanel = new JPanel(new BorderLayout(10, 0));
-	    contentPanel.setBackground(Color.WHITE);
+		// 🔹 `JLayeredPane`을 사용해 이미지 위에 하트 버튼을 배치
+		JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
 
-	    // 왼쪽 - 이미지
-	    JLabel imageLabel = new JLabel();
-	    imageLabel.setPreferredSize(new Dimension(70, 70));
-	    if (image2 != null) {
-	        imageLabel.setIcon(image2);
-	    } else {
-	        imageLabel.setOpaque(true);
-	        imageLabel.setBackground(Color.LIGHT_GRAY); // 이미지 없을 경우 기본 배경
-	    }
-	    contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 3, 0)); // 위, 왼쪽, 아래, 오른쪽 순서
-	    contentPanel.add(imageLabel, BorderLayout.WEST);
+		// 🔹 이미지 추가 (기본 레이어)
+		layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
 
-	    // 오른쪽 - 제목 & 내용
-	    JPanel textPanel = new JPanel();
-	    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
-	    textPanel.setBackground(Color.WHITE);
+		// 3️⃣ 투표 버튼 (하트 아이콘) 추가 → 이미지 내부의 오른쪽 아래에 배치
+		JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
+		voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
+		voteLabel.setOpaque(false);
+		voteLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("투표 버튼이 클릭됨!");
+			}
+		});
 
-	    JLabel titleLabel = new JLabel("제목");
+		// 🔹 하트 버튼을 이미지 위에 추가 (위쪽 레이어)
+		layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
 
-	    JLabel contentLabel = new JLabel("내용");
+		// 🔹 contentPanel에 `layeredPane` 추가 (이미지 & 버튼 함께 추가됨)
+		contentPanel.add(layeredPane);
 
-	    textPanel.add(titleLabel);
-	    textPanel.add(Box.createVerticalStrut(10)); // 10px 간격
-	    textPanel.add(contentLabel);
-	    
-	    contentPanel.add(textPanel, BorderLayout.CENTER);
-
-	    // 5) 전체 구성
-	    commuItemPanel.add(topPanel, BorderLayout.NORTH);
-	    commuItemPanel.add(separator, BorderLayout.CENTER);
-	    commuItemPanel.add(contentPanel,BorderLayout.SOUTH);
-	    
-	    commuPanel.add(commuItemPanel);
-		
-		// 각 커뮤니티 게시글 항목 간에 간격을 둔다
-		commuPanel.add(Box.createVerticalStrut(5)); // 10px 간격
+		// 4️⃣ 전체 투표 목록 패널 (votePanel)에 추가
+		votePanel.add(contentPanel);
+		votePanel.revalidate();
+		votePanel.repaint();
+		scrollPane.revalidate();
 	}
 
 	/**
@@ -243,6 +240,6 @@ public class CommuMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new CommuMainScreen();
+		new VoteMainScreen();
 	}
 }

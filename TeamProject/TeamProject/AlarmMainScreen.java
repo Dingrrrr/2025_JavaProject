@@ -46,7 +46,7 @@ public class AlarmMainScreen extends JFrame {
 				} else if (source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
 				} else if (source == SendButton) {
-					System.out.println("알림 추가 버튼 클릭됨");
+					System.out.println("쪽지 보내기 버튼 클릭됨");
 				}
 			}
 		};
