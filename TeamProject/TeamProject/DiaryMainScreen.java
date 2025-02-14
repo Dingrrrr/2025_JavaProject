@@ -12,6 +12,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 public class DiaryMainScreen extends JFrame {
 	// 추가 중
@@ -20,6 +22,11 @@ public class DiaryMainScreen extends JFrame {
 	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
 	private JPanel diaryPanel; // 다이어리 패널
 	private JScrollPane scrollPane; // 스크롤 패널
+	private DiaryAddDialog pc;
+	TPMgr mgr = new TPMgr();
+	Vector<DiaryBean> vlist = mgr.showDiary(StaticData.pet_id);
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
 	public DiaryMainScreen() {
 		setTitle("프레임 설정");
@@ -44,16 +51,31 @@ public class DiaryMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(DiaryMainScreen.this);
 				} else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+					setEnabled(false);
+					new AlbumChooseDialog(DiaryMainScreen.this);
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
+					dispose();
+					new PetAddMainScreen();
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
 				} else if (source == addButtonLabel) {
-					System.out.println("일기 추가 버튼 클릭됨");
+					System.out.println("➕ 추가 버튼 클릭됨!");
+					if(pc==null) {
+						pc = new DiaryAddDialog(DiaryMainScreen.this);
+						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX()+25, getY()+270);
+					}else {
+						pc.setLocation(getX()+25, getY()+270);
+						pc.setVisible(true);
+					}
+					setEnabled(false);
 				}
 			}
 		};
@@ -133,10 +155,6 @@ public class DiaryMainScreen extends JFrame {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
 
-		// 🔹 더미 일기 데이터 추가
-		for (int i = 1; i <= 15; i++) {
-			addDiary();
-		}
 
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
@@ -146,6 +164,8 @@ public class DiaryMainScreen extends JFrame {
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
 		addButtonLabel.setVisible(true);
 		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
+		
+		addDiary();
 
 		// 🔹 닫기 버튼
 		JButton closeButton = new JButton("X");
@@ -164,61 +184,76 @@ public class DiaryMainScreen extends JFrame {
 	 * 일기 추가 메서드
 	 */
 	private void addDiary() {
-		// 날짜 라벨 생성
-		JLabel diaryDateLabel = new JLabel("날짜: 20xx.xx.xx");
-		diaryDateLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		diaryDateLabel.setPreferredSize(new Dimension(160, 20)); // 크기 고정
-		diaryDateLabel.setOpaque(true);
-		diaryDateLabel.setBackground(Color.white);
+		for (DiaryBean db : vlist) {
+			StaticData.diary_id = db.getDiary_id();
+			// 날짜 라벨 생성
+			JLabel diaryDateLabel = new JLabel("날짜: " + sdf.format(db.getDiary_date()));
+			diaryDateLabel.setHorizontalAlignment(SwingConstants.LEFT);
+			diaryDateLabel.setPreferredSize(new Dimension(160, 20)); // 크기 고정
+			diaryDateLabel.setOpaque(true);
+			diaryDateLabel.setBackground(Color.white);
 
-		// 내용 입력된 창 설정
-		JTextArea diaryContentArea = new JTextArea("ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ");
-		diaryContentArea.setPreferredSize(new Dimension(160, 75)); // 크기 고정
-		diaryContentArea.setOpaque(true); // 배경을 흰색으로 설정하려면 true
-		diaryContentArea.setBackground(Color.WHITE); // 배경을 흰색으로 설정
+			// 내용 입력된 창 설정
+			JLabel diaryTitle = new JLabel(db.getDiary_name());
+			diaryTitle.setPreferredSize(new Dimension(60, 30)); // 크기 고정
+//			JTextArea diaryContentArea = new JTextArea(db.getDiary_name());
+//			diaryContentArea.setPreferredSize(new Dimension(160, 75)); // 크기 고정
+//			diaryContentArea.setOpaque(true); // 배경을 흰색으로 설정하려면 true
+//			diaryContentArea.setBackground(Color.WHITE); // 배경을 흰색으로 설정
 
-		// 텍스트 영역에서 줄바꿈 허용 및 단어 단위로 줄바꿈
-		diaryContentArea.setLineWrap(true);
-		diaryContentArea.setWrapStyleWord(true);
+			// 텍스트 영역에서 줄바꿈 허용 및 단어 단위로 줄바꿈
+//			diaryContentArea.setLineWrap(true);
+//			diaryContentArea.setWrapStyleWord(true);
 
-		// 텍스트 길이 제한 및 "..." 추가
-		int maxLength = 50; // 최대 문자 길이 설정 -> 50으로 해서 50이상이 되면 ...이 되게 함
-		String text = diaryContentArea.getText();
-		if (text.length() > maxLength) {
-			text = text.substring(0, maxLength) + "...";
-			diaryContentArea.setText(text);
+			// 텍스트 길이 제한 및 "..." 추가
+//			int maxLength = 50; // 최대 문자 길이 설정 -> 50으로 해서 50이상이 되면 ...이 되게 함
+//			String text = diaryContentArea.getText();
+//			if (text.length() > maxLength) {
+//				text = text.substring(0, maxLength) + "...";
+//				diaryContentArea.setText(text);
+//			}
+
+			// 일기 날짜와 내용을 하나의 패널로 묶기
+			JPanel diaryWithContentPanel = new JPanel();
+			
+			diaryWithContentPanel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					setEnabled(false);
+					new DiaryResultDialog(DiaryMainScreen.this);
+				}
+			});
+			
+			// 일기 날짜 + 일기 내용 패널 (albumWithTagPanel) 설정
+			diaryWithContentPanel.setBackground(Color.WHITE); // 패널 배경을 흰색으로 설정
+
+			diaryWithContentPanel.setLayout(new BoxLayout(diaryWithContentPanel, BoxLayout.Y_AXIS)); // 세로로 배치
+			diaryWithContentPanel.add(diaryDateLabel);
+			diaryWithContentPanel.add(diaryTitle);
+//			diaryWithContentPanel.add(diaryContentArea);
+
+			// 일기 날짜 + 일기 내용 패널 크기 고정
+			diaryWithContentPanel.setPreferredSize(new Dimension(176, 100)); // 일기 날짜와 내용 합친 크기
+
+			// 테두리 추가
+			diaryWithContentPanel.setBorder(new LineBorder(Color.lightGray, 1)); // 회색 1픽셀 두께의 테두리 추가
+
+			// FlowLayout 사용하여 여백 없애기
+			diaryWithContentPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 1, 1)); // 수평 간격과 수직 간격을 0으로 설정
+
+			diaryPanel.add(diaryWithContentPanel);
+
+			// 패널 크기 갱신 (일기 개수에 따라 스크롤 가능하도록 조정)
+			int rows = (diaryPanel.getComponentCount() + 1) / 2;
+			diaryPanel.setPreferredSize(new Dimension(338, rows * 100)); // 크기 유지
+
+			// 패널 업데이트
+			diaryPanel.revalidate();
+			diaryPanel.repaint();
+
+			// 🔹 스크롤 패널의 크기를 동적으로 맞추기
+			scrollPane.revalidate();
 		}
-
-		// 일기 날짜와 내용을 하나의 패널로 묶기
-		JPanel diaryWithContentPanel = new JPanel();
-		// 일기 날짜 + 일기 내용 패널 (albumWithTagPanel) 설정
-		diaryWithContentPanel.setBackground(Color.WHITE); // 패널 배경을 흰색으로 설정
-
-		diaryWithContentPanel.setLayout(new BoxLayout(diaryWithContentPanel, BoxLayout.Y_AXIS)); // 세로로 배치
-		diaryWithContentPanel.add(diaryDateLabel);
-		diaryWithContentPanel.add(diaryContentArea);
-
-		// 일기 날짜 + 일기 내용 패널 크기 고정
-		diaryWithContentPanel.setPreferredSize(new Dimension(176, 100)); // 일기 날짜와 내용 합친 크기
-
-		// 테두리 추가
-		diaryWithContentPanel.setBorder(new LineBorder(Color.lightGray, 1)); // 회색 1픽셀 두께의 테두리 추가
-
-		// FlowLayout 사용하여 여백 없애기
-		diaryWithContentPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 1, 1)); // 수평 간격과 수직 간격을 0으로 설정
-
-		diaryPanel.add(diaryWithContentPanel);
-
-		// 패널 크기 갱신 (일기 개수에 따라 스크롤 가능하도록 조정)
-		int rows = (diaryPanel.getComponentCount() + 1) / 2;
-		diaryPanel.setPreferredSize(new Dimension(338, rows * 100)); // 크기 유지
-
-		// 패널 업데이트
-		diaryPanel.revalidate();
-		diaryPanel.repaint();
-
-		// 🔹 스크롤 패널의 크기를 동적으로 맞추기
-		scrollPane.revalidate();
 	}
 
 	/**
@@ -231,6 +266,6 @@ public class DiaryMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new DiaryMainScreen();
+		new LoginScreen();
 	}
 }

@@ -9,4 +9,5 @@ public class StaticData {
 	static int pet_id;
 	static Stack<JFrame> frameStack = new Stack<>();
 	static int album_id;
+	static int diary_id;
 }

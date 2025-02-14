@@ -51,6 +51,13 @@ public class AlbumChooseDialog extends JFrame {
 							}
 						} else if (source == diaryLabel) {
 							System.out.println("일기 선택 아이콘 클릭됨");
+							dispose();
+							preFrame.dispose();
+							if(mgr.isDiary(StaticData.pet_id)) {	//이미 일기가 있으면 실행
+								new DiaryMainScreen();
+							} else {	//DB에 일기가 없으면 실행
+								new DiaryScreen();
+							}
 						}
 					}
 				};

@@ -21,8 +21,8 @@ public class AlbumMainScreen extends JFrame {
 	private JPanel albumPanel; // 앨범 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private AlbumAddDialog pc;
-	TPMgr mgr;
-	Vector<AlbumBean> vlist;
+	TPMgr mgr = new TPMgr();
+	Vector<AlbumBean> vlist = mgr.showAlbum(StaticData.pet_id);
 
 	public AlbumMainScreen() {
 		setTitle("프레임 설정");
@@ -30,11 +30,6 @@ public class AlbumMainScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mgr = new TPMgr();
-		vlist = mgr.showAlbum(StaticData.pet_id);
-		
-		revalidate();
-        repaint();
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -163,17 +158,28 @@ public class AlbumMainScreen extends JFrame {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
 		
-//		// 🔹 더미 앨범 데이터 추가
-//		for (int i = 1; i <= vlist.size(); i++) {
-//			addAlbum();
-//		}
+		addAlbum();
 		
+
+		// 🔹 닫기 버튼
+		JButton closeButton = new JButton("X");
+		closeButton.setBounds(370, 10, 20, 20);
+		closeButton.setBackground(Color.RED);
+		closeButton.setForeground(Color.WHITE);
+		closeButton.setBorder(BorderFactory.createEmptyBorder());
+		closeButton.setFocusPainted(false);
+		closeButton.addActionListener(e -> System.exit(0));
+		panel.add(closeButton);
+
+		setVisible(true);
+	}
+	
+	public void addAlbum() {
 		for (AlbumBean ab : vlist) {
 			/**
 			 * 앨범 추가
 			 */
 			StaticData.album_id = ab.getAlbum_id();
-			System.out.println(StaticData.album_id);
 			// 앨범 레이블 생성
 			JLabel albumLabel = new JLabel("📸 앨범 " + (albumPanel.getComponentCount() + 1));
 			albumLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -239,25 +245,7 @@ public class AlbumMainScreen extends JFrame {
 			// 🔹 스크롤 패널의 크기를 동적으로 맞추기
 			scrollPane.revalidate();
 		}
-
-		// 🔹 닫기 버튼
-		JButton closeButton = new JButton("X");
-		closeButton.setBounds(370, 10, 20, 20);
-		closeButton.setBackground(Color.RED);
-		closeButton.setForeground(Color.WHITE);
-		closeButton.setBorder(BorderFactory.createEmptyBorder());
-		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
-		panel.add(closeButton);
-
-		setVisible(true);
 	}
-	
-	public void updData() {
-		revalidate();
-		repaint();
-	}
-	
 	
 
 	/**
@@ -270,6 +258,6 @@ public class AlbumMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new AlbumMainScreen();
+		new LoginScreen();
 	}
 }
