@@ -42,16 +42,17 @@ public class AlbumScreen extends JFrame{
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {
-						pc = new AlbumAddDialog();
+						pc = new AlbumAddDialog(AlbumScreen.this);
 						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
 						pc.setLocation(getX()+25, getY()+150);
 					}else {
 						pc.setLocation(getX()+25, getY()+150);
 						pc.setVisible(true);
 					}
+					setEnabled(false);
 				}else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
-					new AlbumChooseDialog();
+					new AlbumChooseDialog(AlbumScreen.this);
 				}else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();

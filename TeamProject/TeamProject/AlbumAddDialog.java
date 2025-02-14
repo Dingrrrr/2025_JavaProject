@@ -21,7 +21,7 @@ public class AlbumAddDialog extends JFrame {
 	TPMgr mgr;
 	AlbumBean bean;
 	
-	public AlbumAddDialog() {
+	public AlbumAddDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -45,6 +45,7 @@ public class AlbumAddDialog extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
 					//사진 추가
@@ -57,9 +58,8 @@ public class AlbumAddDialog extends JFrame {
 					bean.setAlbum_image(img);
 					mgr.addAlbum(StaticData.pet_id, bean);
 					dispose();
+					preFrame.dispose();
 					new AlbumMainScreen();
-
-					
 				}
 			}
 		};

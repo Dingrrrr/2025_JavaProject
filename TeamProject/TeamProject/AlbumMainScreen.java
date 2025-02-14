@@ -20,6 +20,7 @@ public class AlbumMainScreen extends JFrame {
 	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
 	private JPanel albumPanel; // 앨범 패널
 	private JScrollPane scrollPane; // 스크롤 패널
+	private AlbumAddDialog pc;
 	TPMgr mgr;
 	Vector<AlbumBean> vlist;
 
@@ -64,8 +65,16 @@ public class AlbumMainScreen extends JFrame {
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
 				} else if (source == addButtonLabel) {
-					System.out.println("앨범 추가 버튼 클릭됨");
-					new AlbumAddDialog();
+					System.out.println("➕ 추가 버튼 클릭됨!");
+					if(pc==null) {
+						pc = new AlbumAddDialog(AlbumMainScreen.this);
+						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX()+25, getY()+150);
+					}else {
+						pc.setLocation(getX()+25, getY()+150);
+						pc.setVisible(true);
+					}
+					setEnabled(false);
 				}
 			}
 		};
@@ -196,7 +205,7 @@ public class AlbumMainScreen extends JFrame {
 			albumWithTagPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					new AlbumResultDialog(ab);	//매개변수로 ab 넣어야함 -> albumResultDialog 수정되면 수정
+					new AlbumResultDialog(ab, AlbumMainScreen.this);	//매개변수로 ab 넣어야함 -> albumResultDialog 수정되면 수정
 				}
 			});
 			
@@ -245,7 +254,8 @@ public class AlbumMainScreen extends JFrame {
 	}
 	
 	public void updData() {
-		
+		revalidate();
+		repaint();
 	}
 	
 	

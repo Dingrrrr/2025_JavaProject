@@ -52,13 +52,14 @@ public class UserHomeScreen extends JFrame {
 						} else if (source == addButtonLabel) {
 							System.out.println("➕ 추가 버튼 클릭됨!");
 							if(pc==null) {
-								pc = new PetChooseDialog();
+								pc = new PetChooseDialog(UserHomeScreen.this);
 								//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
 								pc.setLocation(getX()+25, getY()+300);
 							}else {
 								pc.setLocation(getX()+25, getY()+300);
 								pc.setVisible(true);
 							}
+							setEnabled(false);
 						}
 					}
 				};
