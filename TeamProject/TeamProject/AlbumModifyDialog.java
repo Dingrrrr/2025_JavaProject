@@ -2,6 +2,9 @@ package TeamProject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,7 +14,7 @@ public class AlbumModifyDialog extends JFrame{
 	private JPanel p;
 	private BufferedImage image;
 	
-	public AlbumModifyDialog() {
+	public AlbumModifyDialog(Frame preFrame) {
 		setTitle("프레임 설정");
 		setSize(364, 166);
 		setUndecorated(true);
@@ -23,23 +26,44 @@ public class AlbumModifyDialog extends JFrame{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// 🔹 공통 마우스 클릭 이벤트 리스너
+		MouseAdapter commonMouseListener = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Object source = e.getSource();
+				
+				if(source == addpicLabel) {
+					
+				} else if(source == deletepicLabel) {
+					
+				} else if(source == cancelLabel) {
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
+					dispose();
+				}
+			}
+		};
 		
 		//사진 추가 라벨
 		addpicLabel = new JLabel("사진 추가");
 		addpicLabel.setBounds(155, 5, 72, 50);
 		addpicLabel.setForeground(Color.BLACK);
+		addpicLabel.addMouseListener(commonMouseListener);
 		add(addpicLabel);
 		
 		//사진 삭제 라벨
 		deletepicLabel = new JLabel("사진 삭제");
 		deletepicLabel.setBounds(155, 55, 72, 50);
 		deletepicLabel.setForeground(Color.BLACK);
+		deletepicLabel.addMouseListener(commonMouseListener);
 		add(deletepicLabel);
 		
 		//취소 라벨
 		cancelLabel = new JLabel("취소");
 		cancelLabel.setBounds(170, 105, 72, 50);
 		cancelLabel.setForeground(Color.BLACK);
+		cancelLabel.addMouseListener(commonMouseListener);
 		add(cancelLabel);
 		
 		// JPanel 추가
@@ -75,6 +99,6 @@ public class AlbumModifyDialog extends JFrame{
 	
 	
 	public static void main(String[] args) {
-		new AlbumModifyDialog();
+		new LoginScreen();
 	}
 }

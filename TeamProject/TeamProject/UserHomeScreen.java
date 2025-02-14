@@ -41,6 +41,7 @@ public class UserHomeScreen extends JFrame {
 						if (source == alarmLabel) {
 							System.out.println("🔔 알람 클릭됨!");
 							dispose();
+							new AlarmMainScreen(UserHomeScreen.this);
 						} else if (source == profileLabel) {
 							System.out.println("👤 프로필 클릭됨!");
 							dispose();

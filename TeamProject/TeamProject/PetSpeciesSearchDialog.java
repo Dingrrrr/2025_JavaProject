@@ -53,6 +53,7 @@ public class PetSpeciesSearchDialog extends JFrame {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == searchButton) {
 					Vector<DogBean> vd = new Vector<DogBean>();
 					System.out.println("검색 버튼 클릭됨");
