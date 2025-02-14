@@ -15,16 +15,21 @@ public class DiaryResultDialog extends JFrame {
 	private JLabel closeLabel;
 	private JLabel DiaryTitleLabel, DiaryWriteLabel, modifyLabel;
 	private JTextField DiaryTitleField;
-	private JTextArea DirayWriteArea;
+	private JTextArea DiaryWriteArea;
 	private JButton SaveButton, DelButton;
 	private JScrollPane scrollPane;
+	private String title, content;
+	TPMgr mgr;
+	DiaryBean bean;
 
-	public DiaryResultDialog() {
+	public DiaryResultDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 500);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		bean = mgr.showOneDiary(StaticData.diary_id);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -40,12 +45,33 @@ public class DiaryResultDialog extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
+					title = DiaryTitleField.getText().trim();
+					content = DiaryWriteArea.getText().trim();
+					DiaryBean db = new DiaryBean();
+					db.setDiary_name(title);
+					db.setDiary_content(content);
+					mgr.updDiary(StaticData.diary_id, db);
+					dispose();
+					preFrame.dispose();
+					new DiaryMainScreen();
 				} else if (source == DelButton) {
 					System.out.println("삭제 버튼 클릭됨");
+					mgr.delDiary(StaticData.diary_id);
+					dispose();
+					preFrame.dispose();
+					if(mgr.isDiary(StaticData.pet_id)) {	//일기가 있으면 실행
+						new DiaryMainScreen();
+					} else {	//일기가 없으면 실행
+						new DiaryScreen();
+					}
+					
 				} else if (source == modifyLabel) {
 					System.out.println("수정 버튼 클릭됨");
+					DiaryTitleField.setEnabled(true);
+					DiaryWriteArea.setEnabled(true);
 				}
 			}
 		};
@@ -57,15 +83,17 @@ public class DiaryResultDialog extends JFrame {
 		add(DiaryTitleLabel);
 
 		// 일기 제목 텍스트 필드 추가
-		DiaryTitleField = new JTextField();
+		DiaryTitleField = new JTextField(bean.getDiary_name());
 		DiaryTitleField.setBounds(15, 70, 318, 40);
-		DiaryTitleField.setText("");
+		DiaryTitleField.setText(bean.getDiary_name());
 		DiaryTitleField
 				.setBorder(BorderFactory.createCompoundBorder(
 						// 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 						new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)
 				));
 		add(DiaryTitleField);
+		DiaryTitleField.setEnabled(false);
+		
 		
 		// 일기 내용 라벨
 		DiaryWriteLabel = new JLabel("내용");
@@ -74,16 +102,17 @@ public class DiaryResultDialog extends JFrame {
 		add(DiaryWriteLabel);
 		
 		// 일기 내용 텍스트 필드 추가
-		DirayWriteArea = new JTextArea();
-		DirayWriteArea.setBounds(15, 160, 318, 250);
-		DirayWriteArea.setText("");
-		DirayWriteArea.setLineWrap(true);
-		DirayWriteArea.setWrapStyleWord(true);
-		DirayWriteArea.setBorder(BorderFactory.createCompoundBorder(
+		DiaryWriteArea = new JTextArea(bean.getDiary_content());
+		DiaryWriteArea.setBounds(15, 160, 318, 250);
+		DiaryWriteArea.setText(bean.getDiary_content());
+		DiaryWriteArea.setLineWrap(true);
+		DiaryWriteArea.setWrapStyleWord(true);
+		DiaryWriteArea.setBorder(BorderFactory.createCompoundBorder(
 		        new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 		    ));
+		DiaryWriteArea.setEnabled(false);
 		
-		scrollPane = new JScrollPane(DirayWriteArea);
+		scrollPane = new JScrollPane(DiaryWriteArea);
 		scrollPane.setBounds(15, 160, 318, 250); // 텍스트 영역 크기와 위치 설정
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -148,6 +177,6 @@ public class DiaryResultDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new DiaryResultDialog();
+		new LoginScreen();
 	}
 }

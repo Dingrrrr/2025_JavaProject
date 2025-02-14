@@ -635,6 +635,29 @@ public class TPMgr {
 		return vlist;
 	}
 	
+	//일기가 존재 유무(이미 일기가 있으면 true 반환)
+	public boolean isDiary(int pet_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from diary where pet_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
 	//일기 추가
 	public void addDiary(int pet_id, DiaryBean bean) {
 		Connection con = null;
@@ -717,6 +740,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				DiaryBean bean = new DiaryBean();
+				bean.setDiary_id(rs.getInt("diary_id"));
 				bean.setDiary_date(rs.getTimestamp("diary_date"));
 				bean.setDiary_name(rs.getString("diary_name"));
 				bean.setDiary_content(rs.getString("diary_content"));
@@ -728,6 +752,31 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return vlist;
+	}
+	
+	//일기 한개 출력
+	public DiaryBean showOneDiary(int diary_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		DiaryBean bean = new DiaryBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from diary where diary_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, diary_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setDiary_name(rs.getString("diary_name"));
+				bean.setDiary_content(rs.getString("diary_content"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
 	}
 	
 	//커뮤니티 추가

@@ -18,13 +18,18 @@ public class DiaryAddDialog extends JFrame {
 	private JTextArea DiaryWriteTArea;
 	private JButton SaveButton;
 	private JScrollPane scrollPane;
+	private String title, content;
+	DiaryBean bean;
+	TPMgr mgr;
 
-	public DiaryAddDialog() {
+	public DiaryAddDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 500);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bean = new DiaryBean();
+		mgr = new TPMgr();
 	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -40,8 +45,17 @@ public class DiaryAddDialog extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
+					title = DiaryTitleTField.getText().trim();
+					content = DiaryWriteTArea.getText().trim();
+					bean.setDiary_name(title);
+					bean.setDiary_content(content);
+					mgr.addDiary(StaticData.pet_id, bean);
+					dispose();
+					preFrame.dispose();
+					new DiaryMainScreen();
 				}
 			}
 		};
@@ -131,6 +145,6 @@ public class DiaryAddDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new DiaryAddDialog();
+		new LoginScreen();
 	}
 }
