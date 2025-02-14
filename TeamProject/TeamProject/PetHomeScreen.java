@@ -78,6 +78,8 @@ public class PetHomeScreen extends JFrame {
 					new CommuMainScreen();
 				}else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
+					dispose();
+					new VoteMainScreen();
 				}
 			}
 		};
@@ -196,6 +198,13 @@ public class PetHomeScreen extends JFrame {
 		// 🔹 반려동물 프로필 이미지
 		petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
 		petProfileLabel.setBounds(40, 190, 150, 150);
+		petProfileLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				new PetModifyScreen(PetHomeScreen.this);
+			}
+		});
 		add(petProfileLabel);
 
 		// 🔹 반려동물 이름 라벨
