@@ -38,10 +38,9 @@ public class PetAddScreen extends JFrame {
 				
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-<<<<<<< HEAD
-=======
+
 					dispose();
->>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
+
 				} else if (source == deleteLabel) {
 					System.out.println("반려동물 프로필 사진 삭제 클릭됨!");
 				} else if (source == petAddProButton) {
@@ -50,8 +49,6 @@ public class PetAddScreen extends JFrame {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 				} else if (source == nextButton) {
 					System.out.println("다음 단계 버튼 클릭됨!");
-<<<<<<< HEAD
-=======
 					if(petNameTField.getText().trim().isEmpty()) {
 						warningLabel.setVisible(true);
 					} else {
@@ -61,7 +58,6 @@ public class PetAddScreen extends JFrame {
 						dispose();
 						new PetRecordAddScreen(bean, PetAddScreen.this);
 					}
->>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				}
 			}
 		};

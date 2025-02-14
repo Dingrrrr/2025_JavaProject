@@ -44,7 +44,7 @@ public class LoginScreen extends JFrame {
 	static String id;
 	boolean flag1 = true, flag2 = true;
 	TPMgr mgr;
-
+	
 	public LoginScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
@@ -92,6 +92,7 @@ public class LoginScreen extends JFrame {
 				}
 				flag1 = false;
 			}
+		
 		});
 		
 		
@@ -129,11 +130,11 @@ public class LoginScreen extends JFrame {
 		pw_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
+
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					id = id_textField.getText().trim();
 					new PetHomeScreen();
-=======
+
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.isPet(StaticData.user_id)) {
@@ -144,7 +145,6 @@ public class LoginScreen extends JFrame {
 						dispose();
 						new UserHomeScreen();			//반려동물 정보가 없는 경우
 					}
->>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				} else {
 					id_textField.setText("아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -156,7 +156,6 @@ public class LoginScreen extends JFrame {
 					warningLabel.setVisible(true);
 				}
 			}
-		});
 		
 		warningLabel = new JLabel("아이디 또는 비밀번호가 틀렸습니다");
 		warningLabel.setForeground(Color.RED);
@@ -170,11 +169,10 @@ public class LoginScreen extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
+
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					id = id_textField.getText().trim();
 					new PetHomeScreen();
-=======
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.isPet(StaticData.user_id)) {
@@ -185,7 +183,6 @@ public class LoginScreen extends JFrame {
 						dispose();
 						new UserHomeScreen();			//반려동물 정보가 없는 경우
 					}
->>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				} else {
 					id_textField.setText("아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -197,7 +194,6 @@ public class LoginScreen extends JFrame {
 					warningLabel.setVisible(true);
 				}
 			}
-		});
 
 		// 회원가입 라벨 추가
 		registerLabel = new JLabel("회원가입");
@@ -261,8 +257,7 @@ public class LoginScreen extends JFrame {
 		}
 	}
 
-
 	public static void main(String[] args) {
 		new LoginScreen();
 	}
-}
+		}

@@ -40,11 +40,9 @@ public class PetChooseDialog extends JFrame {
 					dispose(); // 창 닫기
 				} else if (source == dogLabel) {
 					System.out.println("강아지 선택 아이콘 클릭됨");
-<<<<<<< HEAD
-=======
+
 					dispose();
 					new PetAddScreen();
->>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 				} else if (source == catLabel) {
 					System.out.println("고양이 선택 아이콘 클릭됨");
 				}

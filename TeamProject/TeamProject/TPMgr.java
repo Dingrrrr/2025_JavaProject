@@ -273,10 +273,7 @@ public class TPMgr {
 		}
 		return vlist;
 	}
-<<<<<<< HEAD
-	
-=======
-	
+
 	//반려동물 아이디 출력
 	public int showPetId(String id, PetBean bean) {
 		Connection con = null;
@@ -355,7 +352,6 @@ public class TPMgr {
 		return bean;
 	}
 	
->>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 	//반려동물 정보 추가(선택 사항)
 	public void addHRPet(int pet_id, HRBean bean) {
 		Connection con = null;

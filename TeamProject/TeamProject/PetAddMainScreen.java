@@ -29,11 +29,11 @@ public class PetAddMainScreen extends JFrame {
 		setSize(402, 874);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
-<<<<<<< HEAD
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		vlist = mgr.showPet(LoginScreen.id);
 		bean = (PetBean)vlist.elementAt(0);
-=======
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		vlist = mgr.showPet(StaticData.user_id);
 		try {
@@ -41,7 +41,6 @@ public class PetAddMainScreen extends JFrame {
 			bean[1] = (PetBean)vlist.elementAt(1);
 		} catch (Exception e) {}
 		
->>>>>>> branch 'main' of https://github.com/min9yu12/mingyu_.git
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
