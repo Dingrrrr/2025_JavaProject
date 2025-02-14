@@ -82,6 +82,14 @@ public class PetSpeciesSearchDialog extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("검색 결과 출력 바람");
+				Vector<DogBean> vd = new Vector<DogBean>();
+				dogSearch = searchTextField.getText().trim();
+				dogSearch = "%"+dogSearch+"%";
+				vd = mgr.showSearchDog(dogSearch);
+				dogList.removeAllElements();
+				for (DogBean db : vd) {
+					dogList.addElement(db.getDog());
+				}
 			}
 		});
 		add(searchTextField);
