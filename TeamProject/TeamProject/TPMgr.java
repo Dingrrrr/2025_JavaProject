@@ -1292,7 +1292,7 @@ public class TPMgr {
 	}
 
 	//쪽지
-	public boolean msg(String user_id, MsgBean bean) {
+	public boolean sendMsg(String user_id, MsgBean bean) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -1317,7 +1317,7 @@ public class TPMgr {
 	}
 	
 	//알림
-	public Vector<MsgBean> msgList(String user_id){
+	public Vector<MsgBean> showMsgList(String user_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1331,6 +1331,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				MsgBean bean = new MsgBean();
+				bean.setMsg_id(rs.getInt("msg_id"));
 				bean.setSender_id(rs.getString("sender_id"));
 				bean.setMsg_title(rs.getString("msg_title"));
 				bean.setMsg_content(rs.getString("msg_content"));
@@ -1365,6 +1366,32 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt);
 		}
 		return flag;
+	}
+	
+	//알림 하나 출력
+	public MsgBean showOneMsg(int msg_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		MsgBean bean = new MsgBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from msg where msg_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, msg_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setMsg_title(rs.getString("msg_title"));
+				bean.setMsg_content(rs.getString("msg_content"));
+				bean.setSender_id(rs.getString("sender_id"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
 	}
 	
 	
