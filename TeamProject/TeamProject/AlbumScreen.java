@@ -174,6 +174,5 @@ public class AlbumScreen extends JFrame{
 		}
 
 		public static void main(String[] args) {
-			new AlbumScreen();
 		}
 	}

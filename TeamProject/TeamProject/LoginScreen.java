@@ -251,5 +251,6 @@ public class LoginScreen extends JFrame {
 
 	public static void main(String[] args) {
 		new LoginScreen();
+		//
 	}
 }

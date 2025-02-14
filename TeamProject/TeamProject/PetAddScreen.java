@@ -260,5 +260,6 @@ public class PetAddScreen extends JFrame {
 
 	public static void main(String[] args) {
 		new LoginScreen();
+		//
 	}
 }

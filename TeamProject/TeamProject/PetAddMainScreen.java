@@ -108,8 +108,7 @@ public class PetAddMainScreen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
-				StaticData.pet_id = bean[0].getPet_id();
-				new PetHomeScreen(StaticData.pet_id);
+				new PetHomeScreen(bean[0].getPet_id());
 			}
 		});
 		add(petProfileLabel);
@@ -147,8 +146,7 @@ public class PetAddMainScreen extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					dispose();
-					StaticData.pet_id = bean[1].getPet_id();
-					new PetHomeScreen(StaticData.pet_id);
+					new PetHomeScreen(bean[1].getPet_id());
 				}
 			});
 			add(petProfileLabel);
