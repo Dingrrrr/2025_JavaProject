@@ -45,12 +45,16 @@ public class AlbumMainScreen extends JFrame {
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
+					dispose();
+					new AlarmMainScreen(AlbumMainScreen.this);
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(AlbumMainScreen.this);
 				} else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+					setEnabled(false);
+					new AlbumChooseDialog(AlbumMainScreen.this);
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
@@ -213,6 +217,7 @@ public class AlbumMainScreen extends JFrame {
 			albumWithTagPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					setEnabled(false);
 					new AlbumResultDialog(ab, AlbumMainScreen.this);	//매개변수로 ab 넣어야함 -> albumResultDialog 수정되면 수정
 				}
 			});

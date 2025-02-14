@@ -20,7 +20,7 @@ public class AlarmMainScreen extends JFrame {
 	private JScrollPane scrollPane; // 스크롤 패널
 	private JButton SendButton;
 
-	public AlarmMainScreen() {
+	public AlarmMainScreen(Frame preFrame) {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
@@ -41,10 +41,16 @@ public class AlarmMainScreen extends JFrame {
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
+					dispose();
+					new AlarmMainScreen(preFrame);
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(AlarmMainScreen.this);
 				} else if (source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
+					dispose();
+					preFrame.setVisible(true);
 				} else if (source == SendButton) {
 					System.out.println("쪽지 보내기 버튼 클릭됨");
 				}
@@ -210,6 +216,6 @@ public class AlarmMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new AlarmMainScreen();
+		new LoginScreen();
 	}
 }
