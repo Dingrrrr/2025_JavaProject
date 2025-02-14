@@ -387,7 +387,7 @@ public class TPMgr {
 		Vector<DogBean> vlist = new Vector<DogBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from dog_species where dog like %?%";
+			sql = "select * from dog_species where dog like ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, dogSearch);
 			rs = pstmt.executeQuery();

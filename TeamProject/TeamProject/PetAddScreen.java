@@ -32,6 +32,7 @@ public class PetAddScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		bean = new PetBean();
+		StaticData.selectedItem = "";
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -140,6 +141,7 @@ public class PetAddScreen extends JFrame {
 		petSpecTField.setBorder(BorderFactory.createCompoundBorder(
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 		    ));
+		petSpecTField.setEnabled(false);
 		add(petSpecTField);
 
 		// 반려동물 종 검색 버튼
@@ -257,6 +259,10 @@ public class PetAddScreen extends JFrame {
 		panel.add(closeButton);
 
 		setVisible(true);
+	}
+	
+	public void updateSpecies(String species) {
+		petSpecTField.setText(species);
 	}
 
 	/**
