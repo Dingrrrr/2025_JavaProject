@@ -57,12 +57,13 @@ public class PetAddScreen extends JFrame {
 				} else if (source == petSpSearchButton) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					if (pssd == null) {
-						pssd = new PetSpeciesSearchDialog();
+						pssd = new PetSpeciesSearchDialog(PetAddScreen.this);
 						pssd.setLocation(getX() + 25, getY() + 350);
 					} else {
 						pssd.setLocation(getX() + 25, getY() + 350);
 						pssd.setVisible(true);
 					}
+					setEnabled(false);
 				} else if (source == nextButton) {
 					System.out.println("다음 단계 버튼 클릭됨!");
 					if(petNameTField.getText().trim().isEmpty()) {

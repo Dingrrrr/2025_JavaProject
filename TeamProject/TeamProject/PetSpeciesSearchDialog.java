@@ -10,6 +10,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Vector;
+
 import javax.imageio.ImageIO;
 
 public class PetSpeciesSearchDialog extends JFrame {
@@ -19,14 +21,19 @@ public class PetSpeciesSearchDialog extends JFrame {
 	private JButton searchButton;
 	private JTextField searchTextField;
 	private JTextArea searchResultTextArea;
+	private String dogSearch;
+	TPMgr mgr;
+	Vector<DogBean> vlist;
 
-	public PetSpeciesSearchDialog() {
+	public PetSpeciesSearchDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 450);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBackground(new Color(0, 0, 0, 0)); // 투명 배경 설정
+		mgr = new TPMgr();
+		vlist = mgr.showDog();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -42,8 +49,16 @@ public class PetSpeciesSearchDialog extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
 				} else if (source == searchButton) {
+					Vector<DogBean> vd = new Vector<DogBean>();
 					System.out.println("검색 버튼 클릭됨");
+					dogSearch = searchTextField.getText().trim();
+					vd = mgr.showSearchDog(dogSearch);
+					searchResultTextArea.setText("");
+					for (DogBean db : vd) {
+						searchResultTextArea.append(db.getDog());
+					}
 				} 
 			}
 		};
@@ -78,7 +93,9 @@ public class PetSpeciesSearchDialog extends JFrame {
 		//설명 필드 추가
 		searchResultTextArea = new JTextArea();
 		searchResultTextArea.setBounds(15, 95, 318, 330);
-		searchResultTextArea.setText("ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ");
+		for (DogBean db : vlist) {
+			searchResultTextArea.append(db.getDog());
+		}
 		searchResultTextArea.setLineWrap(true);
 		searchResultTextArea.setWrapStyleWord(true);
 		searchResultTextArea.setBorder(BorderFactory.createCompoundBorder(
@@ -122,6 +139,6 @@ public class PetSpeciesSearchDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetSpeciesSearchDialog();
+		new LoginScreen();
 	}
 }
