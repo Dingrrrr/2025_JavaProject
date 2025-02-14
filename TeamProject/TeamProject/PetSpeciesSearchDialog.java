@@ -31,7 +31,6 @@ public class PetSpeciesSearchDialog extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBackground(new Color(0, 0, 0, 0)); // 투명 배경 설정
 		mgr = new TPMgr();
 		vlist = mgr.showDog();
 
@@ -59,7 +58,7 @@ public class PetSpeciesSearchDialog extends JFrame {
 					for (DogBean db : vd) {
 						searchResultTextArea.append(db.getDog());
 					}
-				} 
+				}
 			}
 		};
 
@@ -72,36 +71,61 @@ public class PetSpeciesSearchDialog extends JFrame {
 		// 검색할 품종 종류 필드
 		searchTextField = new JTextField();
 		searchTextField.setBounds(15, 60, 250, 30);
-		searchTextField.setText("");		
+		searchTextField.setText("");
 		searchTextField.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("검색 결과 출력 바람");
 			}
 		});
 		add(searchTextField);
-		
+
 		// 검색 버튼
 		searchButton = new JButton("검색");
-		searchButton.setBounds(265, 60, 70,30);
+		searchButton.setBounds(265, 60, 70, 30);
 		searchButton.setBackground(new Color(91, 91, 91));
 		searchButton.setForeground(Color.WHITE);
 		searchButton.addMouseListener(commonMouseListener);
 		add(searchButton);
 
-		//설명 필드 추가
-		searchResultTextArea = new JTextArea();
-		searchResultTextArea.setBounds(15, 95, 318, 330);
+		/*
+		 * // 설명 필드 추가 searchResultTextArea = new JTextArea();
+		 * searchResultTextArea.setBounds(15, 95, 318, 330); for (DogBean db : vlist) {
+		 * searchResultTextArea.append(db.getDog()); }
+		 * searchResultTextArea.setLineWrap(true);
+		 * searchResultTextArea.setWrapStyleWord(true); searchResultTextArea
+		 * .setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(10), new
+		 * EmptyBorder(10, 5, 10, 5) )); add(searchResultTextArea);
+		 */
+
+		// 검색 결과 리스트 모델 및 JList 생성
+		DefaultListModel<String> dogList = new DefaultListModel<>();
+		JList<String> searchResultList = new JList<>(dogList);
+		JScrollPane scrollPane = new JScrollPane(searchResultList);
+
+		// 스크롤 및 테두리 설정
+		scrollPane.setBounds(15, 95, 318, 330);
+		scrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));  // 테두리 설정
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // 수직 스크롤 바 숨김
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // 수평 스크롤 바 숨김
+
+		// JList 크기 고정 (스크롤 방지)
+		searchResultList.setFixedCellHeight(30);  // 각 항목 높이 고정
+		searchResultList.setFixedCellWidth(303);  // 너비 고정
+
+		// 데이터 추가 (DogBean에서 정보 가져오기)
 		for (DogBean db : vlist) {
-			searchResultTextArea.append(db.getDog());
+		    dogList.addElement(db.getDog()); // 리스트에 추가
 		}
-		searchResultTextArea.setLineWrap(true);
-		searchResultTextArea.setWrapStyleWord(true);
-		searchResultTextArea.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(10), new EmptyBorder(10, 5, 10, 5) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
-		add(searchResultTextArea);
+
+		// 리스트 스타일 설정
+		searchResultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		searchResultList.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(10), new EmptyBorder(10, 5, 10, 5))); // 둥근 테두리 설정
+		searchResultList.setBackground(Color.WHITE); // 배경색 설정 (선택적)
+
+		// 리스트 추가
+		add(scrollPane);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
