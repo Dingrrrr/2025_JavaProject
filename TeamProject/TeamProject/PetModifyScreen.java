@@ -16,7 +16,7 @@ public class PetModifyScreen extends JFrame {
 	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
 
-	public PetModifyScreen() {
+	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
@@ -37,6 +37,9 @@ public class PetModifyScreen extends JFrame {
 
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
+					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == deleteLabel) {
 					System.out.println("반려동물 프로필 사진 삭제 클릭됨!");
 				} else if (source == petAddProButton) {
@@ -219,6 +222,5 @@ public class PetModifyScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetModifyScreen();
 	}
 }

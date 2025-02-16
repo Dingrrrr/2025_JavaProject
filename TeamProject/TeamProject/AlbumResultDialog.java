@@ -21,6 +21,7 @@ public class AlbumResultDialog extends JFrame {
 	private String tag, write;
 	TPMgr mgr;
 	AlbumBean bean;
+	private AlbumPhotoModifyDialog amd;
 	
 	public AlbumResultDialog(AlbumBean ab, AlbumMainScreen preFrame) {
 		setTitle("프레임 설정");
@@ -50,8 +51,13 @@ public class AlbumResultDialog extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
-					setEnabled(false);
-					new AlbumModifyDialog(AlbumResultDialog.this);
+					if(amd==null) {
+						amd = new AlbumPhotoModifyDialog(AlbumResultDialog.this);
+						amd.setLocation(getX()+1, getY()+455);
+					}else {
+						amd.setLocation(getX()+1, getY()+455);
+						amd.setVisible(true);
+					}
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
 					write = diaryWriteArea.getText().trim();

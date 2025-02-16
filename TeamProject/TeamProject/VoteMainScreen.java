@@ -61,9 +61,9 @@ public class VoteMainScreen extends JFrame {
 					System.out.println("투표 추가 버튼 클릭됨!");
 					if (va == null) {
 						va = new VoteAddDialog();
-						va.setLocation(getX() + 25, getY() + 300);
+						va.setLocation(getX() + 25, getY() + 150);
 					} else {
-						va.setLocation(getX() + 25, getY() + 300);
+						va.setLocation(getX() + 25, getY() + 150);
 						va.setVisible(true);
 					}
 				}else if (source == popularButton) {

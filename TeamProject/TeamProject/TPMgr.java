@@ -574,6 +574,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				HRBean bean = new HRBean();
+				bean.setRecord_id(rs.getInt("record_id"));
 				bean.setHr_date(rs.getTimestamp("hr_date"));
 				bean.setHeight(rs.getBigDecimal("height"));
 				bean.setWeight(rs.getBigDecimal("weight"));
