@@ -45,27 +45,38 @@ public class VoteMainScreen extends JFrame {
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
+					dispose();
+					new AlarmMainScreen(VoteMainScreen.this);
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
-				} else if (source == voteLabel) {
-					System.out.println("투표 버튼 클릭됨!");
+					dispose();
+					new UpdateUserScreen(VoteMainScreen.this);
 				} else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+					setEnabled(false);
+					new AlbumChooseDialog(VoteMainScreen.this);
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
+					dispose();
+					new PetHomeScreen(StaticData.pet_id);
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
+					dispose();
+					new CommuMainScreen();
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
+					dispose();
+					new VoteMainScreen();
 				} else if (source == addButtonLabel) {
 					System.out.println("투표 추가 버튼 클릭됨!");
 					if (va == null) {
-						va = new VoteAddDialog();
+						va = new VoteAddDialog(VoteMainScreen.this);
 						va.setLocation(getX() + 25, getY() + 300);
 					} else {
 						va.setLocation(getX() + 25, getY() + 300);
 						va.setVisible(true);
 					}
+					setEnabled(false);
 				}else if (source == popularButton) {
 					System.out.println("인기순 버튼 클릭됨");
 				} else if (source == recentButton) {
@@ -205,9 +216,7 @@ public class VoteMainScreen extends JFrame {
 	/**
 	 * 투표 추가 메서드
 	 */
-	/**
-	 * 투표 추가 메서드
-	 */
+	
 	private void addVote() {
 		// 1️⃣ 개별 투표 아이템을 담을 패널 생성
 		JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용

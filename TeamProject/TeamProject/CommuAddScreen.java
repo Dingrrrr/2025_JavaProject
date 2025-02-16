@@ -45,6 +45,7 @@ public class CommuAddScreen extends JFrame {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
 					//이미지 추가

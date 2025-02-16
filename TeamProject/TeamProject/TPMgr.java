@@ -940,6 +940,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				ComuBean bean = new ComuBean();
+				bean.setPost_id(rs.getInt("post_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setComu_date(rs.getTimestamp("comu_date"));
 				bean.setComu_image(rs.getString("comu_image"));
@@ -954,6 +955,7 @@ public class TPMgr {
 		}
 		return vlist;
 	}
+	
 	
 	//커뮤니티 댓글 추가
 	public void addCmt(int post_id, int user_id, String cmt) {

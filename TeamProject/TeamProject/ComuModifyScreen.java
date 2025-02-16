@@ -19,13 +19,19 @@ public class ComuModifyScreen extends JFrame {
 	private JTextField titleField;
 	private JTextArea contentArea;
 	private JButton saveButton, delButton;
+	private String title, content;
+	ComuBean bean;
+	TPMgr mgr;
 
-	public ComuModifyScreen() {
+	public ComuModifyScreen(WritenCommuScreen preFrame, ComuBean cb) {
 		setTitle("프레임 설정");
 		setSize(364, 630);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bean = new ComuBean();
+		bean.setComu_image("");
+		mgr = new TPMgr();
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -41,12 +47,27 @@ public class ComuModifyScreen extends JFrame {
 						if (source == closeLabel) {
 							System.out.println("닫기 버튼 클릭됨");
 							dispose(); // 창 닫기
+							preFrame.setEnabled(true);
 						} else if (source == saveButton) {
 							System.out.println("저장 버튼 클리됨");
+							title = titleField.getText().trim();
+							content = contentArea.getText().trim();
+							bean.setComu_title(title);
+							bean.setComu_content(content);
+							mgr.updComu(cb.getPost_id(), bean);
+							dispose();
+							preFrame.updateTitleContent(title, content);
+							preFrame.setEnabled(true);
 						} else if (source == delButton) {
 							System.out.println("삭제 버튼 클릭됨");
+							mgr.delComu(cb.getPost_id());
+							dispose();
+							preFrame.dispose();
+							new CommuMainScreen();
 						} else if (source == addButtonLabel) {
 							System.out.println("추가 버튼 클릭됨");
+							setEnabled(false);
+							new ComuModifyDialog();
 						}
 					}
 				};
@@ -56,9 +77,8 @@ public class ComuModifyScreen extends JFrame {
 				titleLabel.setForeground(Color.BLACK);
 				add(titleLabel);
 				
-				titleField = new JTextField();
+				titleField = new JTextField(cb.getComu_title());
 				titleField.setBounds(35, 51, 280, 32);
-				titleField.setText("");
 				titleField.setBorder(BorderFactory.createCompoundBorder(
 					new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				));
@@ -81,9 +101,8 @@ public class ComuModifyScreen extends JFrame {
 				contentLabel.setForeground(Color.BLACK);
 				add(contentLabel);
 				
-				contentArea = new JTextArea();
+				contentArea = new JTextArea(cb.getComu_content());
 				contentArea.setBounds(35, 400, 280, 116);
-				contentArea.setText("");
 				contentArea.setLineWrap(true);
 				contentArea.setWrapStyleWord(true);
 				contentArea.setBorder(BorderFactory.createCompoundBorder(
@@ -152,6 +171,6 @@ public class ComuModifyScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new ComuModifyScreen();
+//		new ComuModifyScreen();
 	}
 }

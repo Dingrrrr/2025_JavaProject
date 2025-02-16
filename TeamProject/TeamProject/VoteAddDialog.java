@@ -14,13 +14,15 @@ public class VoteAddDialog extends JFrame {
 	private JLabel votetitleLabel, closeLabel, grayFrameLabel, addButtonLabel;
 	private JButton addButton;
 	private VotePhotoModifyDialog vpmd;
+	TPMgr mgr;
 
-	public VoteAddDialog() {
+	public VoteAddDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 500);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -36,6 +38,7 @@ public class VoteAddDialog extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
 					if(vpmd==null) {
@@ -105,6 +108,10 @@ public class VoteAddDialog extends JFrame {
 		
 		setVisible(true);
 	}
+	
+	public void updateImage() {
+		//회색 프레임에 이미지 출력
+	}
 
 	private JLabel createScaledImageLabel(String imagePath, int width, int height) {
 		ImageIcon icon = new ImageIcon(imagePath);
@@ -113,6 +120,6 @@ public class VoteAddDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new VoteAddDialog();
+		new LoginScreen();
 	}
 }

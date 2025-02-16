@@ -21,7 +21,7 @@ public class WritenCommuScreen extends JFrame {
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
 	private JButton SendButton;
 
-	public WritenCommuScreen() {
+	public WritenCommuScreen(JFrame preFrame, ComuBean cb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -42,8 +42,12 @@ public class WritenCommuScreen extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == modifyLabel) {
 					System.out.println("수정버튼 클릭됨");
+					setEnabled(false);
+					new ComuModifyScreen(WritenCommuScreen.this, cb);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
 				}
@@ -118,9 +122,8 @@ public class WritenCommuScreen extends JFrame {
 		TitleLabel.setForeground(Color.black);
 
 		// 제목 텍스트 필드
-		TitleTArea = new JTextArea();
+		TitleTArea = new JTextArea(cb.getComu_title());
 		TitleTArea.setBounds(5, 45, 330, 30);
-		TitleTArea.setText("");
 		TitleTArea.setEditable(false);
 		TitleTArea.setBorder(BorderFactory.createCompoundBorder(
 		    new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)
@@ -132,9 +135,8 @@ public class WritenCommuScreen extends JFrame {
 		ExplainLabel.setForeground(Color.black);
 
 		// 설명 텍스트 필드
-		ExplainTArea = new JTextArea();
+		ExplainTArea = new JTextArea(cb.getComu_content());
 		ExplainTArea.setBounds(5, 120, 330, 100);
-		ExplainTArea.setText("");
 		ExplainTArea.setEditable(false);
 		ExplainTArea.setBorder(BorderFactory.createCompoundBorder(
 		    new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)
@@ -252,6 +254,11 @@ public class WritenCommuScreen extends JFrame {
 				    commuItemPanel.add(contentPanel,BorderLayout.CENTER);
 				   CommuPanel.add(commuItemPanel);
 				}
+				
+	public void updateTitleContent(String title, String content) {
+		TitleTArea.setText(title);
+		ExplainTArea.setText(content);
+	}
 	
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
@@ -263,6 +270,6 @@ public class WritenCommuScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new WritenCommuScreen();
+//		new WritenCommuScreen();
 	}
 }
