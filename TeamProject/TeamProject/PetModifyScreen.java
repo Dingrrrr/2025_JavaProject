@@ -18,6 +18,7 @@ public class PetModifyScreen extends JFrame {
 	private String name, spec, birth;
 	TPMgr mgr;
 	PetBean bean, pb;
+	private PetPhotoModifyDialog ppm;
 
 	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -48,10 +49,15 @@ public class PetModifyScreen extends JFrame {
 					preFrame.setEnabled(true);
 					dispose();
 					preFrame.setVisible(true);
-				} else if (source == deleteLabel) {
-					System.out.println("반려동물 프로필 사진 삭제 클릭됨!");
 				} else if (source == petAddProButton) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
+					if (ppm == null) {
+						ppm = new PetPhotoModifyDialog(PetModifyScreen.this);
+						ppm.setLocation(getX()+22, getY() + 630);
+					} else {
+						ppm.setLocation(getX()+22, getY() + 630);
+						ppm.setVisible(true);
+					}
 				} else if (source == petSpSearchButton) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					setEnabled(false);
@@ -96,13 +102,7 @@ public class PetModifyScreen extends JFrame {
 		petProfileLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
 		petProfileLabel.setBounds(70, 189, 270, 270);
 		add(petProfileLabel);
-
-		// 🔹 펫 프로필 사진 삭제 이미지
-		deleteLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
-		deleteLabel.setBounds(332, 180, 28, 28);
-		deleteLabel.addMouseListener(commonMouseListener);
-		add(deleteLabel);
-
+		
 		// 반려동물 프로필 사진 추가 버튼
 		petAddProButton = new JButton("추가");
 		petAddProButton.setBounds(277, 450, 80, 35);

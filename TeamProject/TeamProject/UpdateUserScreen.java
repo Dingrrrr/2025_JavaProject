@@ -22,6 +22,7 @@ public class UpdateUserScreen extends JFrame {
 	boolean flag = false;
 	private JFrame previousFrame;  // 이전 프레임 저장
 	TPMgr mgr;
+	private UserPhotoModifyDialog upm;
 
 	public UpdateUserScreen(JFrame previousFrame) {
 		setTitle("회원정보 수정");
@@ -53,10 +54,15 @@ public class UpdateUserScreen extends JFrame {
 						dispose();						
 						new UserHomeScreen();
 					}
-				} else if (source == delLabel) {
-					System.out.println("유저 프로필 사진 삭제 클릭됨!");
 				} else if (source == addButton) {
 					System.out.println("유저 프로필 사진 추가 클릭됨!");
+					if (upm == null) {
+						upm = new UserPhotoModifyDialog(UpdateUserScreen.this);
+						upm.setLocation(getX()+22, getY() + 630);
+					} else {
+						upm.setLocation(getX()+22, getY() + 630);
+						upm.setVisible(true);
+					}
 				} else if (source == updataButton) {
 					System.out.println("유저 정보 수정 버튼 클릭됨!");
 					nameField.setEnabled(true);
@@ -90,27 +96,12 @@ public class UpdateUserScreen extends JFrame {
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
 
-		// 삭제 아이콘
-		delLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
-		delLabel.setBounds(332, 180, 28, 28);
-		delLabel.addMouseListener(commonMouseListener);
-		delLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-//				UserBean b = new UserBean();
-//				b.setUser_image("");		//기본이미지 주소
-//				mgr.userUpd(LoginScreen.id, b);
-				revalidate(); 	//새로고침
-			}
-		});
-		add(delLabel);
-
 		// 메인 프로필 이미지
 		profileLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
 		profileLabel.setBounds(70, 189, 270, 270);
 		add(profileLabel);
 
-		// 추가 버튼
+		// 이미지 추가 버튼
 		addButton = new RoundedButton("추가");
 		addButton.setBounds(277, 450, 80, 35);
 		addButton.setBackground(new Color(91, 91, 91));

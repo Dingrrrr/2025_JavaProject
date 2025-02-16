@@ -50,7 +50,6 @@ public class AlbumAddDialog extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
-					System.out.println("+아이콘 클릭됨");
 					if (amd == null) {
 						amd = new AlbumPhotoModifyDialog(AlbumAddDialog.this);
 						amd.setLocation(getX() + 1, getY() + 455);
