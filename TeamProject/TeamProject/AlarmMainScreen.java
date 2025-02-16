@@ -136,6 +136,7 @@ public class AlarmMainScreen extends JFrame {
 	 * 알림 추가 메서드
 	 */
 	private void addAlarm() {
+		
 	    // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
 	    alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
 
