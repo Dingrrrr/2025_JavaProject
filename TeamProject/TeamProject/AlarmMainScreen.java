@@ -143,6 +143,9 @@ public class AlarmMainScreen extends JFrame {
 	 * 알림 추가 메서드
 	 */
 	private void addAlarm() {
+	    // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
+	    alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
+
 		for (MsgBean mb : vlist) {
 			StaticData.msg_id = mb.getMsg_id();
 			 // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
@@ -155,7 +158,6 @@ public class AlarmMainScreen extends JFrame {
 		    		new NoteCheckScreen(AlarmMainScreen.this);
 		    	}
 		    });
-
 		    // 알람 항목 패널
 		    JPanel alarmItemPanel = new JPanel();
 		    alarmItemPanel.setPreferredSize(new Dimension(353, 120));
