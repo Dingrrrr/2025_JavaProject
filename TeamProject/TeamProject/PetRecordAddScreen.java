@@ -70,7 +70,7 @@ public class PetRecordAddScreen extends JFrame {
 					System.out.println(pet_id);
 					mgr.addHRPet(pet_id, bean);
 					dispose();
-					new PetAddMainScreen();
+					new PetHomeScreen(pet_id);
 				} else if(source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");	
 					dispose();

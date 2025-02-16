@@ -66,6 +66,8 @@ public class DiaryScreen extends JFrame{
 					new CommuMainScreen();
 				}else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
+					dispose();
+					new VoteMainScreen();
 				}
 			}
 		};

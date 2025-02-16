@@ -69,6 +69,8 @@ public class DiaryMainScreen extends JFrame {
 					new CommuMainScreen();
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
+					dispose();
+					new VoteMainScreen();
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {
