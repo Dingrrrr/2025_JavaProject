@@ -210,7 +210,7 @@ public class TPMgr {
 			pstmt.setString(3, bean.getPet_age());
 			pstmt.setString(4, bean.getPet_gender());
 			pstmt.setString(5, bean.getPet_image());
-			pstmt.setInt(6, bean.getPet_id());
+			pstmt.setInt(6, pet_id);
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)
 				flag = true;

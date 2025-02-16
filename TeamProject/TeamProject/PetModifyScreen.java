@@ -15,6 +15,9 @@ public class PetModifyScreen extends JFrame {
 	private JTextField petNameTField, petSpecTField, petBirthTField;
 	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
+	private String name, spec, birth;
+	TPMgr mgr;
+	PetBean bean, pb;
 
 	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -22,6 +25,10 @@ public class PetModifyScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		bean = mgr.showOnePet(StaticData.pet_id);
+		pb = new PetBean();
+		pb.setPet_image("");
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -39,6 +46,7 @@ public class PetModifyScreen extends JFrame {
 					System.out.println("뒤로가기 클릭됨");
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
+					dispose();
 					preFrame.setVisible(true);
 				} else if (source == deleteLabel) {
 					System.out.println("반려동물 프로필 사진 삭제 클릭됨!");
@@ -46,10 +54,34 @@ public class PetModifyScreen extends JFrame {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 				} else if (source == petSpSearchButton) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
+					setEnabled(false);
+					new PetSpeciesSearchDialogByModify(PetModifyScreen.this);
 				} else if (source == petModifyButton) {
 					System.out.println("반려동물 정보 수정 버튼 클릭됨!");
+					name = petNameTField.getText().trim();
+					spec = petSpecTField.getText().trim();
+					birth = petBirthTField.getText().trim();
+					pb.setPet_name(name);
+					pb.setPet_species(spec);
+					pb.setPet_age(birth);
+					if(petMaleRdButton.isSelected()) {
+						pb.setPet_gender("수컷");
+					} else if(petFemaleRdBotton.isSelected()){
+						pb.setPet_gender("암컷");
+					}
+					mgr.updPet(StaticData.pet_id, pb);
+					dispose();
+					new PetHomeScreen(StaticData.pet_id);
+						
 				} else if (source == petDeleteButton) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
+					mgr.delPet(StaticData.pet_id);
+					dispose();
+					if(mgr.isPet(StaticData.user_id)) {
+						new PetAddMainScreen();
+					} else {
+						new UserHomeScreen();
+					}
 				}
 			}
 		};
@@ -86,9 +118,8 @@ public class PetModifyScreen extends JFrame {
 		add(petNameLabel);
 
 		// 반려동물 이름 텍스트 필드 추가
-		petNameTField = new JTextField();
+		petNameTField = new JTextField(bean.getPet_name());
 		petNameTField.setBounds(43, 520, 318, 40);
-		petNameTField.setText("");
 		add(petNameTField);
 
 		// 반려동물 종 라벨
@@ -98,9 +129,8 @@ public class PetModifyScreen extends JFrame {
 		add(petSpecLabel);
 
 		// 반려동물 종 텍스트 필드 추가
-		petSpecTField = new JTextField();
+		petSpecTField = new JTextField(bean.getPet_species());
 		petSpecTField.setBounds(43, 608, 225, 40);
-		petSpecTField.setText("");
 		add(petSpecTField);
 
 		// 반려동물 종 검색 버튼
@@ -118,9 +148,8 @@ public class PetModifyScreen extends JFrame {
 		add(petBirthLabel);
 
 		// 반려동물 종 생년월일 필드 추가
-		petBirthTField = new JTextField();
+		petBirthTField = new JTextField(bean.getPet_age());
 		petBirthTField.setBounds(43, 696, 147, 40);
-		petBirthTField.setText("");
 		add(petBirthTField);
 
 		// 반려동물 성별 라벨
@@ -161,6 +190,12 @@ public class PetModifyScreen extends JFrame {
 		ButtonGroup group = new ButtonGroup();
 		group.add(petMaleRdButton);
 		group.add(petFemaleRdBotton);
+		
+		if(bean.getPet_gender().equals("수컷")) 
+			petMaleRdButton.setSelected(true);
+		else if(bean.getPet_gender().equals("암컷")) 
+			petFemaleRdBotton.setSelected(true);
+		
 
 		// 반려동물 정보 수정 버튼
 		petModifyButton = new JButton("수정");
@@ -211,6 +246,10 @@ public class PetModifyScreen extends JFrame {
 
 		setVisible(true);
 	}
+	
+	public void updateSpecies(String species) {
+		petSpecTField.setText(species);
+	}
 
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
@@ -222,5 +261,6 @@ public class PetModifyScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		new LoginScreen();
 	}
 }

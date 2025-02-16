@@ -24,6 +24,8 @@ public class DiaryMainScreen extends JFrame {
 	private JScrollPane scrollPane; // 스크롤 패널
 	private DiaryAddDialog pc;
 	TPMgr mgr = new TPMgr();
+	Vector<PetBean> vlist1;
+	PetBean bean[] = new PetBean[2];
 	Vector<DiaryBean> vlist = mgr.showDiary(StaticData.pet_id);
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
@@ -34,6 +36,11 @@ public class DiaryMainScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		vlist1 = mgr.showPet(StaticData.user_id);
+		try {
+			bean[0] = (PetBean)vlist1.elementAt(0);
+			bean[1] = (PetBean)vlist1.elementAt(1);
+		} catch (Exception e) {}
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -62,13 +69,15 @@ public class DiaryMainScreen extends JFrame {
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
-					new PetAddMainScreen();
+					new PetHomeScreen(bean[0].getPet_id());
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 					dispose();
 					new CommuMainScreen();
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
+					dispose();
+					new VoteMainScreen();
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {

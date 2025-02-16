@@ -7,12 +7,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Vector;
 
 public class AlbumScreen extends JFrame{
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, addButtonLabel,photoLabel, homeLabel, commuLabel, voteLabel  ;
 	private JLabel additionLabel, welcomeLabel1, welcomeLabel2, welcomeLabel3;
 	private AlbumAddDialog pc;
+	TPMgr mgr = new TPMgr();
+	Vector<PetBean> vlist1;
+	PetBean bean[] = new PetBean[2];
 	
 	
 	public AlbumScreen() {
@@ -21,6 +25,11 @@ public class AlbumScreen extends JFrame{
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		vlist1 = mgr.showPet(StaticData.user_id);
+		try {
+			bean[0] = (PetBean)vlist1.elementAt(0);
+			bean[1] = (PetBean)vlist1.elementAt(1);
+		} catch (Exception e) {}
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -58,7 +67,7 @@ public class AlbumScreen extends JFrame{
 				}else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
-					new PetAddMainScreen();
+					new PetHomeScreen(bean[0].getPet_id());
 				}else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 					dispose();
