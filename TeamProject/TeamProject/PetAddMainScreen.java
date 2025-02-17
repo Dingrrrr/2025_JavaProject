@@ -11,18 +11,21 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
+	private ImageIcon image2;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
 	Vector<PetBean> vlist;
-	PetBean bean[] = new PetBean[2];
 	private PetChooseDialog pc;
-	
+	private JPanel petaddPanel;
+	private JScrollPane scrollPane;	
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -31,10 +34,7 @@ public class PetAddMainScreen extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		vlist = mgr.showPet(StaticData.user_id);
-		try {
-			bean[0] = (PetBean)vlist.elementAt(0);
-			bean[1] = (PetBean)vlist.elementAt(1);
-		} catch (Exception e) {}
+
 		
 
 		try {
@@ -51,8 +51,6 @@ public class PetAddMainScreen extends JFrame {
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
-					dispose();
-					new AlarmMainScreen(PetAddMainScreen.this);
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
@@ -71,7 +69,7 @@ public class PetAddMainScreen extends JFrame {
 						pc.setLocation(getX()+25, getY()+300);
 						pc.setVisible(true);
 					}
-					setEnabled(false);
+					//동물 선택 다이어로그가 켜지면 뒤에 로그아웃, 알림, 사용자 정보 수정 버튼 비활성화
 					
 				}
 			}
@@ -101,88 +99,10 @@ public class PetAddMainScreen extends JFrame {
 		welcomeLabel.setForeground(Color.BLACK);
 		add(welcomeLabel);
 		
-		//한 사용자당 반려동물은 2마리로 제한
 			
+		
 		//반려견 프로필
-		petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
-		petProfileLabel.setBounds(37, 461, 150, 150);
-		petProfileLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				dispose();
-				new PetHomeScreen(bean[0].getPet_id());
-			}
-		});
-		add(petProfileLabel);
-				
-		//반려견 이름
-		petNameLabel = new JLabel("이름 : " + bean[0].getPet_name());
-		petNameLabel.setBounds(222, 482, 146, 26);
-		petNameLabel.setForeground(Color.BLACK);
-		add(petNameLabel);
-				
-		//반려견 종
-		petSpeciesLabel = new JLabel("종 : " +bean[0].getPet_species());
-		petSpeciesLabel.setBounds(222, 512, 146, 26);
-		petSpeciesLabel.setForeground(Color.BLACK);
-		add(petSpeciesLabel);
-				
-		//반려견 생년월일
-		petAgeLabel = new JLabel("나이 : " + bean[0].getPet_age());
-		petAgeLabel.setBounds(222, 542, 146, 26);
-		petAgeLabel.setForeground(Color.BLACK);
-		add(petAgeLabel);
-				
-		//반려견 성별
-		petGenderLabel = new JLabel("성별 : " + bean[0].getPet_gender());
-		petGenderLabel.setBounds(222, 572, 146, 26);
-		petGenderLabel.setForeground(Color.BLACK);
-		add(petGenderLabel);
 		
-		if(bean[1] != null) {	//두 마리일 경우
-			
-			//반려견 프로필
-			petProfileLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
-			petProfileLabel.setBounds(37, 667, 150, 150);
-			petProfileLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					dispose();
-					new PetHomeScreen(bean[1].getPet_id());
-				}
-			});
-			add(petProfileLabel);
-			
-			//반려견 이름
-			petNameLabel = new JLabel("이름 : " + bean[1].getPet_name());
-			petNameLabel.setBounds(222, 688, 146, 26);
-			petNameLabel.setForeground(Color.BLACK);
-			add(petNameLabel);
-			
-			//반려견 종
-			petSpeciesLabel = new JLabel("종 : " +bean[1].getPet_species());
-			petSpeciesLabel.setBounds(222, 718, 146, 26);
-			petSpeciesLabel.setForeground(Color.BLACK);
-			add(petSpeciesLabel);
-			
-			//반려견 생년월일
-			petAgeLabel = new JLabel("나이 : " + bean[1].getPet_age());
-			petAgeLabel.setBounds(222, 748, 146, 26);
-			petAgeLabel.setForeground(Color.BLACK);
-			add(petAgeLabel);
-			
-			//반려견 성별
-			petGenderLabel = new JLabel("성별 : " + bean[1].getPet_gender());
-			petGenderLabel.setBounds(222, 778, 146, 26);
-			petGenderLabel.setForeground(Color.BLACK);
-			add(petGenderLabel);
-		}
-		
-		//반려견 추가 버튼
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-		addButtonLabel.setBounds(280, 730, 70, 70);
-		addButtonLabel.addMouseListener(commonMouseListener);
-		add(addButtonLabel);
 		
 		// 로그아웃 버튼
 		logoutButton = new RoundedButton("로그아웃");
@@ -193,6 +113,7 @@ public class PetAddMainScreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				mgr.userOut(StaticData.user_id);
 				new LoginScreen();
 			}
 		});
@@ -220,6 +141,32 @@ public class PetAddMainScreen extends JFrame {
 		panel.setOpaque(false);
 		panel.setLayout(null);
 		add(panel);
+		
+		// 🔹 스크롤 가능한 게시글 패널 설정
+		petaddPanel = new JPanel();
+		petaddPanel.setLayout(new BoxLayout(petaddPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
+		petaddPanel.setBackground(Color.darkGray);
+		
+
+		petAddMain();
+				
+				// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
+				scrollPane = new JScrollPane(petaddPanel);
+				scrollPane.setBounds(23, 430, 357, 360);
+				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
+				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+				panel.add(scrollPane);
+				
+				// 🔹 추가 버튼 (화면에 고정)
+				addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
+				addButtonLabel.setBounds(300, 700, 70, 70);
+				addButtonLabel.addMouseListener(commonMouseListener);
+				addButtonLabel.setOpaque(true);
+				addButtonLabel.setBackground(new Color(255, 255, 255, 0));
+				addButtonLabel.setVisible(true);
+				getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
+
 
 		// 닫기 버튼
 		JButton closeButton = new JButton("X");
@@ -234,6 +181,78 @@ public class PetAddMainScreen extends JFrame {
 		setVisible(true);
 
 	}
+	
+	private void petAddMain() {
+		
+		for (PetBean pb : vlist) {
+			JPanel petAddMainPanel = new JPanel();
+			petAddMainPanel.setPreferredSize(new Dimension(353, 150)); // 크기 지정
+			petAddMainPanel.setBackground(Color.WHITE);
+			petAddMainPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+			petAddMainPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
+			
+			// 2) 상단 패널 (USER_ID + 날짜)
+		    JPanel topPanel = new JPanel(new BorderLayout());
+		   
+		  
+		    
+		 // 왼쪽 - 이미지
+		    ImageIcon originalIcon = new ImageIcon("TeamProject/dog.png");
+		    Image originalImage = originalIcon.getImage();
+		    Image resizedImage = originalImage.getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+		    ImageIcon image2 = new ImageIcon(resizedImage);
+
+		    JLabel imageLabel = new JLabel();
+		    imageLabel.setPreferredSize(new Dimension(150, 150));
+		    if (image2 != null) {
+		        imageLabel.setIcon(image2);
+		    } else {
+		        imageLabel.setOpaque(true);
+		        imageLabel.setBackground(Color.LIGHT_GRAY); // 이미지 없을 경우 기본 배경
+		    }
+		    imageLabel.addMouseListener(new MouseAdapter() {
+		    	@Override
+		    	public void mouseClicked(MouseEvent e) {
+		    		dispose();
+		    		new PetHomeScreen(pb.getPet_id());
+		    	}
+		    });
+		    
+		    
+		 // 4) 본문 패널 (이미지 + 텍스트)
+		    JPanel contentPanel = new JPanel(new BorderLayout(10, 0));
+		    contentPanel.setBackground(Color.WHITE);
+		    contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 3, 0)); // 위, 왼쪽, 아래, 오른쪽 순서
+		    contentPanel.add(imageLabel, BorderLayout.WEST);
+		    
+		    // 오른쪽 - 이름, 종, 나이, 성별
+		    JPanel textPanel = new JPanel();
+		    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+		    textPanel.setBackground(Color.WHITE);
+
+		    JLabel nameLabel = new JLabel("이름 : " + pb.getPet_name());
+		    JLabel speciesLabel = new JLabel("종 : " +pb.getPet_species());
+		    JLabel ageLabel = new JLabel("나이 : " + pb.getPet_age());
+		    JLabel genderLabel = new JLabel("성별 : " + pb.getPet_gender());
+		    
+		    textPanel.add(nameLabel);
+		    textPanel.add(speciesLabel);
+		    textPanel.add(ageLabel);
+		    textPanel.add(genderLabel);
+		    textPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 0));
+		    
+		    contentPanel.add(textPanel, BorderLayout.CENTER);
+
+		    // 5) 전체 구성
+		    petAddMainPanel.add(contentPanel,BorderLayout.SOUTH);
+		    petaddPanel.add(petAddMainPanel);
+			
+			// 각 애완동물 항목 간에 간격을 둔다
+		    petaddPanel.add(Box.createVerticalStrut(0)); // 0px 간격
+		}
+		
+	}
+	
 
 	private JLabel createScaledImageLabel(String imagePath, int width, int height) {
 		ImageIcon icon = new ImageIcon(imagePath);
