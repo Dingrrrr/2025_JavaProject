@@ -1334,15 +1334,26 @@ public class TPMgr {
 	        pstmt.executeUpdate();
 	        pstmt.close();
 
-
 	        // 3. 투표한 사용자 정보 저장
 	        sql = "INSERT INTO vote_mgr (vote_id, vt_user_id) VALUES (?, ?)";
-
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_id);
 	        pstmt.setString(2, user_id);
 	        pstmt.executeUpdate();
 	        pstmt.close();
+	        
+	        // 4. 투표 올린 사용자에게 알람 전송
+	        if (!user_id.equals(user_id)) { // 자신이 올린 투표에 좋아요하면 알람 안보냄
+	            sql = "INSERT INTO msg (msg_title, sender_id, receiver_id, msg_content, msg_date) VALUES (?, ?, ?, ?, NOW())";
+	            pstmt = con.prepareStatement(sql);
+	            pstmt.setString(1, "새로운 좋아요!"); // 알람 제목
+	            pstmt.setString(2, user_id); // 좋아요를 누른 사용자
+	            pstmt.setString(3, user_id); // receiver_id = 투표 올린 사람 (vote 테이블의 user_id)
+	            pstmt.setString(4, user_id + "님이 당신의 투표에 좋아요를 눌렀습니다!"); // 알람 내용
+	            pstmt.executeUpdate();
+
+	            System.out.println(user_id + "님에게 좋아요 알람이 전송되었습니다.");
+	        }
 
 	        // 모든 SQL 실행이 정상적으로 끝났으면 커밋
 	        con.commit();
