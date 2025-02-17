@@ -97,7 +97,8 @@ public class UpdateUserScreen extends JFrame {
 		add(backLabel);
 
 		// 메인 프로필 이미지
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
+		System.out.println(bean.getUser_image());
+		profileLabel = createScaledImageLabel(bean.getUser_image(), 270, 270);
 		profileLabel.setBounds(70, 189, 270, 270);
 		add(profileLabel);
 
@@ -229,6 +230,13 @@ public class UpdateUserScreen extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
+	
+	// 부모 클래스에서 전달된 이미지를 profileLabel에 설정하는 메소드
+    public void updateProfileImage(Image img) {
+        Image scaledImage = img.getScaledInstance(profileLabel.getWidth(), profileLabel.getHeight(), Image.SCALE_SMOOTH);
+        profileLabel.setIcon(new ImageIcon(scaledImage));
+        profileLabel.setText(""); // 텍스트는 빈 값으로 설정
+    }
 
 	public static void main(String[] args) {
 		new LoginScreen();

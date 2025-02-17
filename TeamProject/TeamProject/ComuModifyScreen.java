@@ -19,6 +19,7 @@ public class ComuModifyScreen extends JFrame {
 	private JTextField titleField;
 	private JTextArea contentArea;
 	private JButton saveButton, delButton;
+	private ComuModifyDialog cmd;
 
 	private String title, content;
 	ComuBean bean;
@@ -26,10 +27,6 @@ public class ComuModifyScreen extends JFrame {
 
 
 	public ComuModifyScreen(WritenCommuScreen preFrame, ComuBean cb) {
-
-	private ComuModifyDialog cmd;
-
-
 		setTitle("프레임 설정");
 		setSize(364, 630);
 		setUndecorated(true);
@@ -74,7 +71,7 @@ public class ComuModifyScreen extends JFrame {
 
 							System.out.println("추가 버튼 클릭됨");
 							setEnabled(false);
-							new ComuModifyDialog();
+							new ComuModifyDialog(ComuModifyScreen.this);
 
 							System.out.println("➕ 추가 버튼 클릭됨!");
 							if (cmd==null) {

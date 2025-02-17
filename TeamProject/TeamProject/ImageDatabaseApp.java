@@ -2,31 +2,16 @@ package TeamProject;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-
-/*
- * CREATE TABLE images (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    image MEDIUMBLOB NOT NULL
-);
- * */
+import javax.swing.*;
 
 public class ImageDatabaseApp {
-	
+    
     private JFrame frame;
     private JLabel imageLabel;
     private JButton selectButton, uploadButton, retrieveButton;
@@ -65,59 +50,65 @@ public class ImageDatabaseApp {
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
             selectedFile = fileChooser.getSelectedFile();
-            imageLabel.setText(selectedFile.getName());
+
+            // 이미지 미리보기 추가
+            ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+            Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            imageLabel.setIcon(new ImageIcon(img));
+            imageLabel.setText(""); 
         }
     }
     
     private void uploadImage() {
-        if (selectedFile == null) {
-            JOptionPane.showMessageDialog(frame, "No image selected!");
+        if (selectedFile == null || !selectedFile.exists()) {
+            JOptionPane.showMessageDialog(frame, "No valid image selected!");
             return;
         }
+        
         Connection con = null;
-        PreparedStatement pstmt  = null;
-        try {
-        	con = pool.getConnection();
-            FileInputStream fis = new FileInputStream(selectedFile);
+        PreparedStatement pstmt = null;
+        
+        try (FileInputStream fis = new FileInputStream(selectedFile)) {
+            con = pool.getConnection();
             pstmt = con.prepareStatement("INSERT INTO images (image) VALUES (?)");
-            
             pstmt.setBinaryStream(1, fis, (int) selectedFile.length());
             pstmt.executeUpdate();
             JOptionPane.showMessageDialog(frame, "Image uploaded successfully!");
-            
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-			pool.freeConnection(con, pstmt);
-		}
+        } finally {
+            pool.freeConnection(con, pstmt);
+        }
     }
     
     private void retrieveImage() {
-    	Connection con = null;
-        PreparedStatement pstmt  = null;
+        Connection con = null;
+        PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-        	 con = pool.getConnection();
-        	 pstmt = con.prepareStatement("SELECT image FROM images ORDER BY id DESC LIMIT 1");
-             rs = pstmt.executeQuery();
-            
+            con = pool.getConnection();
+            pstmt = con.prepareStatement("SELECT image FROM images ORDER BY id DESC LIMIT 1");
+            rs = pstmt.executeQuery();
+
             if (rs.next()) {
                 byte[] imgBytes = rs.getBytes("image");
                 ImageIcon icon = new ImageIcon(imgBytes);
-                imageLabel.setIcon(icon);
-                imageLabel.setText("");
+                Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+                imageLabel.setIcon(new ImageIcon(img));
+                imageLabel.setText(""); 
             } else {
                 JOptionPane.showMessageDialog(frame, "No image found in database.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-			pool.freeConnection(con, pstmt, rs);
-		}
+        } finally {
+            pool.freeConnection(con, pstmt, rs);
+        }
     }
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(ImageDatabaseApp::new);
     }
 }
+
 

@@ -343,6 +343,7 @@ public class TPMgr {
 				bean.setPet_species(rs.getString("pet_species"));
 				bean.setPet_age(rs.getString("pet_age"));
 				bean.setPet_gender(rs.getString("pet_gender"));
+				bean.setPet_image(rs.getString("pet_image"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

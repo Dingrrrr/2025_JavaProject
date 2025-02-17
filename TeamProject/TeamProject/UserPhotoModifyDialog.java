@@ -14,13 +14,19 @@ public class UserPhotoModifyDialog extends JFrame {
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
+	private JLabel imageLabel;
+	private UpdateUserScreen parentScreen; // UpdateUserScreen 객체를 참조
 
-	public UserPhotoModifyDialog(Frame preFrame) {
+	public UserPhotoModifyDialog(UpdateUserScreen parentFrame) {
+		this.parentScreen = parentFrame;
 		setTitle("프레임 설정");
 		setSize(358, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		// imageLabel 초기화
+        imageLabel = new JLabel();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -35,6 +41,7 @@ public class UserPhotoModifyDialog extends JFrame {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
+					selectImage(); // 이미지 선택 메소드 호출
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 				} else if (source == cancelButton) {
@@ -98,6 +105,29 @@ public class UserPhotoModifyDialog extends JFrame {
 		 * grayFrameLabel.setBounds(35, 90, 280, 280); add(grayFrameLabel,
 		 * BorderLayout.SOUTH);
 		 */
+	}
+
+	private void selectImage() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setFileFilter(
+				new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "png", "jpeg"));
+
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = fileChooser.getSelectedFile(); // 선택된 파일 가져오기
+
+			// 선택된 파일로 이미지 아이콘 생성
+			ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+			// 이미지를 JLabel에 맞게 크기 조정
+			Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+
+			// 이미지 미리보기를 설정
+			imageLabel.setIcon(new ImageIcon(img));
+			imageLabel.setText(""); // 텍스트는 빈 값으로 설정
+
+			// 부모 화면(UpdateUserScreen)에게 이미지 전달
+			parentScreen.updateProfileImage(img); // 부모 화면에 이미지 전달
+		}
 	}
 
 	public static void main(String[] args) {
