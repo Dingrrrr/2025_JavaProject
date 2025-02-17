@@ -28,6 +28,7 @@ public class VoteMainScreen extends JFrame {
 	private JButton popularButton, recentButton, oldButton;
 	private TPMgr mgr = new TPMgr();
 	private Vector<VoteBean> vlist;
+	
 	public VoteMainScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
@@ -254,18 +255,43 @@ public class VoteMainScreen extends JFrame {
 			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
 			// 🔹 이미지 추가 (기본 레이어)
 			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
+			
+			
+			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
+			
+			// 중복 투표 여부 확인
+			if(!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {
+				voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
+				voteLabel.setOpaque(false);
+				voteLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						
+						System.out.println("투표 버튼이 클릭됨!");
+						mgr.likeVote(vb.getVote_id(), StaticData.user_id);
+						MsgBean bean = new MsgBean();
+						bean.setMsg_title("새로운 좋아요!");
+						bean.setReceiver_id(vb.getUser_id());
+						bean.setMsg_content(StaticData.user_id + "님이 당신의 투표에 좋아요를 눌렀습니다!");
+						mgr.sendMsg(StaticData.user_id, bean);
+						dispose();
+						new VoteMainScreen();
+					}
+				});
+			}
+			if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {	//이미 투표했으면 true 출력
+				voteLabel = createScaledImageLabel("TeamProject/vote_complete.png", 40, 40);
+				voteLabel.setBounds(130, 105, 40, 40);
+				voteLabel.setOpaque(false);
+			}
 
 			// 3️⃣ 투표 버튼 (하트 아이콘) 추가 → 이미지 내부의 오른쪽 아래에 배치
-			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
-			voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
-			voteLabel.setOpaque(false);
-			voteLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println("투표 버튼이 클릭됨!");
-					mgr.likeVote(vb.getVote_id(), StaticData.user_id);
-				}
-			});
+//			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
+//			voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
+//			voteLabel.setOpaque(false);
+
+
+			
 
 			// 🔹 하트 버튼을 이미지 위에 추가 (위쪽 레이어)
 			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
