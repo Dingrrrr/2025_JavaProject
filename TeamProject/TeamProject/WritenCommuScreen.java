@@ -21,7 +21,7 @@ public class WritenCommuScreen extends JFrame {
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
 	private JButton SendButton;
 
-	public WritenCommuScreen() {
+	public WritenCommuScreen(JFrame preFrame, ComuBean cb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -42,10 +42,16 @@ public class WritenCommuScreen extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == modifyLabel) {
 					System.out.println("수정버튼 클릭됨");
+					setEnabled(false);
+					new ComuModifyScreen(WritenCommuScreen.this);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
+					CommentTArea.setText("");
+					CommentTArea.requestFocus();
 				}
 			}
 		};		
@@ -126,6 +132,8 @@ public class WritenCommuScreen extends JFrame {
 		TitleTArea = new JTextArea();
 		TitleTArea.setBounds(5, 70, 330, 30);
 		TitleTArea.setText("");
+		TitleTArea = new JTextArea(cb.getComu_title());
+		TitleTArea.setBounds(5, 45, 330, 30);
 		TitleTArea.setEditable(false);
 		TitleTArea.setBorder(BorderFactory.createCompoundBorder(
 		    new RoundedBorder(20), new EmptyBorder(5, 5, 5, 5)
@@ -140,6 +148,8 @@ public class WritenCommuScreen extends JFrame {
 		ExplainTArea = new JTextArea();
 		ExplainTArea.setBounds(5, 155, 330, 100);
 		ExplainTArea.setText("");
+		ExplainTArea = new JTextArea(cb.getComu_content());
+		ExplainTArea.setBounds(5, 120, 330, 100);
 		ExplainTArea.setEditable(false);
 		ExplainTArea.setBorder(BorderFactory.createCompoundBorder(
 		    new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)
@@ -258,6 +268,11 @@ public class WritenCommuScreen extends JFrame {
 				    commuItemPanel.add(contentPanel,BorderLayout.CENTER);
 				   CommuPanel.add(commuItemPanel);
 				}
+				
+	public void updateTitleContent(String title, String content) {
+		TitleTArea.setText(title);
+		ExplainTArea.setText(content);
+	}
 	
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
@@ -269,6 +284,6 @@ public class WritenCommuScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new WritenCommuScreen();
+		new LoginScreen();
 	}
 }

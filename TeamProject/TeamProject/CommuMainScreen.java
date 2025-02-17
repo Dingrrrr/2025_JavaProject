@@ -25,9 +25,9 @@ public class CommuMainScreen extends JFrame {
 	private JPanel commuPanel; // 커뮤니티 게시글 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	Vector<ComuBean> vlist;
-	TPMgr mgr = new TPMgr();
 	Vector<PetBean> vlist1;
 	PetBean bean[] = new PetBean[2];
+	TPMgr mgr = new TPMgr();
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
@@ -203,6 +203,18 @@ public class CommuMainScreen extends JFrame {
 	        commuItemPanel.setBackground(Color.WHITE);
 	        commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
 	        commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
+	        commuItemPanel.addMouseListener(new MouseAdapter() {
+	        	@Override
+	        	public void mouseClicked(MouseEvent e) {
+	        		if(cb.getUser_id().equals(StaticData.user_id)) {	//내가 만든 게시글 클릭(수정 화면)
+	        			new WritenCommuScreen(CommuMainScreen.this, cb);
+	        			setEnabled(false);
+	        		} else {	//남이 만든 게시글 클릭
+	        			new WritenCommuScreen(CommuMainScreen.this, cb);
+	        			setEnabled(false);
+	        		}
+	        	}
+	        });
 
 	        // 2) 상단 패널 (USER_ID + 날짜)
 	        JPanel topPanel = new JPanel(new BorderLayout());
