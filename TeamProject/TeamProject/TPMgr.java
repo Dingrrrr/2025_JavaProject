@@ -1310,20 +1310,9 @@ public class TPMgr {
 	    try {
 	        con = pool.getConnection();
 	        con.setAutoCommit(false);  // 트랜잭션 시작
+	    
 	        
-	        // 좋아요 중복 확인
-	        sql = "SELECT COUNT(*) FROM vote_mgr WHERE vote_id = ? AND vt_user_id = ?";
-	        pstmt = con.prepareStatement(sql);
-	        pstmt.setInt(1, vote_id);
-	        pstmt.setString(2, user_id);
-	        rs = pstmt.executeQuery();
-	        //이미 좋아요를 눌렀다면 실행
-	        if (rs.next() && rs.getInt(1) > 0) {
-	        	System.out.println("❌ " + user_id + "는 이미 vote_id " + vote_id + "에 좋아요를 눌렀습니다.");
-	        	return;
-	        }
-	        
-	        // 2. 현재 투표 좋아요 개수 가져오기
+	        // 1. 현재 투표 좋아요 개수 가져오기
 	        sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_id);
@@ -1337,7 +1326,7 @@ public class TPMgr {
 	        	return;
 	        }
 
-	        // 3. 좋아요 개수 증가
+	        // 2. 좋아요 개수 증가
 	        sql = "UPDATE vote SET vote_like = ? WHERE vote_id = ?";
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_like + 1);
@@ -1345,8 +1334,10 @@ public class TPMgr {
 	        pstmt.executeUpdate();
 	        pstmt.close();
 
-	        // 4. 투표한 사용자 정보 저장
-	        sql = "INSERT INTO vote_mgr VALUES (?, ?)";
+
+	        // 3. 투표한 사용자 정보 저장
+	        sql = "INSERT INTO vote_mgr (vote_id, vt_user_id) VALUES (?, ?)";
+
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_id);
 	        pstmt.setString(2, user_id);
