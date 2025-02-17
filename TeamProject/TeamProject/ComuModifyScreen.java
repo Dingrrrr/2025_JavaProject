@@ -19,6 +19,7 @@ public class ComuModifyScreen extends JFrame {
 	private JTextField titleField;
 	private JTextArea contentArea;
 	private JButton saveButton, delButton;
+	private ComuModifyDialog cmd;
 
 	public ComuModifyScreen() {
 		setTitle("프레임 설정");
@@ -46,7 +47,14 @@ public class ComuModifyScreen extends JFrame {
 						} else if (source == delButton) {
 							System.out.println("삭제 버튼 클릭됨");
 						} else if (source == addButtonLabel) {
-							System.out.println("추가 버튼 클릭됨");
+							System.out.println("➕ 추가 버튼 클릭됨!");
+							if (cmd==null) {
+								cmd = new ComuModifyDialog(ComuModifyScreen.this);
+								cmd.setLocation(getX()+1, getY()+455);
+							} else {
+								cmd.setLocation(getX()+1, getY()+455);
+								cmd.setVisible(true);
+							}
 						}
 					}
 				};

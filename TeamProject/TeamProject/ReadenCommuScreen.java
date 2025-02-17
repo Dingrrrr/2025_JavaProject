@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-public class WritenCommuScreen extends JFrame {
+public class ReadenCommuScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, modifyLabel,  grayFrameLabel;
 	private JLabel TitleLabel,ExplainLabel, PhotoLabel, commentLabel, useridLabel;
@@ -21,7 +21,7 @@ public class WritenCommuScreen extends JFrame {
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
 	private JButton SendButton;
 
-	public WritenCommuScreen() {
+	public ReadenCommuScreen() {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -195,12 +195,6 @@ public class WritenCommuScreen extends JFrame {
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
 		
-		// 🔹 수정 버튼 이미지 추가
-		modifyLabel = createScaledImageLabel("TeamProject/modify_icon.png", 30, 30);
-		modifyLabel.setBounds(280, 7, 30, 30);
-		modifyLabel.addMouseListener(commonMouseListener);
-		panel.add(modifyLabel); // 🔹 패널에 추가
-		
 		setVisible(true);
 	}
 	
@@ -269,6 +263,6 @@ public class WritenCommuScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new WritenCommuScreen();
+		new ReadenCommuScreen();
 	}
 }
