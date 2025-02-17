@@ -2,6 +2,9 @@ package TeamProject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,10 +13,11 @@ public class ComuModifyDialog extends JFrame{
 	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
+	private JButton addpicButton, deletepicButton, cancelButton;
 	
-	public ComuModifyDialog() {
+	public ComuModifyDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
-		setSize(364, 166);
+		setSize(347, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,23 +28,46 @@ public class ComuModifyDialog extends JFrame{
 			e.printStackTrace();
 		}
 		
+		// 🔹 공통 마우스 클릭 이벤트 리스너
+				MouseAdapter commonMouseListener = new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						Object source = e.getSource(); // 클릭된 컴포넌트 확인
+						if (source == addpicButton) {
+							System.out.println("추가 버튼 클릭됨");
+						} else if (source == deletepicButton) {
+							System.out.println("삭제 버튼 클릭됨");
+						} else if (source == cancelButton) {
+							System.out.println("취소 버튼 클릭됨");
+							dispose();
+						}
+
+					}
+				};
+		
 		//사진 추가 라벨
-		addpicLabel = new JLabel("사진 추가");
-		addpicLabel.setBounds(155, 5, 72, 50);
-		addpicLabel.setForeground(Color.BLACK);
-		add(addpicLabel);
+		addpicButton = new JButton("사진 추가");
+		addpicButton.setBounds(2, 2, 343, 53);
+		addpicButton.setBackground(Color.white);
+		addpicButton.setFocusable(false); // 포커스 끄기
+		addpicButton.addMouseListener(commonMouseListener);
+		add(addpicButton);
 		
-		//사진 삭제 라벨
-		deletepicLabel = new JLabel("사진 삭제");
-		deletepicLabel.setBounds(155, 55, 72, 50);
-		deletepicLabel.setForeground(Color.BLACK);
-		add(deletepicLabel);
+		// 사진 삭제 버튼
+		deletepicButton = new JButton("사진 삭제");
+		deletepicButton.setBounds(2, 55, 343, 53);
+		deletepicButton.setBackground(Color.white);
+		deletepicButton.setFocusable(false); // 포커스 끄기
+		deletepicButton.addMouseListener(commonMouseListener);
+		add(deletepicButton);
 		
-		//취소 라벨
-		cancelLabel = new JLabel("취소");
-		cancelLabel.setBounds(170, 105, 72, 50);
-		cancelLabel.setForeground(Color.BLACK);
-		add(cancelLabel);
+		// 취소 버튼
+		cancelButton = new JButton("취소");
+		cancelButton.setBounds(2, 105, 343, 53);
+		cancelButton.setBackground(Color.white);
+		cancelButton.setFocusable(false); // 포커스 끄기
+		cancelButton.addMouseListener(commonMouseListener);
+		add(cancelButton);
 		
 		// JPanel 추가
 		JPanel panel = new JPanel() {
@@ -49,7 +76,7 @@ public class ComuModifyDialog extends JFrame{
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(364, 166, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(347, 160, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				// y=158 위치에 가로로 회색 선 그리기
@@ -75,6 +102,6 @@ public class ComuModifyDialog extends JFrame{
 	
 	
 	public static void main(String[] args) {
-		new ComuModifyDialog();
+	
 	}
 }
