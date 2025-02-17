@@ -40,9 +40,9 @@ public class VoteModifyScreen extends JFrame {
 							System.out.println("➕ 추가 버튼 클릭됨!");
 							if (vmd==null) {
 								vmd = new VoteModifyDialog(VoteModifyScreen.this);
-								vmd.setLocation(getX()+8, getY()+335);
+								vmd.setLocation(getX()+3, getY()+335);
 							} else {
-								vmd.setLocation(getX()+8, getY()+335);
+								vmd.setLocation(getX()+3, getY()+335);
 								vmd.setVisible(true);
 							}
 						}
