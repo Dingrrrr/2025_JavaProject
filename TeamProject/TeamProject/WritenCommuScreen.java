@@ -56,7 +56,7 @@ public class WritenCommuScreen extends JFrame {
 				} else if (source == modifyLabel) {
 					System.out.println("수정버튼 클릭됨");
 					setEnabled(false);
-					new ComuModifyScreen(WritenCommuScreen.this, cb);
+					new ComuModifyScreen(preFrame , WritenCommuScreen.this, cb);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
 					mgr.addCmt(cb.getPost_id(), StaticData.user_id, CommentTArea.getText().trim());
@@ -141,7 +141,7 @@ public class WritenCommuScreen extends JFrame {
 
 		// 제목 텍스트 필드
 		TitleTArea = new JTextArea();
-		TitleTArea.setBounds(5, 70, 330, 30);
+		TitleTArea.setBounds(5, 80, 330, 30);
 		TitleTArea.setText("");
 		TitleTArea = new JTextArea(cb.getComu_title());
 		TitleTArea.setBounds(5, 45, 330, 30);
