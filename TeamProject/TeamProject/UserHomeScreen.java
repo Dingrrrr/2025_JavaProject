@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -146,7 +149,13 @@ public class UserHomeScreen extends JFrame {
 		closeButton.setForeground(Color.WHITE);
 		closeButton.setBorder(BorderFactory.createEmptyBorder());
 		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
 		panel.add(closeButton);
 
 		setVisible(true);

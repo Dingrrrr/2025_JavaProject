@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -216,7 +218,13 @@ public class PetRecordAddScreen extends JFrame {
 		closeButton.setForeground(Color.WHITE);
 		closeButton.setBorder(BorderFactory.createEmptyBorder());
 		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
 		panel.add(closeButton);
 
 		setVisible(true);
