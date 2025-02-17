@@ -1310,6 +1310,7 @@ public class TPMgr {
 	    try {
 	        con = pool.getConnection();
 	        con.setAutoCommit(false);  // 트랜잭션 시작
+	    
 	        
 	        // 1. 현재 투표 좋아요 개수 가져오기
 	        sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
@@ -1334,7 +1335,7 @@ public class TPMgr {
 	        pstmt.close();
 
 	        // 3. 투표한 사용자 정보 저장
-	        sql = "INSERT INTO vote_mgr VALUES (?, ?)";
+	        sql = "INSERT INTO vote_mgr (vote_id, vt_user_id) VALUES (?, ?)";
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_id);
 	        pstmt.setString(2, user_id);

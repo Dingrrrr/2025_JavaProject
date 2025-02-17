@@ -291,6 +291,6 @@ public class VoteMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new VoteMainScreen();
+		new LoginScreen();
 	}
 }
