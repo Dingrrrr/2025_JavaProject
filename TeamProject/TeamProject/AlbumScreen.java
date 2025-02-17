@@ -15,9 +15,7 @@ public class AlbumScreen extends JFrame{
 	private JLabel additionLabel, welcomeLabel1, welcomeLabel2, welcomeLabel3;
 	private AlbumAddDialog pc;
 	TPMgr mgr = new TPMgr();
-	Vector<PetBean> vlist1;
-	PetBean bean[] = new PetBean[2];
-	
+
 	
 	public AlbumScreen() {
 		setTitle("프레임 설정");
@@ -25,11 +23,6 @@ public class AlbumScreen extends JFrame{
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		vlist1 = mgr.showPet(StaticData.user_id);
-		try {
-			bean[0] = (PetBean)vlist1.elementAt(0);
-			bean[1] = (PetBean)vlist1.elementAt(1);
-		} catch (Exception e) {}
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -67,7 +60,7 @@ public class AlbumScreen extends JFrame{
 				}else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
-					new PetHomeScreen(bean[0].getPet_id());
+					new PetHomeScreen(StaticData.pet_id);
 				}else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 					dispose();
