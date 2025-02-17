@@ -1133,6 +1133,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setVote_image(rs.getString("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
