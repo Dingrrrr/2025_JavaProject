@@ -203,8 +203,8 @@ public class CommuMainScreen extends JFrame {
 	        			new WritenCommuScreen(CommuMainScreen.this, cb);
 	        			setEnabled(false);
 	        		} else {	//남이 만든 게시글 클릭
-//	        			new 
-//	        			setEnabled(false);
+	        			new WritenCommuScreen(CommuMainScreen.this, cb);
+	        			setEnabled(false);
 	        		}
 	        	}
 	        });

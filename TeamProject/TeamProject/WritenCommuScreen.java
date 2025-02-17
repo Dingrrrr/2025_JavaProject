@@ -50,6 +50,8 @@ public class WritenCommuScreen extends JFrame {
 					new ComuModifyScreen(WritenCommuScreen.this, cb);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
+					CommentTArea.setText("");
+					CommentTArea.requestFocus();
 				}
 			}
 		};		
@@ -270,6 +272,6 @@ public class WritenCommuScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-//		new WritenCommuScreen();
+		new LoginScreen();
 	}
 }
