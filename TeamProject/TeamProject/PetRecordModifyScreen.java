@@ -94,7 +94,7 @@ public class PetRecordModifyScreen extends JFrame {
                     new PetHomeScreen(StaticData.pet_id);
                 } else if (source == petRcDeleteButton) {
                     System.out.println("삭제 버튼 클릭됨");
-                    System.out.println(StaticData.pet_id);
+                    System.out.println(recordId);
                     mgr.delHRPet(recordId);  // Record_id 사용하여 삭제
                     dispose();
                     preFrame.dispose();

@@ -10,6 +10,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Vector;
+
 import javax.imageio.ImageIO;
 
 public class WritenCommuScreen extends JFrame {
@@ -20,6 +23,10 @@ public class WritenCommuScreen extends JFrame {
 	private JPanel CommuPanel;
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
 	private JButton SendButton;
+	TPMgr mgr;
+	Vector<CmtBean> vlist;
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
 	public WritenCommuScreen(JFrame preFrame, ComuBean cb) {
 		setTitle("프레임 설정");
@@ -27,6 +34,8 @@ public class WritenCommuScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		vlist = mgr.showCmt(cb.getPost_id());
 	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -50,8 +59,10 @@ public class WritenCommuScreen extends JFrame {
 					new ComuModifyScreen(WritenCommuScreen.this, cb);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
-					CommentTArea.setText("");
-					CommentTArea.requestFocus();
+					mgr.addCmt(cb.getPost_id(), StaticData.user_id, CommentTArea.getText().trim());
+					dispose();
+					preFrame.setVisible(true);
+					new WritenCommuScreen(preFrame, cb);
 				}
 			}
 		};		
@@ -182,10 +193,12 @@ public class WritenCommuScreen extends JFrame {
 				
 				
 				
-	 // 🔹 더미 게시글 데이터 추가
-		for (int i = 1; i <= 15; i++) {
-			addCommu();
-		}
+//	 // 🔹 더미 게시글 데이터 추가
+//		for (int i = 1; i <= 15; i++) {
+//			addCommu();
+//		}
+				
+		addCommu();
 	    
 		// 🔹 닫기 버튼 이미지 추가
 		closeLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
@@ -203,9 +216,11 @@ public class WritenCommuScreen extends JFrame {
 	}
 	
 				
-				//댓글창 추가 메소드
-	
-				private void addCommu() {
+			//댓글창 추가 메소드
+
+			private void addCommu() {
+					
+				for (CmtBean cmb : vlist) {
 					// 1) 전체 항목을 감싸는 패널
 				    JPanel commuItemPanel = new JPanel();
 				    commuItemPanel.setPreferredSize(new Dimension(75, 99)); // 크기 지정
@@ -219,17 +234,14 @@ public class WritenCommuScreen extends JFrame {
 				    topPanel.setPreferredSize(new Dimension(340, 20)); // 가로 340px, 세로 15px
 				    topPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY)); // 아래쪽만 테두리 1px
 				    
-				    JLabel userIdLabel = new JLabel("작성자");
+				    JLabel userIdLabel = new JLabel(cmb.getUser_id());
 				    userIdLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0)); // 왼쪽에 3px 여백 추가
 				    
-				    JLabel dateLabel = new JLabel("20xx.xx.xx", SwingConstants.RIGHT);
+				    JLabel dateLabel = new JLabel(sdf.format(cmb.getCmt_date()), SwingConstants.RIGHT);
 				    dateLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3)); // 오른쪽에 3px 여백 추가
 				    topPanel.add(userIdLabel, BorderLayout.WEST);
 				    topPanel.add(dateLabel, BorderLayout.EAST);
-				    
-				    
-				    
-				 
+
 				    
 				    
 				    // 3) 구분선
@@ -246,7 +258,7 @@ public class WritenCommuScreen extends JFrame {
 				    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 				    textPanel.setBackground(Color.WHITE);
 
-				    JLabel titleLabel = new JLabel("작성 내용");
+				    JLabel titleLabel = new JLabel(cmb.getCmt_content());
 				    textPanel.add(titleLabel);
 				    textPanel.add(Box.createVerticalStrut(10)); // 10px 간격
 				    contentPanel.add(textPanel, BorderLayout.CENTER);
@@ -256,6 +268,8 @@ public class WritenCommuScreen extends JFrame {
 				    commuItemPanel.add(contentPanel,BorderLayout.CENTER);
 				   CommuPanel.add(commuItemPanel);
 				}
+					
+			}
 				
 	public void updateTitleContent(String title, String content) {
 		TitleTArea.setText(title);

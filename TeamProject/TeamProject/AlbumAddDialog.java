@@ -20,7 +20,8 @@ public class AlbumAddDialog extends JFrame {
 	private String tags, write;
 	TPMgr mgr;
 	AlbumBean bean;
-	
+	private AlbumPhotoModifyDialog amd;
+
 	public AlbumAddDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
@@ -49,7 +50,13 @@ public class AlbumAddDialog extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
-					//사진 추가
+					if (amd == null) {
+						amd = new AlbumPhotoModifyDialog(AlbumAddDialog.this);
+						amd.setLocation(getX() + 1, getY() + 455);
+					} else {
+						amd.setLocation(getX() + 1, getY() + 455);
+						amd.setVisible(true);
+					}
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
 					tags = AlbumTagTField.getText().trim();
@@ -119,14 +126,11 @@ public class AlbumAddDialog extends JFrame {
 		SaveButton.addMouseListener(commonMouseListener);
 		add(SaveButton);
 
-		// 🔹 추가 버튼 (화면에 고정)
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-		addButtonLabel.setBounds(300, 700, 70, 70);
+		// 🔹 추가 버튼
+		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 62, 62);
+		addButtonLabel.setBounds(245, 245, 62, 62);
 		addButtonLabel.addMouseListener(commonMouseListener);
-		addButtonLabel.setOpaque(true);
-		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
-		addButtonLabel.setVisible(true);
-		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
+		add(addButtonLabel);
 
 		// 🔹 회색프레임
 		grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);

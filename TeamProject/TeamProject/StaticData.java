@@ -11,4 +11,5 @@ public class StaticData {
 	static int album_id;
 	static int diary_id;
 	static int msg_id;
+	static int record_id;
 }
