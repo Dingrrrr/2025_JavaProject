@@ -40,7 +40,7 @@ public class LoginScreen extends JFrame {
 	private JTextField id_textField;
 	private JPasswordField pw_textField;
 	private JButton loginButton;
-	private JLabel registerLabel, warningLabel;
+	private JLabel registerLabel, warningLabel, warningLabel2;
 	boolean flag1 = true, flag2 = true;
 	TPMgr mgr;
 
@@ -130,14 +130,27 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
-					if(mgr.isPet(StaticData.user_id)) {
-						dispose();
-						new PetAddMainScreen();		//반려동물 정보가 이미 있는 경우
+					if(mgr.userCheck(StaticData.user_id)) {	//이미 접속했다면 실행
+						warningLabel2.setVisible(true);
+						id_textField.setText("아이디를 입력하세요");
+						id_textField.setForeground(Color.GRAY);
+						pw_textField.setText("비밀번호를 입력하세요");
+						pw_textField.setForeground(Color.GRAY);
+						pw_textField.setEchoChar((char) 0);
+						flag1 = true;
+						flag2 = true;
+					} else {	//접속상태가 아니라면 실행
+						mgr.userIn(StaticData.user_id);
+						if(mgr.isPet(StaticData.user_id)) {
+							dispose();
+							new PetAddMainScreen();		//반려동물 정보가 이미 있는 경우
+						}
+						else {
+							dispose();
+							new UserHomeScreen();			//반려동물 정보가 없는 경우
+						}
 					}
-					else {
-						dispose();
-						new UserHomeScreen();			//반려동물 정보가 없는 경우
-					}
+					
 				} else {
 					id_textField.setText("아이디를 입력하세요");
 					id_textField.setForeground(Color.GRAY);
@@ -154,6 +167,10 @@ public class LoginScreen extends JFrame {
 		warningLabel = new JLabel("아이디 또는 비밀번호가 틀렸습니다");
 		warningLabel.setForeground(Color.RED);
 		warningLabel.setBounds(61, 580, 250, 60);
+		
+		warningLabel2 = new JLabel("이미 접속중인 아이디입니다");
+		warningLabel2.setForeground(Color.RED);
+		warningLabel2.setBounds(61, 580, 250, 60);
 
 		// 로그인 버튼 추가
 		loginButton = new RoundedButton("로그인");
@@ -165,13 +182,25 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
-					if(mgr.isPet(StaticData.user_id)) {
-						dispose();
-						new PetAddMainScreen();		//이미 반려동물 정보가 있을 경우				
-					}
-					else {
-						dispose();
-						new UserHomeScreen();			//반려동물 정보가 없는 경우
+					if(mgr.userCheck(StaticData.user_id)) {	//이미 접속했다면 실행
+						warningLabel2.setVisible(true);
+						id_textField.setText("아이디를 입력하세요");
+						id_textField.setForeground(Color.GRAY);
+						pw_textField.setText("비밀번호를 입력하세요");
+						pw_textField.setForeground(Color.GRAY);
+						pw_textField.setEchoChar((char) 0);
+						flag1 = true;
+						flag2 = true;
+					} else {	//접속상태가 아니라면 실행
+						mgr.userIn(StaticData.user_id);
+						if(mgr.isPet(StaticData.user_id)) {
+							dispose();
+							new PetAddMainScreen();		//반려동물 정보가 이미 있는 경우
+						}
+						else {
+							dispose();
+							new UserHomeScreen();			//반려동물 정보가 없는 경우
+						}
 					}
 				} else {
 					id_textField.setText("아이디를 입력하세요");
@@ -204,7 +233,9 @@ public class LoginScreen extends JFrame {
 		add(loginButton);
 		add(registerLabel);
 		add(warningLabel);
+		add(warningLabel2);
 		warningLabel.setVisible(false);
+		warningLabel2.setVisible(false);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {

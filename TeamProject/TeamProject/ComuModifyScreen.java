@@ -26,6 +26,9 @@ public class ComuModifyScreen extends JFrame {
 
 
 	public ComuModifyScreen(WritenCommuScreen preFrame, ComuBean cb) {
+
+	public ComuModifyScreen(JFrame prePreFrame, WritenCommuScreen preFrame, ComuBean cb) {
+
 		setTitle("프레임 설정");
 		setSize(364, 630);
 		setUndecorated(true);
@@ -50,6 +53,7 @@ public class ComuModifyScreen extends JFrame {
 							System.out.println("닫기 버튼 클릭됨");
 							dispose(); // 창 닫기
 							preFrame.setEnabled(true);
+							prePreFrame.setVisible(true);
 							preFrame.setVisible(true);
 						} else if (source == saveButton) {
 							System.out.println("저장 버튼 클리됨");
@@ -61,11 +65,14 @@ public class ComuModifyScreen extends JFrame {
 							dispose();
 							preFrame.updateTitleContent(title, content);
 							preFrame.setEnabled(true);
+							prePreFrame.setVisible(true);
+							preFrame.setVisible(true);
 						} else if (source == delButton) {
 							System.out.println("삭제 버튼 클릭됨");
 							mgr.delComu(cb.getPost_id());
 							dispose();
 							preFrame.dispose();
+							prePreFrame.dispose();
 							new CommuMainScreen();
 						} else if (source == addButtonLabel) {
 							System.out.println("추가 버튼 클릭됨");
@@ -183,6 +190,6 @@ public class ComuModifyScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-
+		new LoginScreen();
 	}
 }

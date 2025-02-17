@@ -110,6 +110,7 @@ public class UserHomeScreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				mgr.userOut(StaticData.user_id);
 				new LoginScreen();
 			}
 		});

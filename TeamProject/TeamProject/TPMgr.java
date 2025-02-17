@@ -91,6 +91,68 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//접속 시작
+	public void userIn(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "insert id_check values(?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
+	//동시 접속 확인(이미 접속해있으면 true)
+	public boolean userCheck(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from id_check where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
+	//접속 끊음
+	public void userOut(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "delete from id_check where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
 	//사용자 이름
 	public String userName(String id) {
 		Connection con = null;
@@ -1163,6 +1225,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setVote_image(rs.getString("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
@@ -1192,6 +1255,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setVote_image(rs.getString("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
@@ -1221,6 +1285,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setVote_image(rs.getString("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
@@ -1237,37 +1302,65 @@ public class TPMgr {
 	
 	//투표 좋아요
 	public void likeVote(int vote_id, String user_id) {
-		//한 투표 게시글의 아이디, 투표한 사용자의 아이디
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = null;
-		try {
-			con = pool.getConnection();
-			
-			sql = "select vote_like from vote where vote_id = ?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vote_id);
-			rs = pstmt.executeQuery();
-			int vote_like = rs.getInt("vote_like");
-			
-			sql = "update vote set vote_like = ? where vote_id = ?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, (vote_like+1));
-			pstmt.setInt(2, vote_id);
-			pstmt.executeUpdate();
-			
-			sql = "insert vote_mgr values(?, ?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vote_id);
-			pstmt.setString(2, user_id);
-			pstmt.executeUpdate();
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql = null;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			pool.freeConnection(con, pstmt, rs);
-		}
+	    try {
+	        con = pool.getConnection();
+	        con.setAutoCommit(false);  // 트랜잭션 시작
+
+	        // 1. 현재 투표 좋아요 개수 가져오기
+	        sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_id);
+	        rs = pstmt.executeQuery();
+
+	        int vote_like = 0;
+	        if (rs.next()) {  // rs.next() 호출 필수!
+	            vote_like = rs.getInt("vote_like");
+	        }
+	        rs.close(); // ResultSet 닫기
+	        pstmt.close(); // 기존 pstmt 닫기
+
+	        // 2. 좋아요 개수 증가
+	        sql = "UPDATE vote SET vote_like = ? WHERE vote_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_like + 1);
+	        pstmt.setInt(2, vote_id);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+
+	        // 3. 투표한 사용자 정보 저장
+	        sql = "INSERT INTO vote_mgr (vote_id, user_id) VALUES (?, ?)";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_id);
+	        pstmt.setString(2, user_id);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+
+	        // 모든 SQL 실행이 정상적으로 끝났으면 커밋
+	        con.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        try {
+	            if (con != null) con.rollback();  // 오류 발생 시 롤백
+	        } catch (Exception rollbackEx) {
+	            rollbackEx.printStackTrace();
+	        }
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (pstmt != null) pstmt.close();
+	            if (con != null) {
+	                con.setAutoCommit(true); // 다시 기본값으로 변경
+	                pool.freeConnection(con);
+	            }
+	        } catch (Exception closeEx) {
+	            closeEx.printStackTrace();
+	        }
+	    }
 	}
 	
 	//투표 유무(이미 투표했으면 true 반환)
