@@ -20,7 +20,7 @@ public class ComuModifyScreen extends JFrame {
 	private JTextArea contentArea;
 	private JButton saveButton, delButton;
 
-	public ComuModifyScreen() {
+	public ComuModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(364, 630);
 		setUndecorated(true);
@@ -152,6 +152,5 @@ public class ComuModifyScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new ComuModifyScreen();
 	}
 }
