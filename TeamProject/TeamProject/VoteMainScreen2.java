@@ -62,7 +62,7 @@ public class VoteMainScreen2 extends JFrame {
 				} else if (source == addButtonLabel) {
 					System.out.println("투표 추가 버튼 클릭됨!");
 					if (va == null) {
-						va = new VoteAddDialog();
+						va = new VoteAddDialog(VoteMainScreen2.this);
 						va.setLocation(getX() + 25, getY() + 150);
 					} else {
 						va.setLocation(getX() + 25, getY() + 150);

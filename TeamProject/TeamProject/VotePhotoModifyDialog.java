@@ -35,8 +35,10 @@ public class VotePhotoModifyDialog extends JFrame {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
+					dispose();
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
+					dispose();
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();

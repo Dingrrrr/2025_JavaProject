@@ -67,7 +67,6 @@ public class PetRecordAddScreen extends JFrame {
 					bean.setDate(petMtTimeTField.getText().trim());
 					mgr.addPet(StaticData.user_id, pb);
 					pet_id = mgr.showPetId(StaticData.user_id, pb);
-					System.out.println(pet_id);
 					mgr.addHRPet(pet_id, bean);
 					dispose();
 					new PetHomeScreen(pet_id);
