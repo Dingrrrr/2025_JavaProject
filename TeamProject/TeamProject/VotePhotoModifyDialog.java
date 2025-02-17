@@ -15,7 +15,7 @@ public class VotePhotoModifyDialog extends JFrame {
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
 
-	public VotePhotoModifyDialog() {
+	public VotePhotoModifyDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
@@ -42,6 +42,7 @@ public class VotePhotoModifyDialog extends JFrame {
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					preFrame.setEnabled(true);
 				}
 
 			}
@@ -103,6 +104,6 @@ public class VotePhotoModifyDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new VotePhotoModifyDialog();
+//		new VotePhotoModifyDialog();
 	}
 }
