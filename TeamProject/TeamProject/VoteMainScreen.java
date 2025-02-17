@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Vector;
 
 public class VoteMainScreen extends JFrame {
 	private BufferedImage image;
@@ -23,19 +24,23 @@ public class VoteMainScreen extends JFrame {
 	private JScrollPane scrollPane; // 스크롤 패널
 	private VoteAddDialog va;
 	private JButton popularButton, recentButton, oldButton;
-
+	private TPMgr mgr = new TPMgr();
+	private Vector<VoteBean> vlist;
 	public VoteMainScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		vlist = mgr.showVote();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 
 		// 🔹 공통 마우스 클릭 이벤트 리스너
 		MouseAdapter commonMouseListener = new MouseAdapter() {
@@ -68,10 +73,16 @@ public class VoteMainScreen extends JFrame {
 					}
 				}else if (source == popularButton) {
 					System.out.println("인기순 버튼 클릭됨");
+					vlist = mgr.popVote();
+					addVote();
 				} else if (source == recentButton) {
 					System.out.println("최신순 버튼 클릭됨");
+					vlist = mgr.newVote();
+					addVote();
 				} else if (source == oldButton) {
 					System.out.println("오래된순 버튼 클릭됨");
+					vlist = mgr.oldVote();
+					addVote();
 				} 
 			}
 		};
@@ -184,10 +195,11 @@ public class VoteMainScreen extends JFrame {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
 
-		// 🔹 더미 투표 데이터 추가
-		for (int i = 1; i <= 15; i++) {
-			addVote();
-		}
+//		// 🔹 더미 투표 데이터 추가
+//		for (int i = 1; i <= 15; i++) {
+//			addVote();
+//		}
+		addVote();
 
 		// 🔹 닫기 버튼
 		JButton closeButton = new JButton("X");
@@ -202,62 +214,67 @@ public class VoteMainScreen extends JFrame {
 		setVisible(true);
 	}
 
+
 	/**
 	 * 투표 추가 메서드
 	 */
-	/**
-	 * 투표 추가 메서드
-	 */
+
 	private void addVote() {
-		// 1️⃣ 개별 투표 아이템을 담을 패널 생성
-		JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
-		contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
-		contentPanel.setBackground(Color.WHITE);
+		//기존 투표 목록을 삭제하여 중복 추가 방지
+		votePanel.removeAll();
+		
+		for (VoteBean vb : vlist) {
+			// 1️⃣ 개별 투표 아이템을 담을 패널 생성
+			JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
+			contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
+			contentPanel.setBackground(Color.WHITE);
 
-		// 2️⃣ 이미지 라벨 추가 (배경 역할)
-		JLabel imageLabel = new JLabel("투표용 이미지");
-		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		imageLabel.setBounds(0, 0, 176, 150); // 패널 전체 크기 설정
-		imageLabel.setOpaque(true);
-		imageLabel.setBackground(Color.white);
+			// 2️⃣ 이미지 라벨 추가 (배경 역할)
+			JLabel imageLabel = new JLabel("투표용 이미지");
+			imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			imageLabel.setBounds(0, 0, 176, 150); // 패널 전체 크기 설정
+			imageLabel.setOpaque(true);
+			imageLabel.setBackground(Color.white);
+			imageLabel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 
-		// contentPanel의 아랫부분에만 검정색 테두리 추가
-		Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
-		imageLabel.setBorder(blackBottomBorder);
+			// contentPanel의 아랫부분에만 검정색 테두리 추가
+			Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
+			imageLabel.setBorder(blackBottomBorder);
 
-		if (image2 != null) {
-			imageLabel.setIcon(image2);
-		}
-
-		// 🔹 `JLayeredPane`을 사용해 이미지 위에 하트 버튼을 배치
-		JLayeredPane layeredPane = new JLayeredPane();
-		layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
-
-		// 🔹 이미지 추가 (기본 레이어)
-		layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
-
-		// 3️⃣ 투표 버튼 (하트 아이콘) 추가 → 이미지 내부의 오른쪽 아래에 배치
-		JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
-		voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
-		voteLabel.setOpaque(false);
-		voteLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println("투표 버튼이 클릭됨!");
+			if (image2 != null) {
+				imageLabel.setIcon(image2);
 			}
-		});
 
-		// 🔹 하트 버튼을 이미지 위에 추가 (위쪽 레이어)
-		layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
+			// 🔹 `JLayeredPane`을 사용해 이미지 위에 하트 버튼을 배치
+			JLayeredPane layeredPane = new JLayeredPane();
+			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
+			// 🔹 이미지 추가 (기본 레이어)
+			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
 
-		// 🔹 contentPanel에 `layeredPane` 추가 (이미지 & 버튼 함께 추가됨)
-		contentPanel.add(layeredPane);
+			// 3️⃣ 투표 버튼 (하트 아이콘) 추가 → 이미지 내부의 오른쪽 아래에 배치
+			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
+			voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
+			voteLabel.setOpaque(false);
+			voteLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("투표 버튼이 클릭됨!");
+					mgr.likeVote(vb.getVote_id(), StaticData.user_id);
+				}
+			});
 
-		// 4️⃣ 전체 투표 목록 패널 (votePanel)에 추가
-		votePanel.add(contentPanel);
+			// 🔹 하트 버튼을 이미지 위에 추가 (위쪽 레이어)
+			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
+			// 🔹 contentPanel에 `layeredPane` 추가 (이미지 & 버튼 함께 추가됨)
+			contentPanel.add(layeredPane);
+
+			// 4️⃣ 전체 투표 목록 패널 (votePanel)에 추가
+			votePanel.add(contentPanel);
+		}
 		votePanel.revalidate();
 		votePanel.repaint();
 		scrollPane.revalidate();
+		
 	}
 
 	/**

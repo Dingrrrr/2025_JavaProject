@@ -25,7 +25,10 @@ public class ComuModifyScreen extends JFrame {
 	TPMgr mgr;
 
 
+	public ComuModifyScreen(WritenCommuScreen preFrame, ComuBean cb) {
+
 	public ComuModifyScreen(JFrame prePreFrame, WritenCommuScreen preFrame, ComuBean cb) {
+
 		setTitle("프레임 설정");
 		setSize(364, 630);
 		setUndecorated(true);
@@ -72,11 +75,9 @@ public class ComuModifyScreen extends JFrame {
 							prePreFrame.dispose();
 							new CommuMainScreen();
 						} else if (source == addButtonLabel) {
-
 							System.out.println("추가 버튼 클릭됨");
 							setEnabled(false);
 							new ComuModifyDialog(ComuModifyScreen.this);
-
 							System.out.println("➕ 추가 버튼 클릭됨!");
 							if (cmd==null) {
 								cmd = new ComuModifyDialog(ComuModifyScreen.this);
