@@ -55,6 +55,7 @@ public class NoteSendScreen extends JFrame {
 					bean.setMsg_title(title);
 					bean.setMsg_content(content);
 					mgr.sendMsg(StaticData.user_id, bean);
+					StaticData.msg_user_id = "";
 					dispose();
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
@@ -69,9 +70,8 @@ public class NoteSendScreen extends JFrame {
 				add(SendIdLabel);
 
 				// 전송할 아이디 필드 추가
-				SendIdTField = new JTextField();
+				SendIdTField = new JTextField(StaticData.msg_user_id);
 				SendIdTField.setBounds(15, 60, 318, 40);
-				SendIdTField.setText("");
 				SendIdTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
