@@ -129,8 +129,8 @@ public class WritenCommuScreen extends JFrame {
 		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setPreferredSize(new Dimension(340, 460)); // 적절한 높이 설정
 		
-		//유저 아디ㅣ 라벨
-		useridLabel = new JLabel("User_id");
+		//유저 아이디 라벨
+		useridLabel = new JLabel(cb.getUser_id());
 		useridLabel.setBounds(5, 8, 66, 30);
 		useridLabel.setForeground(Color.BLACK);
 
