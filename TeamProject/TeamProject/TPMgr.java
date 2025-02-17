@@ -1333,7 +1333,7 @@ public class TPMgr {
 	        pstmt.close();
 
 	        // 3. 투표한 사용자 정보 저장
-	        sql = "INSERT INTO vote_mgr (vote_id, user_id) VALUES (?, ?)";
+	        sql = "INSERT INTO vote_mgr (vote_id, vt_user_id) VALUES (?, ?)";
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_id);
 	        pstmt.setString(2, user_id);
