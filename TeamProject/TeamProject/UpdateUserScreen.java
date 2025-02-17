@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 
 public class UpdateUserScreen extends JFrame {
 
@@ -20,7 +21,7 @@ public class UpdateUserScreen extends JFrame {
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton;
 	boolean flag = false;
-	private JFrame previousFrame;  // 이전 프레임 저장
+	private JFrame previousFrame; // 이전 프레임 저장
 	TPMgr mgr;
 	private UserPhotoModifyDialog upm;
 
@@ -47,20 +48,20 @@ public class UpdateUserScreen extends JFrame {
 
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-					if(mgr.isPet(StaticData.user_id)) {		//반려동물 정보가 있는 경우
+					if (mgr.isPet(StaticData.user_id)) { // 반려동물 정보가 있는 경우
 						dispose();
 						previousFrame.setVisible(true);
 					} else {
-						dispose();						
+						dispose();
 						new UserHomeScreen();
 					}
 				} else if (source == addButton) {
 					System.out.println("유저 프로필 사진 추가 클릭됨!");
 					if (upm == null) {
 						upm = new UserPhotoModifyDialog(UpdateUserScreen.this);
-						upm.setLocation(getX()+22, getY() + 630);
+						upm.setLocation(getX() + 22, getY() + 630);
 					} else {
-						upm.setLocation(getX()+22, getY() + 630);
+						upm.setLocation(getX() + 22, getY() + 630);
 						upm.setVisible(true);
 					}
 				} else if (source == updataButton) {
@@ -72,14 +73,14 @@ public class UpdateUserScreen extends JFrame {
 					flag = true;
 				} else if (source == fisButton) {
 					System.out.println("유저 정보 완료 버튼 클릭됨!");
-					if(flag) {
+					if (flag) {
 						UserBean bb = new UserBean();
 						bb.setUsername(nameField.getText().trim());
 						bb.setPassword(pwField.getText().trim());
 						bb.setEmail(emailField.getText().trim());
 						bb.setPhone(phoneField.getText().trim());
-//						bb.setUser_image();
-						if(mgr.userUpd(StaticData.user_id, bb)) {
+						// bb.setUser_image();
+						if (mgr.userUpd(StaticData.user_id, bb)) {
 							nameField.setEnabled(false);
 							pwField.setEnabled(false);
 							emailField.setEnabled(false);
@@ -97,8 +98,8 @@ public class UpdateUserScreen extends JFrame {
 		add(backLabel);
 
 		// 메인 프로필 이미지
-		System.out.println(bean.getUser_image());
-		profileLabel = createScaledImageLabel(bean.getUser_image(), 270, 270);
+		System.out.println(Arrays.toString(bean.getUser_image()));  // 디버깅을 위한 출력
+		profileLabel = createScaledImageUserLabel(bean.getUser_image(), 270, 270);  // byte[]를 전달
 		profileLabel.setBounds(70, 189, 270, 270);
 		add(profileLabel);
 
@@ -118,9 +119,13 @@ public class UpdateUserScreen extends JFrame {
 
 		nameField = new JTextField(bean.getUsername());
 		nameField.setBounds(43, 510, 220, 40);
-		nameField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		nameField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(nameField);
 
 		// 비밀번호
@@ -131,9 +136,13 @@ public class UpdateUserScreen extends JFrame {
 
 		pwField = new JPasswordField(bean.getPassword());
 		pwField.setBounds(43, 580, 320, 40);
-		pwField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		pwField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																													// 여백
+																													// (위,
+																													// 왼쪽,
+																													// 아래,
+																													// 오른쪽)
+		));
 		add(pwField);
 
 		// 이메일
@@ -144,9 +153,13 @@ public class UpdateUserScreen extends JFrame {
 
 		emailField = new JTextField(bean.getEmail());
 		emailField.setBounds(43, 650, 320, 40);
-		emailField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		emailField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(emailField);
 
 		// 휴대폰 번호
@@ -157,9 +170,13 @@ public class UpdateUserScreen extends JFrame {
 
 		phoneField = new JTextField(bean.getPhone());
 		phoneField.setBounds(43, 720, 320, 40);
-		phoneField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		phoneField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(phoneField);
 
 		// 수정 버튼
@@ -187,7 +204,7 @@ public class UpdateUserScreen extends JFrame {
 		fisButton.setForeground(Color.WHITE);
 		fisButton.addMouseListener(commonMouseListener);
 		add(fisButton);
-		
+
 		nameField.setEnabled(false);
 		pwField.setEnabled(false);
 		emailField.setEnabled(false);
@@ -230,13 +247,20 @@ public class UpdateUserScreen extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
-	
+
+	private JLabel createScaledImageUserLabel(byte[] imageData, int width, int height) {
+		ImageIcon icon = new ImageIcon(imageData); // byte[] 데이터를 ImageIcon으로 변환
+		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		return new JLabel(new ImageIcon(scaledImage));
+	}
+
 	// 부모 클래스에서 전달된 이미지를 profileLabel에 설정하는 메소드
-    public void updateProfileImage(Image img) {
-        Image scaledImage = img.getScaledInstance(profileLabel.getWidth(), profileLabel.getHeight(), Image.SCALE_SMOOTH);
-        profileLabel.setIcon(new ImageIcon(scaledImage));
-        profileLabel.setText(""); // 텍스트는 빈 값으로 설정
-    }
+	public void updateProfileImage(Image img) {
+		Image scaledImage = img.getScaledInstance(profileLabel.getWidth(), profileLabel.getHeight(),
+				Image.SCALE_SMOOTH);
+		profileLabel.setIcon(new ImageIcon(scaledImage));
+		profileLabel.setText(""); // 텍스트는 빈 값으로 설정
+	}
 
 	public static void main(String[] args) {
 		new LoginScreen();

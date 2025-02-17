@@ -56,7 +56,7 @@ public class WritenCommuScreen extends JFrame {
 				} else if (source == modifyLabel) {
 					System.out.println("수정버튼 클릭됨");
 					setEnabled(false);
-					new ComuModifyScreen(WritenCommuScreen.this, cb);
+					new ComuModifyScreen(preFrame , WritenCommuScreen.this, cb);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
 					mgr.addCmt(cb.getPost_id(), StaticData.user_id, CommentTArea.getText().trim());
@@ -129,8 +129,8 @@ public class WritenCommuScreen extends JFrame {
 		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setPreferredSize(new Dimension(340, 460)); // 적절한 높이 설정
 		
-		//유저 아디ㅣ 라벨
-		useridLabel = new JLabel("User_id");
+		//유저 아이디 라벨
+		useridLabel = new JLabel(cb.getUser_id());
 		useridLabel.setBounds(5, 8, 66, 30);
 		useridLabel.setForeground(Color.BLACK);
 
@@ -141,7 +141,7 @@ public class WritenCommuScreen extends JFrame {
 
 		// 제목 텍스트 필드
 		TitleTArea = new JTextArea();
-		TitleTArea.setBounds(5, 70, 330, 30);
+		TitleTArea.setBounds(5, 80, 330, 30);
 		TitleTArea.setText("");
 		TitleTArea = new JTextArea(cb.getComu_title());
 		TitleTArea.setBounds(5, 70, 330, 30);
