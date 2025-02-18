@@ -14,19 +14,23 @@ public class VoteScreenDialog extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, heartLabel, grayFrameLabel;
 	private JLabel albumphoto;
+	TPMgr mgr;
 
-	public VoteScreenDialog() {
+	public VoteScreenDialog(VoteMainScreen preFrame, VoteBean vb) {
 		setTitle("프레임 설정");
 		setSize(350, 350);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
 	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+
 
 		// 🔹 공통 마우스 클릭 이벤트 리스너
 		MouseAdapter commonMouseListener = new MouseAdapter() {
@@ -36,8 +40,22 @@ public class VoteScreenDialog extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == heartLabel) {
-					System.out.println("하트 클릭됨");
+					 if(!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {	//누르지 않았다면
+						System.out.println("하트 클릭됨");
+						mgr.likeVote(vb.getVote_id(), StaticData.user_id);
+						MsgBean bean = new MsgBean();
+						bean.setMsg_title("새로운 좋아요!");
+						bean.setReceiver_id(vb.getUser_id());
+						bean.setMsg_content(mgr.showOneUserName(StaticData.user_id) + "님이 당신의 투표에 좋아요를 눌렀습니다!");
+						mgr.sendMsg(StaticData.user_id, bean);
+						preFrame.addVote();
+						dispose();
+						preFrame.setVisible(true);
+						new VoteScreenDialog(preFrame, vb);
+					}
 				}
 			}
 		};
@@ -46,19 +64,26 @@ public class VoteScreenDialog extends JFrame {
 			albumphoto = new JLabel("앨범 사진");
 			albumphoto.setBounds(140, 145, 60, 30);
 			albumphoto.setForeground(Color.black);
-				add(albumphoto);
+			add(albumphoto);
 				
-				// 🔹 하트 버튼 이미지 추가
+				
+			// 🔹 하트 버튼 이미지 추가
+			if(mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {		//이미 눌렀다면
+				heartLabel = createScaledImageLabel("TeamProject/vote_complete.png", 70, 70);
+				heartLabel.setBounds(235, 240, 70, 70);
+				heartLabel.setOpaque(false);
+			} else {
 				heartLabel = createScaledImageLabel("TeamProject/vote.png", 70, 70);
 				heartLabel.setBounds(235, 240, 70, 70);
 				heartLabel.addMouseListener(commonMouseListener);
-						add(heartLabel); // 🔹 패널에 추가
+			}
+			add(heartLabel); // 🔹 패널에 추가
 						
-				// 🔹 회색프레임
-				grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
-				grayFrameLabel.setBounds(35, 35, 280, 280);
-				grayFrameLabel.addMouseListener(commonMouseListener);
-				add(grayFrameLabel);
+			// 🔹 회색프레임
+			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
+			grayFrameLabel.setBounds(35, 35, 280, 280);
+			grayFrameLabel.addMouseListener(commonMouseListener);
+			add(grayFrameLabel);
 			
 				
 			
@@ -103,6 +128,6 @@ public class VoteScreenDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new VoteScreenDialog();
+		new LoginScreen();
 	}
 }
