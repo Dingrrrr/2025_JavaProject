@@ -12,11 +12,12 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
+import java.io.*;
 
 public class UpdateUserScreen extends JFrame {
 
 	private BufferedImage image;
-	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel;
+	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, imageLabel;
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton;
@@ -24,6 +25,7 @@ public class UpdateUserScreen extends JFrame {
 	private JFrame previousFrame; // 이전 프레임 저장
 	TPMgr mgr;
 	private UserPhotoModifyDialog upm;
+	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 
 	public UpdateUserScreen(JFrame previousFrame) {
 		setTitle("회원정보 수정");
@@ -50,7 +52,7 @@ public class UpdateUserScreen extends JFrame {
 					System.out.println("뒤로가기 클릭됨");
 					if (mgr.isPet(StaticData.user_id)) { // 반려동물 정보가 있는 경우
 						dispose();
-						previousFrame.setVisible(true);
+						new PetAddMainScreen();
 					} else {
 						dispose();
 						new UserHomeScreen();
@@ -58,6 +60,8 @@ public class UpdateUserScreen extends JFrame {
 				} else if (source == addButton) {
 					System.out.println("유저 프로필 사진 추가 클릭됨!");
 					if (upm == null) {
+						// UserPhotoModifyDialog 생성 시 'this'는 JFrame, UpdateUserScreen.this는
+						// UpdateUserScreen 객체
 						upm = new UserPhotoModifyDialog(UpdateUserScreen.this);
 						upm.setLocation(getX() + 22, getY() + 630);
 					} else {
@@ -79,13 +83,15 @@ public class UpdateUserScreen extends JFrame {
 						bb.setPassword(pwField.getText().trim());
 						bb.setEmail(emailField.getText().trim());
 						bb.setPhone(phoneField.getText().trim());
-						// bb.setUser_image();
+						bb.setUser_image(imageBytes);
 						if (mgr.userUpd(StaticData.user_id, bb)) {
 							nameField.setEnabled(false);
 							pwField.setEnabled(false);
 							emailField.setEnabled(false);
 							phoneField.setEnabled(false);
 						}
+
+						System.out.println(imageBytes);
 					}
 				}
 			}
@@ -97,12 +103,6 @@ public class UpdateUserScreen extends JFrame {
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
 
-		// 메인 프로필 이미지
-		System.out.println(Arrays.toString(bean.getUser_image()));  // 디버깅을 위한 출력
-		profileLabel = createScaledImageUserLabel(bean.getUser_image(), 270, 270);  // byte[]를 전달
-		profileLabel.setBounds(70, 189, 270, 270);
-		add(profileLabel);
-
 		// 이미지 추가 버튼
 		addButton = new RoundedButton("추가");
 		addButton.setBounds(277, 450, 80, 35);
@@ -110,6 +110,25 @@ public class UpdateUserScreen extends JFrame {
 		addButton.setForeground(Color.WHITE);
 		addButton.addMouseListener(commonMouseListener);
 		add(addButton);
+
+		// 메인 프로필 이미지
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		
+		if (imgNull == "[]") {
+			imageLabel = new JLabel();
+			imageLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
+			imageLabel.setBounds(70, 189, 270, 270);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		} else {
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage().getScaledInstance(270, 270, Image.SCALE_SMOOTH);
+			imageLabel = new JLabel();
+			imageLabel.setIcon(new ImageIcon(img));
+			imageLabel.setBounds(70, 189, 270, 270);
+			add(imageLabel);
+		}
 
 		// 이름
 		nameLabel = new JLabel("이름");
@@ -248,18 +267,18 @@ public class UpdateUserScreen extends JFrame {
 		return new JLabel(new ImageIcon(scaledImage));
 	}
 
-	private JLabel createScaledImageUserLabel(byte[] imageData, int width, int height) {
-		ImageIcon icon = new ImageIcon(imageData); // byte[] 데이터를 ImageIcon으로 변환
-		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-		return new JLabel(new ImageIcon(scaledImage));
+	public JLabel getImageLabel() {
+		return imageLabel;
 	}
 
-	// 부모 클래스에서 전달된 이미지를 profileLabel에 설정하는 메소드
-	public void updateProfileImage(Image img) {
-		Image scaledImage = img.getScaledInstance(profileLabel.getWidth(), profileLabel.getHeight(),
-				Image.SCALE_SMOOTH);
-		profileLabel.setIcon(new ImageIcon(scaledImage));
-		profileLabel.setText(""); // 텍스트는 빈 값으로 설정
+	// 이미지 바이트 배열을 설정하는 setter
+	public void setImageBytes(byte[] imageBytes) {
+		this.imageBytes = imageBytes;
+	}
+
+	// imageBytes를 얻는 메서드
+	public byte[] getImageBytes() {
+		return imageBytes;
 	}
 
 	public static void main(String[] args) {

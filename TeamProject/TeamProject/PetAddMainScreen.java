@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -16,7 +17,8 @@ import javax.swing.*;
 public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel;
+	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
+			imageProfileLabel;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
@@ -54,7 +56,7 @@ public class PetAddMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(PetAddMainScreen.this);
-				} else if (source == profileLabel) {
+				} else if (source == imageLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(PetAddMainScreen.this);
@@ -80,43 +82,25 @@ public class PetAddMainScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-		profileLabel.setBounds(330, 120, 40, 40);
-		profileLabel.addMouseListener(commonMouseListener);
-		add(profileLabel);
-
-		// 🔹 유저 프로필 이미지 - DB에서 가져온 이미지를 사용
-		String userImageUrl = bean1.getUser_image(); // DB에서 가져온 이미지 URL
+		// 메인 프로필 이미지
 		System.out.println(bean1.getUser_image());
-		System.out.println(userImageUrl);
-		// 이미지 URL을 통해 ImageIcon 객체 생성
-		try {
-			// URL을 사용하여 이미지를 로드하고 ImageIcon 생성
-			ImageIcon petImageIcon = new ImageIcon(new URL(userImageUrl)); // petImageUrl에서 이미지 로드
+		byte[] imgBytes = bean1.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		ImageIcon icon = new ImageIcon(imgBytes);
+		System.out.println(imgNull);
+		Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		imageLabel = new JLabel();
+		imageLabel.setIcon(new ImageIcon(img));
+		imageLabel.setBounds(101, 178, 200, 200);
+		imageLabel.addMouseListener(commonMouseListener);
+		add(imageLabel);
 
-			// 이미지 크기 조정 (150x150으로 크기 변경)
-			petImageIcon = new ImageIcon(petImageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
-
-			// petProfileLabel을 ImageIcon을 이용한 JLabel로 변경
-			JLabel petProfileLabel = new JLabel(petImageIcon); // ImageIcon을 JLabel로 설정
-			petProfileLabel.setBounds(101, 178, 200, 200); // 위치 및 크기 설정
-
-			// 마우스 클릭 이벤트 처리
-			petProfileLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					dispose(); // 현재 화면 닫기
-					new UpdateUserScreen(PetAddMainScreen.this);
-				}
-			});
-
-			// JLabel을 화면에 추가
-			add(petProfileLabel);
-
-		} catch (Exception ex) {
-			ex.printStackTrace(); // 오류 발생 시 에러 메시지 출력
-		}
+		// 상단 프로필 아이디
+		Image img1 = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		imageProfileLabel = new JLabel();
+		imageProfileLabel.setIcon(new ImageIcon(img1));
+		imageProfileLabel.setBounds(330, 300, 40, 40);
+		add(imageProfileLabel);
 
 		// 환영 문구
 		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(StaticData.user_id) + "님");
@@ -216,6 +200,7 @@ public class PetAddMainScreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				mgr.userOut(StaticData.user_id);
 				new LoginScreen();
 			}
 		});

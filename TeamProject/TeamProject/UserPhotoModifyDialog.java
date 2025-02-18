@@ -7,26 +7,26 @@ import java.awt.event.MouseEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.*;
 
 public class UserPhotoModifyDialog extends JFrame {
-	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
-	private JLabel imageLabel;
-	private UpdateUserScreen parentScreen; // UpdateUserScreen 객체를 참조
+	private UpdateUserScreen updateUserScreen; // UpdateUserScreen 객체를 저장할 변수
+	private JFrame frame;
+	private File selectedFile;
 
-	public UserPhotoModifyDialog(UpdateUserScreen parentFrame) {
-		this.parentScreen = parentFrame;
+	public UserPhotoModifyDialog(UpdateUserScreen updateUserScreen) {
 		setTitle("프레임 설정");
 		setSize(358, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		// imageLabel 초기화
-        imageLabel = new JLabel();
+		this.updateUserScreen = updateUserScreen;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -41,9 +41,10 @@ public class UserPhotoModifyDialog extends JFrame {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
-					selectImage(); // 이미지 선택 메소드 호출
+					selectImage();
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
+					deleteImage();
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
@@ -108,26 +109,81 @@ public class UserPhotoModifyDialog extends JFrame {
 	}
 
 	private void selectImage() {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.setFileFilter(
-				new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "png", "jpeg"));
+	    JFileChooser fileChooser = new JFileChooser();
+	    if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+	        selectedFile = fileChooser.getSelectedFile();
+	        System.out.println(selectedFile);
 
-		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fileChooser.getSelectedFile(); // 선택된 파일 가져오기
+	        // 이미지 읽기
+	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+	        Image img = icon.getImage();
+	        System.out.println(img);
 
-			// 선택된 파일로 이미지 아이콘 생성
-			ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
-			// 이미지를 JLabel에 맞게 크기 조정
-			Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+	        // 이미지 크기 조정 (270x270)
+	        Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
 
-			// 이미지 미리보기를 설정
-			imageLabel.setIcon(new ImageIcon(img));
-			imageLabel.setText(""); // 텍스트는 빈 값으로 설정
+	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
+	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
+	        System.out.println(resizedIcon);
 
-			// 부모 화면(UpdateUserScreen)에게 이미지 전달
-			parentScreen.updateProfileImage(img); // 부모 화면에 이미지 전달
-		}
+	        // 미리보기 업데이트
+	        updateUserScreen.getImageLabel().setIcon(resizedIcon);
+	        updateUserScreen.getImageLabel().setText(""); // 텍스트 제거
+
+	        // 이미지를 byte[]로 변환
+	        byte[] imageBytes = convertFileToByteArray(selectedFile);
+	        System.out.println(imageBytes);
+
+	        // 변환된 이미지를 updateUserScreen에 저장
+	        updateUserScreen.setImageBytes(imageBytes);
+
+	    } else {
+	        // 파일 선택이 취소된 경우
+	        System.out.println("파일 선택이 취소되었습니다.");
+	    }
+	}
+	
+	private void deleteImage() {
+		// 직접 파일 경로 지정
+		File selectedFile = new File("TeamProject/profile.png");
+
+		// 이미지 읽기
+		ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+		Image img = icon.getImage();
+
+		// getScaledInstance로 이미지 크기 조정
+		Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
+
+		// 새로운 ImageIcon 생성
+		ImageIcon resizedIcon = new ImageIcon(resizedImg);
+
+		// 미리보기 업데이트
+		updateUserScreen.getImageLabel().setIcon(resizedIcon);
+		updateUserScreen.getImageLabel().setText(""); // 텍스트 제거
+
+		// 이미지를 byte[]로 변환
+		byte[] imageBytes = convertFileToByteArray(selectedFile);
+		System.out.println(imageBytes);
+		
+		// 변환된 이미지를 updateUserScreen에 저장
+        updateUserScreen.setImageBytes(imageBytes);
+
+	}
+
+	// 파일을 byte 배열로 변환하는 메서드
+	private byte[] convertFileToByteArray(File file) {
+	    try (FileInputStream fis = new FileInputStream(file);
+	         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+	        byte[] buffer = new byte[1024];
+	        int bytesRead;
+	        while ((bytesRead = fis.read(buffer)) != -1) {
+	            baos.write(buffer, 0, bytesRead);
+	        }
+	        return baos.toByteArray();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 
 	public static void main(String[] args) {

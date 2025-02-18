@@ -10,10 +10,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 
 public class UserHomeScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel;
+	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, additionLabel;
 	private PetChooseDialog pc;
@@ -44,7 +45,7 @@ public class UserHomeScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(UserHomeScreen.this);
-				} else if (source == profileLabel) {
+				} else if (source == imageLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(UserHomeScreen.this);
@@ -68,18 +69,45 @@ public class UserHomeScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+
+		// 메인 프로필 이미지
+		System.out.println(bean.getUser_image());
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+
+		if (imgNull == "[]") {
+			imageLabel = new JLabel();
+			imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
+			imageLabel.setBounds(101, 178, 200, 200);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		} else {
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			imageLabel = new JLabel();
+			imageLabel.setIcon(new ImageIcon(img));
+			imageLabel.setBounds(101, 178, 200, 200);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		}
 		
-		// 🔹 상단 프로필 아이콘
-	    profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-	    profileLabel.setBounds(330, 120, 40, 40);
-	    profileLabel.addMouseListener(commonMouseListener);
-	    add(profileLabel);
-	    
-	    // 🔹 상단 프로필 아이콘
-	    mainProfileLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
-	    mainProfileLabel.setBounds(101, 178, 200, 200);
-	    mainProfileLabel .addMouseListener(commonMouseListener);
-	    add( mainProfileLabel);
+		
+		// 상단 프로필 이미지
+		if (imgNull == "[]") {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		} else {
+			ImageIcon icon1 = new ImageIcon(imgBytes);
+			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			imageProfileLabel = new JLabel();
+			imageProfileLabel.setIcon(new ImageIcon(img1));
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		}
 
 		// 🔹 추가 버튼
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
