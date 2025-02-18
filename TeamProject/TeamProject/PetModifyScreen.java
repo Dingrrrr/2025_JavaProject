@@ -9,10 +9,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 
 public class PetModifyScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel backLabel, petProfileLabel, deleteLabel;
+	private JLabel backLabel, petProfileLabel, deleteLabel, imageLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
 	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton;
@@ -21,6 +22,7 @@ public class PetModifyScreen extends JFrame {
 	TPMgr mgr;
 	PetBean bean, pb;
 	private PetPhotoModifyDialog ppm;
+	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 
 	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -31,7 +33,6 @@ public class PetModifyScreen extends JFrame {
 		mgr = new TPMgr();
 		bean = mgr.showOnePet(StaticData.pet_id);
 		pb = new PetBean();
-		pb.setPet_image("");
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -54,11 +55,14 @@ public class PetModifyScreen extends JFrame {
 				} else if (source == petAddProButton) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 					if (ppm == null) {
-						ppm = new PetPhotoModifyDialog(PetModifyScreen.this);
-						ppm.setLocation(getX()+22, getY() + 630);
+						ppm = new PetPhotoModifyDialog(PetModifyScreen.this); // 'this'를 넘겨줍니다.
+						ppm.setLocation(getX() + 22, getY() + 630);
+						ppm.setVisible(true); // 최초로 보여줄 때만 setVisible 호출
 					} else {
-						ppm.setLocation(getX()+22, getY() + 630);
-						ppm.setVisible(true);
+						ppm.setLocation(getX() + 22, getY() + 630);
+						if (!ppm.isVisible()) { // 이미 보이지 않는 상태일 때만 보이게 설정
+							ppm.setVisible(true);
+						}
 					}
 				} else if (source == petSpSearchButton) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
@@ -72,20 +76,21 @@ public class PetModifyScreen extends JFrame {
 					pb.setPet_name(name);
 					pb.setPet_species(spec);
 					pb.setPet_age(birth);
-					if(petMaleRdButton.isSelected()) {
+					if (petMaleRdButton.isSelected()) {
 						pb.setPet_gender("수컷");
-					} else if(petFemaleRdBotton.isSelected()){
+					} else if (petFemaleRdBotton.isSelected()) {
 						pb.setPet_gender("암컷");
 					}
+					pb.setPet_image(imageBytes);
 					mgr.updPet(StaticData.pet_id, pb);
 					dispose();
 					new PetHomeScreen(StaticData.pet_id);
-						
+
 				} else if (source == petDeleteButton) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
 					mgr.delPet(StaticData.pet_id);
 					dispose();
-					if(mgr.isPet(StaticData.user_id)) {
+					if (mgr.isPet(StaticData.user_id)) {
 						new PetAddMainScreen();
 					} else {
 						new UserHomeScreen();
@@ -100,11 +105,6 @@ public class PetModifyScreen extends JFrame {
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
 
-		// 🔹 펫 프로필 이미지
-		petProfileLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
-		petProfileLabel.setBounds(70, 189, 270, 270);
-		add(petProfileLabel);
-		
 		// 반려동물 프로필 사진 추가 버튼
 		petAddProButton = new JButton("추가");
 		petAddProButton.setBounds(277, 450, 80, 35);
@@ -112,6 +112,27 @@ public class PetModifyScreen extends JFrame {
 		petAddProButton.setForeground(Color.WHITE);
 		petAddProButton.addMouseListener(commonMouseListener);
 		add(petAddProButton);
+
+		// 메인 프로필 이미지
+		System.out.println(bean.getPet_image());
+		byte[] imgBytes = bean.getPet_image();
+		String imgNull = Arrays.toString(imgBytes);
+		System.out.println(imgNull);
+		if (imgBytes == null || imgBytes.length == 0) {
+			imageLabel = new JLabel();
+			imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200);
+			imageLabel.setBounds(101, 230, 200, 200);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		} else {
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			imageLabel = new JLabel();
+			imageLabel.setIcon(new ImageIcon(img));
+			imageLabel.setBounds(101, 230, 200, 200);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		}
 
 		// 반려동물 이름 라벨
 		petNameLabel = new JLabel("이름");
@@ -192,12 +213,11 @@ public class PetModifyScreen extends JFrame {
 		ButtonGroup group = new ButtonGroup();
 		group.add(petMaleRdButton);
 		group.add(petFemaleRdBotton);
-		
-		if(bean.getPet_gender().equals("수컷")) 
+
+		if (bean.getPet_gender().equals("수컷"))
 			petMaleRdButton.setSelected(true);
-		else if(bean.getPet_gender().equals("암컷")) 
+		else if (bean.getPet_gender().equals("암컷"))
 			petFemaleRdBotton.setSelected(true);
-		
 
 		// 반려동물 정보 수정 버튼
 		petModifyButton = new JButton("수정");
@@ -254,7 +274,7 @@ public class PetModifyScreen extends JFrame {
 
 		setVisible(true);
 	}
-	
+
 	public void updateSpecies(String species) {
 		petSpecTField.setText(species);
 	}
@@ -268,8 +288,21 @@ public class PetModifyScreen extends JFrame {
 		return new JLabel(new ImageIcon(scaledImage));
 	}
 
+	public JLabel getImageLabel() {
+		return imageLabel;
+	}
+
+	// 이미지 바이트 배열을 설정하는 setter
+	public void setImageBytes(byte[] imageBytes) {
+		this.imageBytes = imageBytes;
+	}
+
+	// imageBytes를 얻는 메서드
+	public byte[] getImageBytes() {
+		return imageBytes;
+	}
+
 	public static void main(String[] args) {
 		new LoginScreen();
 	}
 }
-

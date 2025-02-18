@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -25,10 +26,12 @@ public class PetAddMainScreen extends JFrame {
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
+	PetBean bean;
 	Vector<PetBean> vlist;
 	private PetChooseDialog pc;
 	private JPanel petaddPanel;
 	private JScrollPane scrollPane; // 스크롤 패널
+	private byte[] imageBytes, imageBytes1;
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -87,7 +90,7 @@ public class PetAddMainScreen extends JFrame {
 		System.out.println(bean1.getUser_image());
 		byte[] imgBytes = bean1.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
+		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
 			imageLabel.setBounds(101, 178, 200, 200);
@@ -163,15 +166,14 @@ public class PetAddMainScreen extends JFrame {
 		panel.setOpaque(false);
 		panel.setLayout(null);
 		add(panel);
-		
+
 		// 🔹 스크롤 가능한 게시글 패널 설정
 		petaddPanel = new JPanel();
 		petaddPanel.setLayout(new BoxLayout(petaddPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
 		petaddPanel.setBackground(Color.darkGray);
-		
 
 		petAddMain();
-				
+
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		scrollPane = new JScrollPane(petaddPanel);
 		scrollPane.setBounds(23, 430, 357, 360);
@@ -179,7 +181,7 @@ public class PetAddMainScreen extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
-				
+
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
 		addButtonLabel.setBounds(300, 700, 70, 70);
@@ -188,6 +190,22 @@ public class PetAddMainScreen extends JFrame {
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
 		addButtonLabel.setVisible(true);
 		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
+
+		// 🔹 닫기 버튼
+		JButton closeButton = new JButton("X");
+		closeButton.setBounds(370, 10, 20, 20);
+		closeButton.setBackground(Color.RED);
+		closeButton.setForeground(Color.WHITE);
+		closeButton.setBorder(BorderFactory.createEmptyBorder());
+		closeButton.setFocusPainted(false);
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
+		panel.add(closeButton);
 
 		setVisible(true);
 
@@ -206,26 +224,32 @@ public class PetAddMainScreen extends JFrame {
 			JPanel topPanel = new JPanel(new BorderLayout());
 
 			// 왼쪽 - 이미지
-			ImageIcon originalIcon = new ImageIcon("TeamProject/dog.png");
-			Image originalImage = originalIcon.getImage();
-			Image resizedImage1 = originalImage.getScaledInstance(135, 135, Image.SCALE_SMOOTH);
-			ImageIcon image2 = new ImageIcon(resizedImage1);
-
-			JLabel petImageLabel = new JLabel();
-			petImageLabel.setPreferredSize(new Dimension(150, 150));
-			if (image2 != null) {
-				petImageLabel.setIcon(image2);
-			} else {
-				petImageLabel.setOpaque(true);
-				petImageLabel.setBackground(Color.LIGHT_GRAY); // 이미지 없을 경우 기본 배경
+			System.out.println(pb.getPet_image());
+			byte[] imgBytes1 = pb.getPet_image();
+			String imgNull = Arrays.toString(imgBytes1);
+			System.out.println(imgNull);
+			if (imgBytes1 == null || imgBytes1.length == 0) {
+				petImageLabel = new JLabel();
+				petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);
+				petImageLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						dispose();
+						new PetHomeScreen(pb.getPet_id());
+					}
+				});
+				} else {
+				ImageIcon icon1 = new ImageIcon(imgBytes1);
+				Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+				petImageLabel.setIcon(new ImageIcon(img1));
+				petImageLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						dispose();
+						new PetHomeScreen(pb.getPet_id());
+					}
+				});
 			}
-			petImageLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					dispose();
-					new PetHomeScreen(pb.getPet_id());
-				}
-			});
 
 			// 4) 본문 패널 (이미지 + 텍스트)
 			JPanel contentPanel = new JPanel(new BorderLayout(10, 0));

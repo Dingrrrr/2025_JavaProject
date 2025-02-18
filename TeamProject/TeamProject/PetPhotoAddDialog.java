@@ -12,22 +12,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class PetPhotoModifyDialog extends JFrame {
+public class PetPhotoAddDialog extends JFrame {
 	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
 	private JFrame frame;
 	private File selectedFile;
-	private PetModifyScreen petModifyScreen;
+	private PetAddScreen petAddScreen;
 
-	public PetPhotoModifyDialog(PetModifyScreen petModifyScreen) {
+	public PetPhotoAddDialog(PetAddScreen petAddScreen) {
 		setTitle("프레임 설정");
 		setSize(358, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.petModifyScreen = petModifyScreen;  // 'petModifyScreen'을 여기서 받음
+		this.petAddScreen = petAddScreen;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -100,6 +100,7 @@ public class PetPhotoModifyDialog extends JFrame {
 		add(panel);
 
 		setVisible(true);
+
 	}
 	
 	private void selectImage() {
@@ -121,15 +122,15 @@ public class PetPhotoModifyDialog extends JFrame {
 	        System.out.println(resizedIcon);
 
 	        // 미리보기 업데이트
-	        petModifyScreen.getImageLabel().setIcon(resizedIcon);
-	        petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+	        petAddScreen.getImageLabel().setIcon(resizedIcon);
+	        petAddScreen.getImageLabel().setText(""); // 텍스트 제거
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
 	        System.out.println(imageBytes);
 
 	        // 변환된 이미지를 updateUserScreen에 저장
-	        petModifyScreen.setImageBytes(imageBytes);
+	        petAddScreen.setImageBytes(imageBytes);
 
 	    } else {
 	        // 파일 선택이 취소된 경우
@@ -152,15 +153,15 @@ public class PetPhotoModifyDialog extends JFrame {
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		petModifyScreen.getImageLabel().setIcon(resizedIcon);
-		petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+		petAddScreen.getImageLabel().setIcon(resizedIcon);
+		petAddScreen.getImageLabel().setText(""); // 텍스트 제거
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
 		System.out.println(imageBytes);
 		
 		// 변환된 이미지를 PetAddScreen에 저장
-		petModifyScreen.setImageBytes(imageBytes);
+        petAddScreen.setImageBytes(imageBytes);
 
 	}
 	

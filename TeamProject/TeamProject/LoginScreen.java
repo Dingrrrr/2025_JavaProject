@@ -17,23 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-class RoundedBorder extends AbstractBorder {
-    private int radius;
-
-    public RoundedBorder(int radius) {
-        this.radius = radius;
-    }
-
-    @Override
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.GRAY); // 테두리 색상
-        g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius); // 둥근 테두리 그리기
-        g2.dispose();
-    }
-}
-
 public class LoginScreen extends JFrame {
 	private BufferedImage image;
 	private BufferedImage logoImage;

@@ -15,7 +15,7 @@ public class VotePhotoModifyDialog extends JFrame {
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
 
-	public VotePhotoModifyDialog(JFrame preFrame) {
+	public VotePhotoModifyDialog(JFrame prePreFrame, JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
@@ -35,14 +35,14 @@ public class VotePhotoModifyDialog extends JFrame {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
-					dispose();
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
-					dispose();
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
 					preFrame.setEnabled(true);
+					prePreFrame.setVisible(true);
+					preFrame.setVisible(true);
 				}
 
 			}
