@@ -15,7 +15,7 @@ public class VoteModifyScreen extends JFrame {
 	private JButton saveButton, delButton;
 	private VoteModifyDialog vmd;
 
-	public VoteModifyScreen() {
+	public VoteModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(364, 496);
 		setUndecorated(true);
@@ -36,15 +36,27 @@ public class VoteModifyScreen extends JFrame {
 						if (source == closeLabel) {
 							System.out.println("닫기 버튼 클릭됨");
 							dispose(); // 창 닫기
+							preFrame.setEnabled(true);
+							preFrame.setVisible(true);
 						} else if (source == addButtonLabel)  {
 							System.out.println("➕ 추가 버튼 클릭됨!");
 							if (vmd==null) {
-								vmd = new VoteModifyDialog(VoteModifyScreen.this);
+								vmd = new VoteModifyDialog(preFrame, VoteModifyScreen.this);
 								vmd.setLocation(getX()+3, getY()+335);
 							} else {
 								vmd.setLocation(getX()+3, getY()+335);
 								vmd.setVisible(true);
 							}
+							setEnabled(false);
+						} else if(source == modifyLabel) {
+							System.out.println("수정 버튼 클릭됨");
+							addButtonLabel.setEnabled(true);
+							saveButton.setEnabled(true);
+							delButton.setEnabled(true);
+						} else if(source == delButton) {
+							System.out.println("삭제 버튼 클릭됨");
+						} else if(source == saveButton) {
+							System.out.println("저장 버튼 클릭됨");
 						}
 					}
 				};
@@ -53,6 +65,7 @@ public class VoteModifyScreen extends JFrame {
 				addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 62, 62);
 				addButtonLabel.setBounds(245, 265, 62, 62);
 				addButtonLabel.addMouseListener(commonMouseListener);
+				addButtonLabel.setEnabled(false);
 				add(addButtonLabel);
 				
 				// 🔹 회색프레임
@@ -67,6 +80,7 @@ public class VoteModifyScreen extends JFrame {
 				saveButton.setBackground(new Color(91, 91, 91));
 				saveButton.setForeground(Color.WHITE);
 				saveButton.addMouseListener(commonMouseListener);
+				saveButton.setEnabled(false);
 				add(saveButton);
 				
 				// 삭제 버튼
@@ -75,6 +89,7 @@ public class VoteModifyScreen extends JFrame {
 				delButton.setBackground(new Color(91, 91, 91));
 				delButton.setForeground(Color.WHITE);
 				delButton.addMouseListener(commonMouseListener);
+				delButton.setEnabled(false);
 				add(delButton);
 				
 		
@@ -117,6 +132,6 @@ public class VoteModifyScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new VoteModifyScreen();
+//		new VoteModifyScreen();
 	}
 }
