@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class PetPhotoModifyDialog extends JFrame {
+public class PetPhotoAddDialog extends JFrame {
 	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
@@ -20,15 +20,13 @@ public class PetPhotoModifyDialog extends JFrame {
 	private PetAddScreen petAddScreen;
 	private JFrame frame;
 	private File selectedFile;
-	private PetModifyScreen petModifyScreen;
 
-	public PetPhotoModifyDialog(PetModifyScreen petModifyScreen) {
+	public PetPhotoAddDialog(Frame preFrame) {
 		setTitle("프레임 설정");
 		setSize(358, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.petModifyScreen = petModifyScreen;  // 'petModifyScreen'을 여기서 받음
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -101,6 +99,13 @@ public class PetPhotoModifyDialog extends JFrame {
 		add(panel);
 
 		setVisible(true);
+
+		/*
+		 * // 🔹 회색프레임 grayFrameLabel =
+		 * createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
+		 * grayFrameLabel.setBounds(35, 90, 280, 280); add(grayFrameLabel,
+		 * BorderLayout.SOUTH);
+		 */
 	}
 	
 	private void selectImage() {
@@ -114,23 +119,23 @@ public class PetPhotoModifyDialog extends JFrame {
 	        Image img = icon.getImage();
 	        System.out.println(img);
 
-	        // 이미지 크기 조정 (200x200)
-	        Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+	        // 이미지 크기 조정 (270x270)
+	        Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
 
 	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
 	        System.out.println(resizedIcon);
 
 	        // 미리보기 업데이트
-	        petModifyScreen.getImageLabel().setIcon(resizedIcon);
-	        petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+	        petAddScreen.getImageLabel().setIcon(resizedIcon);
+	        petAddScreen.getImageLabel().setText(""); // 텍스트 제거
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
 	        System.out.println(imageBytes);
 
 	        // 변환된 이미지를 updateUserScreen에 저장
-	        petModifyScreen.setImageBytes(imageBytes);
+	        petAddScreen.setImageBytes(imageBytes);
 
 	    } else {
 	        // 파일 선택이 취소된 경우
@@ -147,21 +152,21 @@ public class PetPhotoModifyDialog extends JFrame {
 		Image img = icon.getImage();
 
 		// getScaledInstance로 이미지 크기 조정
-		Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
 
 		// 새로운 ImageIcon 생성
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		petModifyScreen.getImageLabel().setIcon(resizedIcon);
-		petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+		petAddScreen.getImageLabel().setIcon(resizedIcon);
+		petAddScreen.getImageLabel().setText(""); // 텍스트 제거
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
 		System.out.println(imageBytes);
 		
 		// 변환된 이미지를 PetAddScreen에 저장
-		petModifyScreen.setImageBytes(imageBytes);
+        petAddScreen.setImageBytes(imageBytes);
 
 	}
 	

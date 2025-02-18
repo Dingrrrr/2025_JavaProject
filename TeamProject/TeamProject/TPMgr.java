@@ -250,7 +250,7 @@ public class TPMgr {
 			pstmt.setString(3, bean.getPet_species());
 			pstmt.setString(4, bean.getPet_age());
 			pstmt.setString(5, bean.getPet_gender());
-			pstmt.setString(6, bean.getPet_image());
+			pstmt.setBytes(6, bean.getPet_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -274,7 +274,7 @@ public class TPMgr {
 			pstmt.setString(2, bean.getPet_species());
 			pstmt.setString(3, bean.getPet_age());
 			pstmt.setString(4, bean.getPet_gender());
-			pstmt.setString(5, bean.getPet_image());
+			pstmt.setBytes(5, bean.getPet_image());
 			pstmt.setInt(6, pet_id);
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)
@@ -408,7 +408,7 @@ public class TPMgr {
 				bean.setPet_species(rs.getString("pet_species"));
 				bean.setPet_age(rs.getString("pet_age"));
 				bean.setPet_gender(rs.getString("pet_gender"));
-				bean.setPet_image(rs.getString("pet_image"));
+				bean.setPet_image(rs.getBytes("pet_image"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -25,6 +25,7 @@ public class PetAddMainScreen extends JFrame {
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
+	PetBean bean;
 	Vector<PetBean> vlist;
 	private PetChooseDialog pc;
 	private JPanel petaddPanel;
@@ -38,6 +39,7 @@ public class PetAddMainScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		UserBean bean1 = mgr.showUser(StaticData.user_id);
 		vlist = mgr.showPet(StaticData.user_id);
+		bean = new PetBean();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -221,6 +223,17 @@ public class PetAddMainScreen extends JFrame {
 			JPanel topPanel = new JPanel(new BorderLayout());
 
 			// 왼쪽 - 이미지
+			System.out.println(bean.getPet_image());
+			byte[] imgBytes = bean.getPet_image();
+			String imgNull = Arrays.toString(imgBytes);
+			if (imgNull == "[]") {
+				petImageLabel = new JLabel();
+				petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);
+				add(petImageLabel);
+			} else {
+				ImageIcon icon = new ImageIcon(imgBytes);
+				Image img = icon.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+			}
 			ImageIcon originalIcon = new ImageIcon("TeamProject/dog.png");
 			Image originalImage = originalIcon.getImage();
 			Image resizedImage1 = originalImage.getScaledInstance(135, 135, Image.SCALE_SMOOTH);
