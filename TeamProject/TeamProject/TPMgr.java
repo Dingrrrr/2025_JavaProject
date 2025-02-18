@@ -715,7 +715,7 @@ public class TPMgr {
 			sql = "insert album values(null, ?, ?, ?, ?, now())";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
-			pstmt.setString(2, bean.getAlbum_image());
+			pstmt.setBytes(2, bean.getAlbum_image());
 			pstmt.setString(3, bean.getAlbum_desc());
 			pstmt.setString(4, bean.getAlbum_tags());
 			pstmt.executeUpdate();
@@ -737,7 +737,7 @@ public class TPMgr {
 			con = pool.getConnection();
 			sql = "update album set album_image = ?, album_desc = ?, album_tags = ? where album_id = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, bean.getAlbum_image());
+			pstmt.setBytes(1, bean.getAlbum_image());
 			pstmt.setString(2, bean.getAlbum_desc());
 			pstmt.setString(3, bean.getAlbum_tags());
 			pstmt.setInt(4, album_id);
@@ -790,7 +790,7 @@ public class TPMgr {
 			while(rs.next()) {
 				AlbumBean bean = new AlbumBean();
 				bean.setAlbum_id(rs.getInt("album_id"));
-				bean.setAlbum_image(rs.getString("album_image"));
+				bean.setAlbum_image(rs.getBytes("album_image"));
 				bean.setAlbum_tags(rs.getString("album_tags"));
 				bean.setAlbum_date(rs.getTimestamp("album_date"));
 				bean.setAlbum_desc(rs.getString("album_desc"));
@@ -1143,7 +1143,7 @@ public class TPMgr {
 	}
 	
 	//투표 추가(수정 필요)
-	public void addVote(String user_id, int pet_id, String image) {
+	public void addVote(String user_id, int pet_id, VoteBean bean) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -1153,7 +1153,7 @@ public class TPMgr {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, user_id);
 			pstmt.setInt(2, pet_id);
-			pstmt.setString(3, image);
+			pstmt.setBytes(3, bean.getVote_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -1164,7 +1164,7 @@ public class TPMgr {
 	}
 	
 	//투표 수정
-	public boolean updVote(String image, int vote_id) {
+	public boolean updVote(int vote_id, VoteBean bean) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -1173,7 +1173,7 @@ public class TPMgr {
 			con = pool.getConnection();
 			sql = "update vote set vote_image = ? where vote_id = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, image);
+			pstmt.setBytes(1, bean.getVote_image());
 			pstmt.setInt(2, vote_id);
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)
@@ -1209,7 +1209,7 @@ public class TPMgr {
 	}
 	
 	//투표 화면에 출력(최신순이 디폴트)
-	public Vector<VoteBean> showVote(){
+	public Vector<VoteBean> showVote(int vote_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1225,7 +1225,7 @@ public class TPMgr {
 				VoteBean bean = new VoteBean();
 				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);
@@ -1255,7 +1255,7 @@ public class TPMgr {
 				VoteBean bean = new VoteBean();
 				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);
@@ -1285,7 +1285,7 @@ public class TPMgr {
 				VoteBean bean = new VoteBean();
 				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);
@@ -1315,7 +1315,7 @@ public class TPMgr {
 				VoteBean bean = new VoteBean();
 				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);

@@ -7,7 +7,7 @@ public class VoteBean {
 	private String user_id;
 	private int pet_id;
 	private int vote_like;
-	private String vote_image;
+	private byte[] vote_image;
 	private Timestamp vote_date;
 	
 	public int getVote_id() {
@@ -34,10 +34,10 @@ public class VoteBean {
 	public void setVote_like(int vote_like) {
 		this.vote_like = vote_like;
 	}
-	public String getVote_image() {
+	public byte[] getVote_image() {
 		return vote_image;
 	}
-	public void setVote_image(String vote_image) {
+	public void setVote_image(byte[] vote_image) {
 		this.vote_image = vote_image;
 	}
 	public Timestamp getVote_date() {
