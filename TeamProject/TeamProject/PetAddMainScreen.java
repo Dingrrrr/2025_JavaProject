@@ -163,15 +163,14 @@ public class PetAddMainScreen extends JFrame {
 		panel.setOpaque(false);
 		panel.setLayout(null);
 		add(panel);
-		
+
 		// 🔹 스크롤 가능한 게시글 패널 설정
 		petaddPanel = new JPanel();
 		petaddPanel.setLayout(new BoxLayout(petaddPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
 		petaddPanel.setBackground(Color.darkGray);
-		
 
 		petAddMain();
-				
+
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		scrollPane = new JScrollPane(petaddPanel);
 		scrollPane.setBounds(23, 430, 357, 360);
@@ -179,7 +178,7 @@ public class PetAddMainScreen extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
-				
+
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
 		addButtonLabel.setBounds(300, 700, 70, 70);
@@ -188,6 +187,22 @@ public class PetAddMainScreen extends JFrame {
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
 		addButtonLabel.setVisible(true);
 		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
+
+		// 🔹 닫기 버튼
+		JButton closeButton = new JButton("X");
+		closeButton.setBounds(370, 10, 20, 20);
+		closeButton.setBackground(Color.RED);
+		closeButton.setForeground(Color.WHITE);
+		closeButton.setBorder(BorderFactory.createEmptyBorder());
+		closeButton.setFocusPainted(false);
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
+		panel.add(closeButton);
 
 		setVisible(true);
 
