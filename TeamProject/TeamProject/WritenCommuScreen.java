@@ -73,13 +73,15 @@ public class WritenCommuScreen extends JFrame {
 				CommentTArea.setText("");
 				CommentTArea.setLineWrap(true);
 				CommentTArea.setWrapStyleWord(true);
-				CommentTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) )); // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				add(CommentTArea);
-			
+				CommentTArea.setBackground(Color.WHITE);
+					
 				JScrollPane scrollPane = new JScrollPane(CommentTArea);
 				scrollPane.setBounds(15, 560, 290, 40); // 텍스트 영역 크기와 위치 설정
+				scrollPane.setBackground(Color.WHITE);
 				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(
+				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) )); // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+		
 				add(scrollPane); // JScrollPane을 프레임에 추가
 				
 				// 전송 버튼
@@ -144,7 +146,7 @@ public class WritenCommuScreen extends JFrame {
 		TitleTArea.setBounds(5, 70, 330, 30);
 		TitleTArea.setEditable(false);
 		TitleTArea.setBorder(BorderFactory.createCompoundBorder(
-		    new RoundedBorder(20), new EmptyBorder(5, 5, 5, 5)
+		    new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)
 		));
 
 		// 설명 라벨
@@ -157,7 +159,7 @@ public class WritenCommuScreen extends JFrame {
 		ExplainTArea.setBounds(5, 155, 330, 100);
 		ExplainTArea.setEditable(false);
 		ExplainTArea.setBorder(BorderFactory.createCompoundBorder(
-		    new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)
+		    new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)
 		));
 
 		// 사진 라벨

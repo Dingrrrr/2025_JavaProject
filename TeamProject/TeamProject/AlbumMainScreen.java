@@ -26,7 +26,7 @@ public class AlbumMainScreen extends JFrame {
 	TPMgr mgr = new TPMgr();
 
 	Vector<AlbumBean> vlist = mgr.showAlbum(StaticData.pet_id);
-
+	
 	public AlbumMainScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
