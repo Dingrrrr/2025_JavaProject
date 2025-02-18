@@ -6,7 +6,7 @@ public class UserBean {
 	private String password;
 	private String email;
 	private String phone;
-	private String user_image;
+	private byte[] user_image; // String에서 byte[]로 변경
 	
 	
 	public String getUser_id() {
@@ -39,12 +39,11 @@ public class UserBean {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getUser_image() {
-		return user_image;
-	}
-	public void setUser_image(String user_image) {
-		this.user_image = user_image;
-	}
-	
+	public byte[] getUser_image() { // 반환 타입을 byte[]로 변경
+        return user_image;
+    }
+    public void setUser_image(byte[] user_image) { // 파라미터 타입을 byte[]로 변경
+        this.user_image = user_image;
+    }
 	
 }

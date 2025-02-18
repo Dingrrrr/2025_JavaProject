@@ -25,7 +25,6 @@ public class ComuModifyScreen extends JFrame {
 	TPMgr mgr;
 
 	public ComuModifyScreen(JFrame prePreFrame, WritenCommuScreen preFrame, ComuBean cb) {
-
 		setTitle("프레임 설정");
 		setSize(364, 630);
 		setUndecorated(true);

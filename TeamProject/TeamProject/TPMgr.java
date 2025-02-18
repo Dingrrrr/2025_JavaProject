@@ -196,7 +196,9 @@ public class TPMgr {
 				bean.setPassword(rs.getString("password"));
 				bean.setEmail(rs.getString("email"));
 				bean.setPhone(rs.getString("phone"));
-				bean.setUser_image(rs.getString("user_image"));
+				// 이미지 데이터는 byte[]로 받아오기
+	            byte[] imageData = rs.getBytes("user_image");
+	            bean.setUser_image(imageData); // UserBean에서 byte[]를 저장하도록 설정
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -220,7 +222,8 @@ public class TPMgr {
 			pstmt.setString(2, bean.getPassword());
 			pstmt.setString(3, bean.getEmail());
 			pstmt.setString(4, bean.getPhone());
-			pstmt.setString(5, bean.getUser_image());
+			// user_image를 byte[]로 설정
+	        pstmt.setBytes(5, bean.getUser_image());  // setBytes를 사용하여 byte[] 데이터 저장
 			pstmt.setString(6, user_id);	//id를 매개변수로 받아 업데이트
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)	//수정 성공
@@ -405,6 +408,7 @@ public class TPMgr {
 				bean.setPet_species(rs.getString("pet_species"));
 				bean.setPet_age(rs.getString("pet_age"));
 				bean.setPet_gender(rs.getString("pet_gender"));
+				bean.setPet_image(rs.getString("pet_image"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
