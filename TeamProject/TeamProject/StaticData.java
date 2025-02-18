@@ -12,5 +12,6 @@ public class StaticData {
 	static int diary_id;
 	static int msg_id;
 	static int record_id;
+	static int vote_id;
 	static String msg_user_id = "";
 }

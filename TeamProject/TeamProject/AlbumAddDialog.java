@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
+
 import javax.imageio.ImageIO;
 
 public class AlbumAddDialog extends JFrame {
@@ -20,7 +22,8 @@ public class AlbumAddDialog extends JFrame {
 	private String tags, write;
 	TPMgr mgr;
 	AlbumBean bean;
-	private AlbumPhotoModifyDialog amd;
+	private AlbumPhotoAddDialog aad;
+	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 
 	public AlbumAddDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -30,7 +33,6 @@ public class AlbumAddDialog extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		bean = new AlbumBean();
-		String img = "";
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -50,12 +52,12 @@ public class AlbumAddDialog extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
-					if (amd == null) {
-						amd = new AlbumPhotoModifyDialog(AlbumAddDialog.this);
-						amd.setLocation(getX() + 1, getY() + 455);
+					if (aad == null) {
+						aad = new AlbumPhotoAddDialog(AlbumAddDialog.this);
+						aad.setLocation(getX() + 1, getY() + 455);
 					} else {
-						amd.setLocation(getX() + 1, getY() + 455);
-						amd.setVisible(true);
+						aad.setLocation(getX() + 1, getY() + 455);
+						aad.setVisible(true);
 					}
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
@@ -63,7 +65,7 @@ public class AlbumAddDialog extends JFrame {
 					write = AlbumWriteTArea.getText().trim();
 					bean.setAlbum_tags(tags);
 					bean.setAlbum_desc(write);
-					bean.setAlbum_image(img);
+					bean.setAlbum_image(imageBytes);
 					mgr.addAlbum(StaticData.pet_id, bean);
 					dispose();
 					preFrame.dispose();
@@ -133,10 +135,25 @@ public class AlbumAddDialog extends JFrame {
 		add(addButtonLabel);
 
 		// 🔹 회색프레임
-		grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
-		grayFrameLabel.setBounds(35, 35, 280, 280);
-		grayFrameLabel.addMouseListener(commonMouseListener);
-		add(grayFrameLabel);
+		System.out.println(bean.getAlbum_image());
+		byte[] imgBytes = bean.getAlbum_image();
+		String imgNull = Arrays.toString(imgBytes);
+		System.out.println(imgNull);
+		if (imgBytes == null || imgBytes.length == 0) {
+			grayFrameLabel = new JLabel();
+			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
+			grayFrameLabel.setBounds(35, 35, 280, 280);
+			grayFrameLabel.addMouseListener(commonMouseListener);
+			add(grayFrameLabel);
+		} else {
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+			grayFrameLabel = new JLabel();
+			grayFrameLabel.setIcon(new ImageIcon(img));
+			grayFrameLabel.setBounds(35, 35, 280, 280);
+			grayFrameLabel.addMouseListener(commonMouseListener);
+			add(grayFrameLabel);
+		}
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
@@ -171,6 +188,20 @@ public class AlbumAddDialog extends JFrame {
 		ImageIcon icon = new ImageIcon(imagePath);
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
+	}
+	
+	public JLabel getImageLabel() {
+		return grayFrameLabel;
+	}
+
+	// 이미지 바이트 배열을 설정하는 setter
+	public void setImageBytes(byte[] imageBytes) {
+		this.imageBytes = imageBytes;
+	}
+
+	// imageBytes를 얻는 메서드
+	public byte[] getImageBytes() {
+		return imageBytes;
 	}
 
 	public static void main(String[] args) {

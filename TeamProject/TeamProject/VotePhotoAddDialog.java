@@ -12,22 +12,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class AlbumPhotoModifyDialog extends JFrame {
+public class VotePhotoAddDialog extends JFrame {
 	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
-	private File selectedFile;
+	private VoteAddDialog voteAddDialog;
 	private JFrame frame;
-	private AlbumResultDialog albumResultDialog;
+	private File selectedFile;
 
-	public AlbumPhotoModifyDialog(AlbumResultDialog albumResultDialog) {
+	public VotePhotoAddDialog(VoteAddDialog voteAddDialog) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.albumResultDialog = albumResultDialog;
+		this.voteAddDialog = voteAddDialog;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -128,14 +128,15 @@ public class AlbumPhotoModifyDialog extends JFrame {
 	        System.out.println(resizedIcon);
 
 	        // 미리보기 업데이트
-	        albumResultDialog.getImageLabel().setIcon(resizedIcon);
+	        voteAddDialog.getImageLabel().setIcon(resizedIcon);
+	        voteAddDialog.getImageLabel().setText(""); // 텍스트 제거
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
 	        System.out.println(imageBytes);
 
 	        // 변환된 이미지를 updateUserScreen에 저장
-	        albumResultDialog.setImageBytes(imageBytes);
+	        voteAddDialog.setImageBytes(imageBytes);
 
 	    } else {
 	        // 파일 선택이 취소된 경우
@@ -158,14 +159,15 @@ public class AlbumPhotoModifyDialog extends JFrame {
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		albumResultDialog.getImageLabel().setIcon(resizedIcon);
+		voteAddDialog.getImageLabel().setIcon(resizedIcon);
+		voteAddDialog.getImageLabel().setText(""); // 텍스트 제거
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
 		System.out.println(imageBytes);
 		
 		// 변환된 이미지를 updateUserScreen에 저장
-		albumResultDialog.setImageBytes(imageBytes);
+		voteAddDialog.setImageBytes(imageBytes);
 
 	}
 
@@ -186,5 +188,6 @@ public class AlbumPhotoModifyDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
+//		new VotePhotoModifyDialog();
 	}
 }

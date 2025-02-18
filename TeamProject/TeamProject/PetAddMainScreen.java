@@ -225,11 +225,11 @@ public class PetAddMainScreen extends JFrame {
 
 			// 왼쪽 - 이미지
 			System.out.println(pb.getPet_image());
-			byte[] imgBytes1 = pb.getPet_image();
-			String imgNull = Arrays.toString(imgBytes1);
+			byte[] imgBytes = pb.getPet_image();
+			String imgNull = Arrays.toString(imgBytes);
 			System.out.println(imgNull);
-			if (imgBytes1 == null || imgBytes1.length == 0) {
-				petImageLabel = new JLabel();
+			petImageLabel = new JLabel(); // JLabel을 먼저 생성
+			if (imgBytes == null || imgBytes.length == 0) {
 				petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);
 				petImageLabel.addMouseListener(new MouseAdapter() {
 					@Override
@@ -239,7 +239,7 @@ public class PetAddMainScreen extends JFrame {
 					}
 				});
 				} else {
-				ImageIcon icon1 = new ImageIcon(imgBytes1);
+				ImageIcon icon1 = new ImageIcon(imgBytes);
 				Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
 				petImageLabel.setIcon(new ImageIcon(img1));
 				petImageLabel.addMouseListener(new MouseAdapter() {

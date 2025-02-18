@@ -7,7 +7,7 @@ public class AlbumBean {
 	private int pet_id;
 	private String album_desc;
 	private String album_tags;
-	private String album_image;
+	private byte[] album_image;
 	private Timestamp album_date;
 	
 	
@@ -35,10 +35,10 @@ public class AlbumBean {
 	public void setAlbum_tags(String album_tags) {
 		this.album_tags = album_tags;
 	}
-	public String getAlbum_image() {
+	public byte[] getAlbum_image() {
 		return album_image;
 	}
-	public void setAlbum_image(String album_image) {
+	public void setAlbum_image(byte[] album_image) {
 		this.album_image = album_image;
 	}
 	public Timestamp getAlbum_date() {
