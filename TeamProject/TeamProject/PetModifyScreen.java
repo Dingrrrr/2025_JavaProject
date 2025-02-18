@@ -117,7 +117,8 @@ public class PetModifyScreen extends JFrame {
 		System.out.println(bean.getPet_image());
 		byte[] imgBytes = bean.getPet_image();
 		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
+		System.out.println(imgNull);
+		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200);
 			imageLabel.setBounds(101, 230, 200, 200);

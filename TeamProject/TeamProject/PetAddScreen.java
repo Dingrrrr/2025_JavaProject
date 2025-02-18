@@ -97,21 +97,18 @@ public class PetAddScreen extends JFrame {
 		System.out.println(bean.getPet_image());
 		byte[] imgBytes = bean.getPet_image();
 		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
-			imageLabel = new JLabel();
-			imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200);
-			imageLabel.setBounds(101, 178, 200, 200);
-			imageLabel.addMouseListener(commonMouseListener);
-			add(imageLabel);
+		System.out.println(imgNull);
+		if (imgBytes == null || imgBytes.length == 0) {
+		    imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200); // 기본 이미지
 		} else {
-			ImageIcon icon = new ImageIcon(imgBytes);
-			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-			imageLabel = new JLabel();
-			imageLabel.setIcon(new ImageIcon(img));
-			imageLabel.setBounds(101, 178, 200, 200);
-			imageLabel.addMouseListener(commonMouseListener);
-			add(imageLabel);
+		    ImageIcon icon = new ImageIcon(imgBytes);
+		    Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		    imageLabel = new JLabel();
+		    imageLabel.setIcon(new ImageIcon(img));
 		}
+		imageLabel.setBounds(101, 230, 200, 200);
+		imageLabel.addMouseListener(commonMouseListener);
+		add(imageLabel);
 
 		// 반려동물 프로필 사진 추가 버튼
 		petAddProButton = new RoundedButton("추가");

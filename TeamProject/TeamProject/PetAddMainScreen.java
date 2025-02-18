@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -30,6 +31,7 @@ public class PetAddMainScreen extends JFrame {
 	private PetChooseDialog pc;
 	private JPanel petaddPanel;
 	private JScrollPane scrollPane; // 스크롤 패널
+	private byte[] imageBytes, imageBytes1;
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -39,7 +41,6 @@ public class PetAddMainScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		UserBean bean1 = mgr.showUser(StaticData.user_id);
 		vlist = mgr.showPet(StaticData.user_id);
-		bean = new PetBean();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -89,7 +90,7 @@ public class PetAddMainScreen extends JFrame {
 		System.out.println(bean1.getUser_image());
 		byte[] imgBytes = bean1.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
+		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
 			imageLabel.setBounds(101, 178, 200, 200);
@@ -223,37 +224,32 @@ public class PetAddMainScreen extends JFrame {
 			JPanel topPanel = new JPanel(new BorderLayout());
 
 			// 왼쪽 - 이미지
-			System.out.println(bean.getPet_image());
-			byte[] imgBytes = bean.getPet_image();
-			String imgNull = Arrays.toString(imgBytes);
-			if (imgNull == "[]") {
+			System.out.println(pb.getPet_image());
+			byte[] imgBytes1 = pb.getPet_image();
+			String imgNull = Arrays.toString(imgBytes1);
+			System.out.println(imgNull);
+			if (imgBytes1 == null || imgBytes1.length == 0) {
 				petImageLabel = new JLabel();
 				petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);
-				add(petImageLabel);
-			} else {
-				ImageIcon icon = new ImageIcon(imgBytes);
-				Image img = icon.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+				petImageLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						dispose();
+						new PetHomeScreen(pb.getPet_id());
+					}
+				});
+				} else {
+				ImageIcon icon1 = new ImageIcon(imgBytes1);
+				Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+				petImageLabel.setIcon(new ImageIcon(img1));
+				petImageLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						dispose();
+						new PetHomeScreen(pb.getPet_id());
+					}
+				});
 			}
-			ImageIcon originalIcon = new ImageIcon("TeamProject/dog.png");
-			Image originalImage = originalIcon.getImage();
-			Image resizedImage1 = originalImage.getScaledInstance(135, 135, Image.SCALE_SMOOTH);
-			ImageIcon image2 = new ImageIcon(resizedImage1);
-
-			JLabel petImageLabel = new JLabel();
-			petImageLabel.setPreferredSize(new Dimension(150, 150));
-			if (image2 != null) {
-				petImageLabel.setIcon(image2);
-			} else {
-				petImageLabel.setOpaque(true);
-				petImageLabel.setBackground(Color.LIGHT_GRAY); // 이미지 없을 경우 기본 배경
-			}
-			petImageLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					dispose();
-					new PetHomeScreen(pb.getPet_id());
-				}
-			});
 
 			// 4) 본문 패널 (이미지 + 텍스트)
 			JPanel contentPanel = new JPanel(new BorderLayout(10, 0));

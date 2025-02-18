@@ -119,7 +119,8 @@ public class PetHomeScreen extends JFrame {
 		System.out.println(bean.getPet_image());
 		byte[] imgBytes = bean.getPet_image();
 		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
+		System.out.println(imgNull);
+		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
 			imageLabel.setBounds(40, 190, 150, 150);

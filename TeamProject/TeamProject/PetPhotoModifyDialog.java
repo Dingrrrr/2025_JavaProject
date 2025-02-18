@@ -17,7 +17,6 @@ public class PetPhotoModifyDialog extends JFrame {
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
-	private PetAddScreen petAddScreen;
 	private JFrame frame;
 	private File selectedFile;
 	private PetModifyScreen petModifyScreen;
