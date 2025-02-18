@@ -144,7 +144,7 @@ public class WritenCommuScreen extends JFrame {
 		TitleTArea.setBounds(5, 70, 330, 30);
 		TitleTArea.setEditable(false);
 		TitleTArea.setBorder(BorderFactory.createCompoundBorder(
-		    new RoundedBorder(20), new EmptyBorder(5, 5, 5, 5)
+		    new RoundedBorder(15), new EmptyBorder(5, 5, 5, 5)
 		));
 
 		// 설명 라벨
