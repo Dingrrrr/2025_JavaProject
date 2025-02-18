@@ -19,7 +19,7 @@ public class ReadenCommuScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, grayFrameLabel;
 	private JLabel TitleLabel,ExplainLabel, PhotoLabel, commentLabel, useridLabel;
-	private JTextArea ExplainTArea, CommentTArea, TitleTArea;
+	private JTextArea ExplainTArea, CommentTArea, TitleArea;
 	private JPanel CommuPanel;
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
 	private JButton SendButton;
@@ -65,17 +65,18 @@ public class ReadenCommuScreen extends JFrame {
 				
 				//댓글 텍스트필드
 				CommentTArea = new JTextArea();
-				CommentTArea.setBounds(15, 560, 290, 40);
 				CommentTArea.setText("");
+				CommentTArea.setBounds(15, 560, 290, 40);
 				CommentTArea.setLineWrap(true);
 				CommentTArea.setWrapStyleWord(true);
-				CommentTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) )); // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				add(CommentTArea);
+				CommentTArea.setBackground(Color.WHITE);
 			
 				JScrollPane scrollPane = new JScrollPane(CommentTArea);
 				scrollPane.setBounds(15, 560, 290, 40); // 텍스트 영역 크기와 위치 설정
 				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				scrollPane.setBackground(Color.WHITE);
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(
+				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) )); // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				add(scrollPane); // JScrollPane을 프레임에 추가
 				
 				// 전송 버튼
@@ -144,11 +145,12 @@ public class ReadenCommuScreen extends JFrame {
 		TitleLabel.setForeground(Color.black);
 
 		// 제목 텍스트 필드
-		TitleTArea = new JTextArea(cb.getComu_title());
-		TitleTArea.setBounds(5, 70, 330, 30);
-		TitleTArea.setEditable(false);
-		TitleTArea.setBorder(BorderFactory.createCompoundBorder(
-		    new RoundedBorder(20), new EmptyBorder(5, 5, 5, 5)
+		TitleArea = new JTextArea(cb.getComu_title());
+		TitleArea.setBounds(5, 70, 330, 30);
+		TitleArea.setEditable(false);
+		TitleArea.setBackground(Color.WHITE);
+		TitleArea.setBorder(BorderFactory.createCompoundBorder(
+		    new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)
 		));
 
 		// 설명 라벨
@@ -160,6 +162,7 @@ public class ReadenCommuScreen extends JFrame {
 		ExplainTArea = new JTextArea(cb.getComu_content());
 		ExplainTArea.setBounds(5, 155, 330, 100);
 		ExplainTArea.setEditable(false);
+		ExplainTArea.setBackground(Color.WHITE);
 		ExplainTArea.setBorder(BorderFactory.createCompoundBorder(
 		    new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)
 		));
@@ -181,7 +184,7 @@ public class ReadenCommuScreen extends JFrame {
 		// 컨텐츠 패널에 컴포넌트 추가
 		contentPanel.add(useridLabel);
 		contentPanel.add(TitleLabel);
-		contentPanel.add(TitleTArea);
+		contentPanel.add(TitleArea);
 		contentPanel.add(ExplainLabel);
 		contentPanel.add(ExplainTArea);
 		contentPanel.add(PhotoLabel);
