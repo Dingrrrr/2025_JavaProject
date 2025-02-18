@@ -9,6 +9,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -25,8 +27,6 @@ public class CommuMainScreen extends JFrame {
 	private JPanel commuPanel; // 커뮤니티 게시글 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	Vector<ComuBean> vlist;
-	Vector<PetBean> vlist1;
-	PetBean bean[] = new PetBean[2];
 	TPMgr mgr = new TPMgr();
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
@@ -38,11 +38,6 @@ public class CommuMainScreen extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		vlist = mgr.showComu();
-		vlist1 = mgr.showPet(StaticData.user_id);
-		try {
-			bean[0] = (PetBean)vlist1.elementAt(0);
-			bean[1] = (PetBean)vlist1.elementAt(1);
-		} catch (Exception e) {}
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -71,7 +66,7 @@ public class CommuMainScreen extends JFrame {
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
-					new PetHomeScreen(bean[0].getPet_id());
+					new PetHomeScreen(StaticData.pet_id);
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 					dispose();
@@ -181,7 +176,13 @@ public class CommuMainScreen extends JFrame {
 		closeButton.setForeground(Color.WHITE);
 		closeButton.setBorder(BorderFactory.createEmptyBorder());
 		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
 		panel.add(closeButton);
 
 		setVisible(true);

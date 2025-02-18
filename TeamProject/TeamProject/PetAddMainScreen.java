@@ -14,17 +14,18 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
 			imageProfileLabel, petImageLabel;
+	private ImageIcon image2;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
 	Vector<PetBean> vlist;
-	PetBean bean[] = new PetBean[2];
 	private PetChooseDialog pc;
 	private JPanel petaddPanel;
 	private JScrollPane scrollPane; // 스크롤 패널
@@ -37,11 +38,6 @@ public class PetAddMainScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		UserBean bean1 = mgr.showUser(StaticData.user_id);
 		vlist = mgr.showPet(StaticData.user_id);
-		try {
-			bean[0] = (PetBean) vlist.elementAt(0);
-			bean[1] = (PetBean) vlist.elementAt(1);
-		} catch (Exception e) {
-		}
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -167,14 +163,15 @@ public class PetAddMainScreen extends JFrame {
 		panel.setOpaque(false);
 		panel.setLayout(null);
 		add(panel);
-
+		
 		// 🔹 스크롤 가능한 게시글 패널 설정
 		petaddPanel = new JPanel();
 		petaddPanel.setLayout(new BoxLayout(petaddPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
 		petaddPanel.setBackground(Color.darkGray);
+		
 
 		petAddMain();
-
+				
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		scrollPane = new JScrollPane(petaddPanel);
 		scrollPane.setBounds(23, 430, 357, 360);
@@ -182,7 +179,7 @@ public class PetAddMainScreen extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
-
+				
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
 		addButtonLabel.setBounds(300, 700, 70, 70);
@@ -191,16 +188,6 @@ public class PetAddMainScreen extends JFrame {
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
 		addButtonLabel.setVisible(true);
 		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
-
-		// 닫기 버튼
-		JButton closeButton = new JButton("X");
-		closeButton.setBounds(370, 10, 20, 20);
-		closeButton.setBackground(Color.RED);
-		closeButton.setForeground(Color.WHITE);
-		closeButton.setBorder(BorderFactory.createEmptyBorder());
-		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
-		panel.add(closeButton);
 
 		setVisible(true);
 

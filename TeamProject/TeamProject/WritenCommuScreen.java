@@ -140,9 +140,6 @@ public class WritenCommuScreen extends JFrame {
 		TitleLabel.setForeground(Color.black);
 
 		// 제목 텍스트 필드
-		TitleTArea = new JTextArea();
-		TitleTArea.setBounds(5, 80, 330, 30);
-		TitleTArea.setText("");
 		TitleTArea = new JTextArea(cb.getComu_title());
 		TitleTArea.setBounds(5, 70, 330, 30);
 		TitleTArea.setEditable(false);
@@ -156,9 +153,6 @@ public class WritenCommuScreen extends JFrame {
 		ExplainLabel.setForeground(Color.black);
 
 		// 설명 텍스트 필드
-		ExplainTArea = new JTextArea();
-		ExplainTArea.setBounds(5, 155, 330, 100);
-		ExplainTArea.setText("");
 		ExplainTArea = new JTextArea(cb.getComu_content());
 		ExplainTArea.setBounds(5, 155, 330, 100);
 		ExplainTArea.setEditable(false);

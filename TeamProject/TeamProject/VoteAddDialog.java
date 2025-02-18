@@ -39,18 +39,22 @@ public class VoteAddDialog extends JFrame {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
 					if(vpmd==null) {
-						vpmd = new VotePhotoModifyDialog();
+						vpmd = new VotePhotoModifyDialog(VoteAddDialog.this);
 						vpmd.setLocation(getX()+1, getY()+340);
 					}else {
 						vpmd.setLocation(getX()+1, getY()+340);
 						vpmd.setVisible(true);
 					}
+					setEnabled(false);
 				} else if (source == addButton){
 					System.out.println("올리기 버튼 클릭됨");
 					dispose();
+					preFrame.dispose();
+					new VoteMainScreen();
 				}
 
 			}

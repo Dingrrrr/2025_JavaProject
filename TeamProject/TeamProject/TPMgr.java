@@ -1314,19 +1314,21 @@ public class TPMgr {
 	    try {
 	        con = pool.getConnection();
 	        con.setAutoCommit(false);  // 트랜잭션 시작
-
+	    
+	        
 	        // 1. 현재 투표 좋아요 개수 가져오기
 	        sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_id);
 	        rs = pstmt.executeQuery();
-
+	        
 	        int vote_like = 0;
-	        if (rs.next()) {  // rs.next() 호출 필수!
-	            vote_like = rs.getInt("vote_like");
+	        if (rs.next()) {
+	        	vote_like = rs.getInt("vote_like");
+	        }else {
+	        	System.out.println("❌ vote_id " + vote_id + " 에 해당하는 데이터가 없습니다.");
+	        	return;
 	        }
-	        rs.close(); // ResultSet 닫기
-	        pstmt.close(); // 기존 pstmt 닫기
 
 	        // 2. 좋아요 개수 증가
 	        sql = "UPDATE vote SET vote_like = ? WHERE vote_id = ?";
@@ -1337,7 +1339,7 @@ public class TPMgr {
 	        pstmt.close();
 
 	        // 3. 투표한 사용자 정보 저장
-	        sql = "INSERT INTO vote_mgr (vote_id, user_id) VALUES (?, ?)";
+	        sql = "INSERT INTO vote_mgr (vote_id, vt_user_id) VALUES (?, ?)";
 	        pstmt = con.prepareStatement(sql);
 	        pstmt.setInt(1, vote_id);
 	        pstmt.setString(2, user_id);
