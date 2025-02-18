@@ -235,7 +235,7 @@ public class VoteMainScreen extends JFrame {
 	 * 투표 추가 메서드
 	 */
 
-	private void addVote() {
+	public void addVote() {
 		//기존 투표 목록을 삭제하여 중복 추가 방지
 		votePanel.removeAll();
 		
@@ -244,6 +244,18 @@ public class VoteMainScreen extends JFrame {
 			JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
 			contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
 			contentPanel.setBackground(Color.WHITE);
+			contentPanel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("이미지 클릭됨");
+					setEnabled(false);
+					if(vb.getUser_id().equals(StaticData.user_id)) {	//내가 올린 투표
+						new VoteModifyScreen(VoteMainScreen.this);
+					} else {	//남이 올린 투표
+						new VoteScreenDialog(VoteMainScreen.this, vb);
+					}
+				}
+			});
 
 			// 2️⃣ 이미지 라벨 추가 (배경 역할)
 			JLabel imageLabel = new JLabel("투표용 이미지");
@@ -252,6 +264,7 @@ public class VoteMainScreen extends JFrame {
 			imageLabel.setOpaque(true);
 			imageLabel.setBackground(Color.white);
 			imageLabel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+			
 
 			// contentPanel의 아랫부분에만 검정색 테두리 추가
 			Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
@@ -271,26 +284,10 @@ public class VoteMainScreen extends JFrame {
 			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
 			
 			// 중복 투표 여부 확인
-			if(!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {
+			if(!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {	
 				voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
 				voteLabel.setOpaque(false);
-				voteLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						
-						System.out.println("투표 버튼이 클릭됨!");
-						mgr.likeVote(vb.getVote_id(), StaticData.user_id);
-						MsgBean bean = new MsgBean();
-						bean.setMsg_title("새로운 좋아요!");
-						bean.setReceiver_id(vb.getUser_id());
-						bean.setMsg_content(StaticData.user_id + "님이 당신의 투표에 좋아요를 눌렀습니다!");
-						mgr.sendMsg(StaticData.user_id, bean);
-						dispose();
-						new VoteMainScreen();
-					}
-				});
-			}
-			if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {	//이미 투표했으면 true 출력
+			}else if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {	//이미 투표했으면 true 출력
 				voteLabel = createScaledImageLabel("TeamProject/vote_complete.png", 40, 40);
 				voteLabel.setBounds(130, 105, 40, 40);
 				voteLabel.setOpaque(false);

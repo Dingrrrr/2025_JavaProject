@@ -16,7 +16,7 @@ public class VoteAddDialog extends JFrame {
 	private VotePhotoModifyDialog vpmd;
 	TPMgr mgr;
 
-	public VoteAddDialog(JFrame preFrame) {
+	public VoteAddDialog(VoteMainScreen preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 500);
 		setUndecorated(true);
@@ -43,7 +43,7 @@ public class VoteAddDialog extends JFrame {
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
 					if(vpmd==null) {
-						vpmd = new VotePhotoModifyDialog(VoteAddDialog.this);
+						vpmd = new VotePhotoModifyDialog(preFrame, VoteAddDialog.this);
 						vpmd.setLocation(getX()+1, getY()+340);
 					}else {
 						vpmd.setLocation(getX()+1, getY()+340);
@@ -53,8 +53,9 @@ public class VoteAddDialog extends JFrame {
 				} else if (source == addButton){
 					System.out.println("올리기 버튼 클릭됨");
 					dispose();
-					preFrame.dispose();
-					new VoteMainScreen();
+					preFrame.setEnabled(true);
+					preFrame.addVote();
+					preFrame.setVisible(true);
 				}
 
 			}

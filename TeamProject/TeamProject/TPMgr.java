@@ -208,6 +208,29 @@ public class TPMgr {
 		return bean;
 	}
 	
+	//한 유저 이름 출력
+	public String showOneUserName(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String userName = "";
+		try {
+			con = pool.getConnection();
+			sql = "select username from user where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				userName = rs.getString("username");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return userName;
+	}
+	
 	//유저 프로필 수정
 	public boolean userUpd(String user_id, UserBean bean) {
 		Connection con = null;
