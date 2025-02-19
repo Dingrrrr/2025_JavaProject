@@ -62,6 +62,7 @@ public class PetAddScreen extends JFrame {
 						ppm.setLocation(getX() + 22, getY() + 630);
 						ppm.setVisible(true);
 					}
+					setEnabled(false);
 				} else if (source == petSpSearchButton) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					if (pssd == null) {
