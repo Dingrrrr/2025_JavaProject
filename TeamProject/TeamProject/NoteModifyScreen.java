@@ -10,18 +10,18 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-public class NoteSendScreen extends JFrame {
+public class NoteModifyScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel;
 	private JLabel SendIdLabel,TitleLabel, DescriptionLabel, modifyLabel;
 	private JTextField  SendIdTField;
 	private JTextArea TitleTArea, DescriptionTArea;
-	private JButton SendButton;
+	private JButton ModifyButton, delButton;
 	private String id, title, content;
 	TPMgr mgr;
 	MsgBean bean;
 
-	public NoteSendScreen(JFrame preFrame) {
+	public NoteModifyScreen(JFrame preFrame, MsgBean mb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -46,8 +46,8 @@ public class NoteSendScreen extends JFrame {
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
-				} else if (source == SendButton) {
-					System.out.println("전송 버튼클릭됨");
+				} else if (source == ModifyButton) {
+					System.out.println("수정 버튼클릭됨");
 					id = SendIdTField.getText().trim();
 					title = TitleTArea.getText().trim();
 					content = DescriptionTArea.getText().trim();
@@ -59,7 +59,13 @@ public class NoteSendScreen extends JFrame {
 					dispose();
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
-				} 
+				} else if (source == delButton) {
+					System.out.println("삭제 버튼 클릭됨");
+					mgr.delMsg(mb.getMsg_id());
+					dispose();
+					preFrame.dispose();
+					new AlarmMainScreen(preFrame);
+				}
 			}
 		};
 		
@@ -115,13 +121,21 @@ public class NoteSendScreen extends JFrame {
 				scrollPane.setBounds(15, 200, 318, 350); // 텍스트 영역 크기와 위치 설정
 				add(scrollPane); // JScrollPane을 프레임에 추가
 				
-				// 저장 버튼
-				SendButton = new RoundedButton("전송");
-				SendButton.setBounds(115, 565, 100, 40);
-				SendButton.setBackground(new Color(91, 91, 91));
-				SendButton.setForeground(Color.WHITE);
-				SendButton.addMouseListener(commonMouseListener);
-				add(SendButton);
+				// 수정 버튼
+				ModifyButton = new RoundedButton("수정");
+				ModifyButton.setBounds(65, 565, 100, 40);
+				ModifyButton.setBackground(new Color(91, 91, 91));
+				ModifyButton.setForeground(Color.WHITE);
+				ModifyButton.addMouseListener(commonMouseListener);
+				add(ModifyButton);
+				
+				// 삭제 버튼
+				delButton = new RoundedButton("삭제");
+				delButton.setBounds(190, 565, 100, 40);
+				delButton.setBackground(new Color(91, 91, 91));
+				delButton.setForeground(Color.WHITE);
+				delButton.addMouseListener(commonMouseListener);
+				add(delButton);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
@@ -144,7 +158,7 @@ public class NoteSendScreen extends JFrame {
 		closeLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
 		closeLabel.setBounds(315, 7, 28, 28);
 		closeLabel.addMouseListener(commonMouseListener);
-		panel.add(closeLabel); // 🔹 패널에 추가	
+		panel.add(closeLabel); // 🔹 패널에 추가
 
 		setVisible(true);
 	}
