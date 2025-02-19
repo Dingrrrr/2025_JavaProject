@@ -42,11 +42,7 @@ public class PetChooseDialog extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == dogLabel) {
 					System.out.println("강아지 선택 아이콘 클릭됨");
-
 					dispose();
-
-					new PetAddScreen();
-
 					preFrame.dispose();
 					preFrame.setEnabled(true);
 					new PetAddScreen(preFrame);

@@ -38,12 +38,6 @@ public class UserBean {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getUser_image() {
-		return user_image;
-	}
-	public void setUser_image(String user_image) {
-		this.user_image = user_image;
-	}
 	public byte[] getUser_image() { // 반환 타입을 byte[]로 변경
         return user_image;
     }

@@ -2,7 +2,6 @@ package TeamProject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +21,7 @@ public class UserHomeScreen extends JFrame {
 	private JButton logoutButton;
 	private JLabel welcomeLabel, additionLabel;
 	private PetChooseDialog pc;
+	TPMgr mgr = new TPMgr();
 
 	public UserHomeScreen() {
 		setTitle("프레임 설정");
@@ -43,35 +43,17 @@ public class UserHomeScreen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
-						if (source == alarmLabel) {
-							System.out.println("🔔 알람 클릭됨!");
-							dispose();
-						} else if (source == profileLabel) {
-							System.out.println("👤 프로필 클릭됨!");
-							dispose();
-							new UpdateUserScreen(UserHomeScreen.this);
 
-						} else if (source == mainProfileLabel) {
-							System.out.println("🖼️ 메인 프로필 클릭됨!");
-							dispose();
-							new UpdateUserScreen(UserHomeScreen.this);
-						} else if (source == addButtonLabel) {
-							System.out.println("➕ 추가 버튼 클릭됨!");
-							if(pc==null) {
-								pc = new PetChooseDialog();
-								//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
-								pc.setLocation(getX()+25, getY()+300);
-							}else {
-								pc.setLocation(getX()+25, getY()+300);
-								pc.setVisible(true);
-							}
-						}
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(UserHomeScreen.this);
 				} else if (source == imageLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(UserHomeScreen.this);
+				} else if (source == imageProfileLabel) {
+					System.out.println("👤 상단 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(UserHomeScreen.this);
 				} else if (source == addButtonLabel) {
@@ -95,21 +77,11 @@ public class UserHomeScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-		profileLabel.setBounds(330, 120, 40, 40);
-		profileLabel.addMouseListener(commonMouseListener);
-		add(profileLabel);
-
 		// 메인 프로필 이미지
 		System.out.println(bean.getUser_image());
 		byte[] imgBytes = bean.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
-		// 🔹 메인 프로필 이미지
-		mainProfileLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
-		mainProfileLabel.setBounds(101, 178, 200, 200);
-		mainProfileLabel.addMouseListener(commonMouseListener);
-		add(mainProfileLabel);
+
 		if (imgNull == "[]") {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
@@ -125,8 +97,7 @@ public class UserHomeScreen extends JFrame {
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		}
-		
-		
+
 		// 상단 프로필 이미지
 		if (imgNull == "[]") {
 			imageProfileLabel = new JLabel();
@@ -151,7 +122,7 @@ public class UserHomeScreen extends JFrame {
 		add(addButtonLabel);
 
 		// 환영 문구
-		welcomeLabel = new JLabel("어서오세요, OO님");
+		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(StaticData.user_id) + "님");
 		welcomeLabel.setBounds(155, 401, 134, 20);
 		welcomeLabel.setForeground(Color.BLACK);
 		add(welcomeLabel);
@@ -163,17 +134,11 @@ public class UserHomeScreen extends JFrame {
 		add(additionLabel);
 
 		// 로그아웃 버튼
-
-		logoutButton = new JButton("로그아웃");
-		logoutButton.setBounds(126, 750, 150, 58);
-
 		logoutButton = new RoundedButton("로그아웃");
 		logoutButton.setBounds(30, 122, 85, 36);
-
 		logoutButton.setBackground(new Color(91, 91, 91));
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -235,9 +200,7 @@ public class UserHomeScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-
-		new UserHomeScreen();
-
 		new LoginScreen();
+		//
 	}
 }

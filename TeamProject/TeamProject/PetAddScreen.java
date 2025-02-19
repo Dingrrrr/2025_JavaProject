@@ -2,7 +2,11 @@ package TeamProject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -18,6 +22,7 @@ public class PetAddScreen extends JFrame {
 	private JTextField petNameTField, petSpecTField, petBirthTField;
 	private JButton petAddProButton, petSpSearchButton, nextButton;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
+	TPMgr mgr;
 	PetBean bean;
 	private PetSpeciesSearchDialog pssd;
 	private PetPhotoAddDialog ppm;
@@ -29,6 +34,7 @@ public class PetAddScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
 		bean = new PetBean();
 
 		try {
@@ -45,13 +51,7 @@ public class PetAddScreen extends JFrame {
 
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-
 					dispose();
-
-
-				} else if (source == deleteLabel) {
-					System.out.println("반려동물 프로필 사진 삭제 클릭됨!");
-
 					preFrame.setVisible(true);
 				} else if (source == petAddProButton) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
@@ -73,8 +73,6 @@ public class PetAddScreen extends JFrame {
 					}
 					setEnabled(false);
 				} else if (source == nextButton) {
-					System.out.println("다음 단계 버튼 클릭됨!");
-					if(petNameTField.getText().trim().isEmpty()) {
 					System.out.println("다음 단계 버튼 클릭됨!");
 					if (petNameTField.getText().trim().isEmpty()) {
 						warningLabel.setVisible(true);
@@ -113,12 +111,11 @@ public class PetAddScreen extends JFrame {
 		add(imageLabel);
 
 		// 반려동물 프로필 사진 추가 버튼
-		petAddProButton = new JButton("추가");
+		petAddProButton = new RoundedButton("추가");
 		petAddProButton.setBounds(277, 450, 80, 35);
 		petAddProButton.setBackground(new Color(91, 91, 91));
 		petAddProButton.setForeground(Color.WHITE);
 		petAddProButton.addMouseListener(commonMouseListener);
-
 		// bean.setPet_image(""); // 지금은 null값, 나중에 수정
 		add(petAddProButton);
 
@@ -132,7 +129,6 @@ public class PetAddScreen extends JFrame {
 		petNameTField = new JTextField();
 		petNameTField.setBounds(43, 520, 318, 40);
 		petNameTField.setText("");
-
 		petNameTField
 				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
 																														// 여백
@@ -141,9 +137,7 @@ public class PetAddScreen extends JFrame {
 																														// 아래,
 																														// 오른쪽)
 				));
-
 		add(petNameTField);
-
 
 		// 경고문
 		warningLabel = new JLabel("이름을 입력하시오");
@@ -151,7 +145,6 @@ public class PetAddScreen extends JFrame {
 		warningLabel.setBounds(43, 545, 250, 60);
 		add(warningLabel);
 		warningLabel.setVisible(false);
-
 
 		// 반려동물 종 라벨
 		petSpecLabel = new JLabel("종");
@@ -163,7 +156,6 @@ public class PetAddScreen extends JFrame {
 		petSpecTField = new JTextField();
 		petSpecTField.setBounds(43, 608, 225, 40);
 		petSpecTField.setText("");
-
 		petSpecTField
 				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
 																														// 여백
@@ -176,7 +168,7 @@ public class PetAddScreen extends JFrame {
 		add(petSpecTField);
 
 		// 반려동물 종 검색 버튼
-		petSpSearchButton = new JButton("검색");
+		petSpSearchButton = new RoundedButton("검색");
 		petSpSearchButton.setBounds(270, 608, 90, 40);
 		petSpSearchButton.setBackground(new Color(91, 91, 91));
 		petSpSearchButton.setForeground(Color.WHITE);
@@ -221,6 +213,12 @@ public class PetAddScreen extends JFrame {
 		petMaleRdButton.setOpaque(false); // 배경 투명 처리
 		petMaleRdButton.setContentAreaFilled(false); // 내용 영역 투명
 		petMaleRdButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // 테두리 설정
+		petMaleRdButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				bean.setPet_gender("수컷");
+			}
+		});
 		add(petMaleRdButton);
 
 		// 반려동물 여 라벨
@@ -235,6 +233,12 @@ public class PetAddScreen extends JFrame {
 		petFemaleRdBotton.setOpaque(false); // 배경 투명 처리
 		petFemaleRdBotton.setContentAreaFilled(false); // 내용 영역 투명
 		petFemaleRdBotton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // 테두리 설정
+		petFemaleRdBotton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				bean.setPet_gender("암컷");
+			}
+		});
 		add(petFemaleRdBotton);
 
 		// 라디오 버튼 그룹으로 묶기 (선택은 하나만)
@@ -242,8 +246,8 @@ public class PetAddScreen extends JFrame {
 		group.add(petMaleRdButton);
 		group.add(petFemaleRdBotton);
 
-		// 반려동물 종 검색 버튼
-		nextButton = new JButton("다음 단계");
+		// 다음단계 버튼
+		nextButton = new RoundedButton("다음 단계");
 		nextButton.setBounds(53, 760, 281, 58);
 		nextButton.setBackground(new Color(91, 91, 91));
 		nextButton.setForeground(Color.WHITE);
@@ -318,7 +322,6 @@ public class PetAddScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetAddScreen();
 		new LoginScreen();
 		//
 	}

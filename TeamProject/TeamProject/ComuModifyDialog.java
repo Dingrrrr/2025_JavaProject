@@ -7,20 +7,27 @@ import java.awt.event.MouseEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class ComuModifyDialog extends JFrame{
 	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
+	private ComuModifyScreen comuModifyScreen;
+	private File selectedFile;
+	private JFrame frame;
 	
-	public ComuModifyDialog(JFrame preFrame) {
+	public ComuModifyDialog(ComuModifyScreen comuModifyScreen) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.comuModifyScreen = comuModifyScreen;
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -35,8 +42,10 @@ public class ComuModifyDialog extends JFrame{
 						Object source = e.getSource(); // 클릭된 컴포넌트 확인
 						if (source == addpicButton) {
 							System.out.println("추가 버튼 클릭됨");
+							selectImage();
 						} else if (source == deletepicButton) {
 							System.out.println("삭제 버튼 클릭됨");
+							deleteImage();
 						} else if (source == cancelButton) {
 							System.out.println("취소 버튼 클릭됨");
 							dispose();
@@ -98,6 +107,82 @@ public class ComuModifyDialog extends JFrame{
 		 * grayFrameLabel.setBounds(35, 90, 280, 280); add(grayFrameLabel,
 		 * BorderLayout.SOUTH);
 		 */
+	}
+	
+	private void selectImage() {
+	    JFileChooser fileChooser = new JFileChooser();
+	    if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+	        selectedFile = fileChooser.getSelectedFile();
+	        System.out.println(selectedFile);
+
+	        // 이미지 읽기
+	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+	        Image img = icon.getImage();
+	        System.out.println(img);
+
+	        // 이미지 크기 조정 (280x280)
+	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+
+	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
+	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
+	        System.out.println(resizedIcon);
+
+	        // 미리보기 업데이트
+	        comuModifyScreen.getImageLabel().setIcon(resizedIcon);
+
+	        // 이미지를 byte[]로 변환
+	        byte[] imageBytes = convertFileToByteArray(selectedFile);
+	        System.out.println(imageBytes);
+
+	        // 변환된 이미지를 updateUserScreen에 저장
+	        comuModifyScreen.setImageBytes(imageBytes);
+
+	    } else {
+	        // 파일 선택이 취소된 경우
+	        System.out.println("파일 선택이 취소되었습니다.");
+	    }
+	}
+	
+	private void deleteImage() {
+		// 직접 파일 경로 지정
+		File selectedFile = new File("TeamProject/photo_frame.png");
+
+		// 이미지 읽기
+		ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+		Image img = icon.getImage();
+
+		// getScaledInstance로 이미지 크기 조정
+		Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+
+		// 새로운 ImageIcon 생성
+		ImageIcon resizedIcon = new ImageIcon(resizedImg);
+
+		// 미리보기 업데이트
+		comuModifyScreen.getImageLabel().setIcon(resizedIcon);
+
+		// 이미지를 byte[]로 변환
+		byte[] imageBytes = convertFileToByteArray(selectedFile);
+		System.out.println(imageBytes);
+		
+		// 변환된 이미지를 updateUserScreen에 저장
+		comuModifyScreen.setImageBytes(imageBytes);
+
+	}
+
+	// 파일을 byte 배열로 변환하는 메서드
+	private byte[] convertFileToByteArray(File file) {
+	    try (FileInputStream fis = new FileInputStream(file);
+	         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+	        byte[] buffer = new byte[1024];
+	        int bytesRead;
+	        while ((bytesRead = fis.read(buffer)) != -1) {
+	            baos.write(buffer, 0, bytesRead);
+	        }
+	        return baos.toByteArray();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 	
 	

@@ -14,13 +14,9 @@ import javax.imageio.ImageIO;
 
 public class AlbumResultDialog extends JFrame {
 	private BufferedImage image;
-	private JLabel closeLabel, addButtonLabel, grayFrameLabel, modifyLabel, deleteLabel;
-	private JLabel diaryTagLabel, diaryWritelabel;
 	private JLabel closeLabel, addButtonLabel, grayFrameLabel, modifyLabel;
 	private JLabel diaryTagLabel, diaryWritelabel, imageLabel;
 	private JTextArea diaryWriteArea;
-	private JTextField  diaryTagTField;
-	private JButton SaveButton,  deleteButton;
 	private JTextField diaryTagTField;
 	private JButton SaveButton, delButton;
 	private JScrollPane scrollpane;
@@ -82,8 +78,6 @@ public class AlbumResultDialog extends JFrame {
 					new AlbumMainScreen();
 				} else if (source == modifyLabel) {
 					System.out.println("수정 버튼클릭됨");
-				}else if (source == deleteButton) {
-					System.out.println("삭제 버튼클릭됨");
 					diaryTagTField.setEnabled(true);
 					diaryWriteArea.setEnabled(true);
 					addButtonLabel.setEnabled(true);
@@ -123,45 +117,6 @@ public class AlbumResultDialog extends JFrame {
 				));
 		add(diaryTagTField);
 		diaryTagTField.setEnabled(false);
-
-				// 앨범 설명 텍스트 필드 추가
-				diaryWriteArea = new JTextArea();
-				diaryWriteArea.setBounds(15, 420, 318, 130);
-				diaryWriteArea.setLineWrap(true);
-				diaryWriteArea.setWrapStyleWord(true);
-				diaryWriteArea.setBorder(BorderFactory.createCompoundBorder(
-						new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15)
-					));
-				add(diaryWriteArea);
-				diaryWriteArea.setEnabled(false);
-				
-				
-				// 스크롤 기능
-				scrollpane = new JScrollPane(diaryWriteArea);
-				scrollpane.setBounds(15, 420, 318, 130);
-				scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-				scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-				scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
-				scrollpane.setBorder(BorderFactory.createCompoundBorder(
-							new RoundedBorder(0), new EmptyBorder(0, 0, 0, 0)
-						));
-				add(scrollpane, BorderLayout.CENTER);
-				
-				// 저장 버튼
-				SaveButton = new RoundedButton("저장");
-				SaveButton.setBounds(55, 560, 100, 40);
-				SaveButton.setBackground(new Color(91, 91, 91));
-				SaveButton.setForeground(Color.WHITE);
-				SaveButton.addMouseListener(commonMouseListener);
-				add(SaveButton);
-				
-				// 삭제
-				deleteButton = new RoundedButton("삭제");
-				deleteButton.setBounds(200, 560, 100, 40);
-				deleteButton.setBackground(new Color(91, 91, 91));
-				deleteButton.setForeground(Color.WHITE);
-				deleteButton.addMouseListener(commonMouseListener);
-				add(deleteButton);
 
 		// 앨범 설명 라벨
 		diaryWritelabel = new JLabel("설명");

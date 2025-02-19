@@ -20,8 +20,6 @@ import javax.swing.border.MatteBorder;
 public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
-	private ImageIcon image2;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
 			imageProfileLabel, petImageLabel;
 	private ImageIcon image2;
@@ -32,25 +30,18 @@ public class PetAddMainScreen extends JFrame {
 	Vector<PetBean> vlist;
 	private PetChooseDialog pc;
 	private JPanel petaddPanel;
-	private JScrollPane scrollPane;	
 	private JScrollPane scrollPane; // 스크롤 패널
 	private byte[] imageBytes, imageBytes1;
+
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		vlist = mgr.showPet(LoginScreen.id);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		UserBean bean1 = mgr.showUser(StaticData.user_id);
 		vlist = mgr.showPet(StaticData.user_id);
-		try {
-			bean[0] = (PetBean)vlist.elementAt(0);
-			bean[1] = (PetBean)vlist.elementAt(1);
-		} catch (Exception e) {}
-		
+
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {
@@ -133,16 +124,10 @@ public class PetAddMainScreen extends JFrame {
 		}
 
 		// 환영 문구
-		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(LoginScreen.id) + "님");
+		welcomeLabel = new JLabel("어서오세요, " + mgr.userName(StaticData.user_id) + "님");
 		welcomeLabel.setBounds(135, 401, 134, 20);
 		welcomeLabel.setForeground(Color.BLACK);
 		add(welcomeLabel);
-		
-		//한 사용자당 반려동물은 2마리로 제한
-			
-		
-		//반려견 프로필
-		
 
 		// 로그아웃 버튼
 		logoutButton = new RoundedButton("로그아웃");
@@ -181,34 +166,6 @@ public class PetAddMainScreen extends JFrame {
 		panel.setOpaque(false);
 		panel.setLayout(null);
 		add(panel);
-		
-		// 🔹 스크롤 가능한 게시글 패널 설정
-		petaddPanel = new JPanel();
-		petaddPanel.setLayout(new BoxLayout(petaddPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
-		petaddPanel.setBackground(Color.darkGray);
-		
-		// 🔹 더미 게시글 데이터 추가
-				for (int i = 1; i <= 5; i++) {
-					petAddMain();
-				}
-				
-				// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
-				scrollPane = new JScrollPane(petaddPanel);
-				scrollPane.setBounds(23, 430, 357, 360);
-				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
-				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-				scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
-				panel.add(scrollPane);
-				
-				// 🔹 추가 버튼 (화면에 고정)
-				addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-				addButtonLabel.setBounds(300, 700, 70, 70);
-				addButtonLabel.addMouseListener(commonMouseListener);
-				addButtonLabel.setOpaque(true);
-				addButtonLabel.setBackground(new Color(255, 255, 255, 0));
-				addButtonLabel.setVisible(true);
-				getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
-
 
 		// 🔹 스크롤 가능한 게시글 패널 설정
 		petaddPanel = new JPanel();
@@ -253,7 +210,7 @@ public class PetAddMainScreen extends JFrame {
 		setVisible(true);
 
 	}
-	
+
 	private void petAddMain() {
 
 		for (PetBean pb : vlist) {

@@ -960,7 +960,7 @@ public class TPMgr {
 			pstmt.setString(1, user_id);
 			pstmt.setString(2, bean.getComu_title());
 			pstmt.setString(3, bean.getComu_content());
-			pstmt.setString(4, bean.getComu_image());
+			pstmt.setBytes(4, bean.getComu_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -982,7 +982,7 @@ public class TPMgr {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bean.getComu_title());
 			pstmt.setString(2, bean.getComu_content());
-			pstmt.setString(3, bean.getComu_image());
+			pstmt.setBytes(3, bean.getComu_image());
 			pstmt.setInt(4, post_id);
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)
@@ -1034,7 +1034,7 @@ public class TPMgr {
 				bean.setPost_id(rs.getInt("post_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setComu_date(rs.getTimestamp("comu_date"));
-				bean.setComu_image(rs.getString("comu_image"));
+				bean.setComu_image(rs.getBytes("comu_image"));
 				bean.setComu_title(rs.getString("comu_title"));
 				bean.setComu_content(rs.getString("comu_content"));
 				vlist.add(bean);
@@ -1443,7 +1443,7 @@ public class TPMgr {
 		return flag;
 	}
 	
-	//알림
+	//받은 알림
 	public Vector<MsgBean> showMsgList(String user_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -1460,6 +1460,37 @@ public class TPMgr {
 				MsgBean bean = new MsgBean();
 				bean.setMsg_id(rs.getInt("msg_id"));
 				bean.setSender_id(rs.getString("sender_id"));
+				bean.setMsg_title(rs.getString("msg_title"));
+				bean.setMsg_content(rs.getString("msg_content"));
+				bean.setMsg_date(rs.getTimestamp("msg_date"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//보낸 쪽지 출력
+	public Vector<MsgBean> showSendMsgList(String user_id){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<MsgBean> vlist = new Vector<MsgBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from msg where sender_id = ? order by msg_date desc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				MsgBean bean = new MsgBean();
+				bean.setMsg_id(rs.getInt("msg_id"));
+				bean.setSender_id(rs.getString("sender_id"));
+				bean.setReceiver_id(rs.getString("receiver_id"));
 				bean.setMsg_title(rs.getString("msg_title"));
 				bean.setMsg_content(rs.getString("msg_content"));
 				bean.setMsg_date(rs.getTimestamp("msg_date"));

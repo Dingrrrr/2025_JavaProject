@@ -23,12 +23,10 @@ public class LoginScreen extends JFrame {
 	private JTextField id_textField;
 	private JPasswordField pw_textField;
 	private JButton loginButton;
-	private JLabel registerLabel, warningLabel;
-	static String id;
 	private JLabel registerLabel, warningLabel, warningLabel2;
 	boolean flag1 = true, flag2 = true;
 	TPMgr mgr;
-	
+
 	public LoginScreen() {
 		setTitle("프레임 설정");
 		setSize(402, 874);
@@ -76,7 +74,6 @@ public class LoginScreen extends JFrame {
 				}
 				flag1 = false;
 			}
-		
 		});
 		
 		
@@ -114,7 +111,6 @@ public class LoginScreen extends JFrame {
 		pw_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.userCheck(StaticData.user_id)) {	//이미 접속했다면 실행
@@ -167,7 +163,6 @@ public class LoginScreen extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.userCheck(StaticData.user_id)) {	//이미 접속했다면 실행
@@ -255,7 +250,6 @@ public class LoginScreen extends JFrame {
 
 		setVisible(true);
 	}
-			
 
 	@Override
 	public void paint(Graphics g) {
@@ -267,10 +261,10 @@ public class LoginScreen extends JFrame {
 			g.drawImage(scaledLogo, 0, 98, this); // 위치도 조정 가능
 		}
 	}
-		
+
 
 	public static void main(String[] args) {
 		new LoginScreen();
+		//
 	}
-		
-		}
+}

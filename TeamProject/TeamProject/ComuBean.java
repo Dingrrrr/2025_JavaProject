@@ -8,7 +8,7 @@ public class ComuBean {
 	private String comu_title;
 	private String comu_content;
 	private Timestamp comu_date;
-	private String comu_image;
+	private byte[] comu_image;
 	
 	public int getPost_id() {
 		return post_id;
@@ -40,10 +40,10 @@ public class ComuBean {
 	public void setComu_date(Timestamp comu_date) {
 		this.comu_date = comu_date;
 	}
-	public String getComu_image() {
+	public byte[] getComu_image() {
 		return comu_image;
 	}
-	public void setComu_image(String comu_image) {
+	public void setComu_image(byte[] comu_image) {
 		this.comu_image = comu_image;
 	}
 }

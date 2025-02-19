@@ -9,6 +9,7 @@ public class PetBean {
 	private String pet_gender;
 	private byte[] pet_image;
 	
+	
 	public int getPet_id() {
 		return pet_id;
 	}
@@ -51,4 +52,7 @@ public class PetBean {
 	public void setPet_image(byte[] pet_image) {
 		this.pet_image = pet_image;
 	}
+	
+	
+	
 }
