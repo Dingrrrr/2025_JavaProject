@@ -71,7 +71,7 @@ public class PetHomeScreen extends JFrame {
 				} else if (source == imageLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
-					new UpdateUserScreen(PetHomeScreen.this);
+					new PetModifyScreen(PetHomeScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					dispose();
