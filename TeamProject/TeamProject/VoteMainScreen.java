@@ -292,6 +292,7 @@ public class VoteMainScreen extends JFrame {
 				imageLabel.setMaximumSize(new Dimension(176, 150));
 			}
 			imageLabel.setBounds(0, 0, 176, 150);
+
 			contentPanel.add(imageLabel);
 
 			// contentPanel의 아랫부분에만 검정색 테두리 추가

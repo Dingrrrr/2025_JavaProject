@@ -15,20 +15,21 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class DiaryMainScreen extends JFrame {
 	// 추가 중
-	
+
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
+	private JLabel alarmLabel, profileLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel, menuLabel, addDiaryLabel, newLineUpLabel, oldLineUpLabel;
 	private JPanel diaryPanel; // 다이어리 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private DiaryAddDialog pc;
 	TPMgr mgr = new TPMgr();
 
-	Vector<DiaryBean> vlist = mgr.showDiary(StaticData.pet_id);
-	
+	Vector<DiaryBean> vlist;
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
 	public DiaryMainScreen() {
@@ -37,6 +38,8 @@ public class DiaryMainScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		vlist = mgr.showDiary(StaticData.pet_id);
+		UserBean bean = mgr.showUser(StaticData.user_id);
 
 
 		try {
@@ -55,7 +58,7 @@ public class DiaryMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(DiaryMainScreen.this);
-				} else if (source == profileLabel) {
+				} else if (source == imageProfileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(DiaryMainScreen.this);
@@ -75,20 +78,49 @@ public class DiaryMainScreen extends JFrame {
 					System.out.println("투표 버튼 클릭됨");
 					dispose();
 					new VoteMainScreen();
-				} else if (source == addButtonLabel) {
-					System.out.println("➕ 추가 버튼 클릭됨!");
+				} else if (source == menuLabel) {
+					System.out.println("메뉴 버튼 클릭됨!");
+					if(addDiaryLabel.isVisible()) {
+						addDiaryLabel.setVisible(false);
+						newLineUpLabel.setVisible(false);
+						oldLineUpLabel.setVisible(false);
+					} else {
+						addDiaryLabel.setVisible(true);
+						newLineUpLabel.setVisible(true);
+						oldLineUpLabel.setVisible(true);						
+					} 
+				}else if(source == addDiaryLabel) {
+					System.out.println("일기 추가 버튼 클릭됨");
 					if(pc==null) {
-						pc = new DiaryAddDialog(DiaryMainScreen.this);
-						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
-						pc.setLocation(getX()+25, getY()+270);
-					}else {
-						pc.setLocation(getX()+25, getY()+270);
-						pc.setVisible(true);
-					}
-					setEnabled(false);
+					pc = new DiaryAddDialog(DiaryMainScreen.this);
+					//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+					pc.setLocation(getX()+25, getY()+270);
+				}else {
+					pc.setLocation(getX()+25, getY()+270);
+					pc.setVisible(true);
+				}
+				setEnabled(false);
+				addDiaryLabel.setVisible(false);
+				newLineUpLabel.setVisible(false);
+				oldLineUpLabel.setVisible(false);
+				} else if(source == newLineUpLabel) {
+					System.out.println("최신순 버튼 클릭됨");
+					vlist = mgr.newDiary(StaticData.pet_id);
+					addDiary();
+					addDiaryLabel.setVisible(false);
+					newLineUpLabel.setVisible(false);
+					oldLineUpLabel.setVisible(false);
+				} else if(source == oldLineUpLabel) {
+					System.out.println("오래된순 버튼 클릭됨");
+					vlist = mgr.oldDiary(StaticData.pet_id);
+					addDiary();
+					addDiaryLabel.setVisible(false);
+					newLineUpLabel.setVisible(false);
+					oldLineUpLabel.setVisible(false);
 				}
 			}
 		};
+	
 
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
@@ -96,11 +128,25 @@ public class DiaryMainScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-		profileLabel.setBounds(330, 120, 40, 40);
-		profileLabel.addMouseListener(commonMouseListener);
-		add(profileLabel);
+		System.out.println(bean.getUser_image());
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		// 상단 프로필 아이디
+		if (imgNull == "[]") {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		} else {
+			ImageIcon icon1 = new ImageIcon(imgBytes);
+			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			imageProfileLabel = new JLabel();
+			imageProfileLabel.setIcon(new ImageIcon(img1));
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		}
 
 		// 🔹 앨범 & 일기 버튼
 		photoLabel = createScaledImageLabel("TeamProject/photo.png", 60, 60);
@@ -125,6 +171,28 @@ public class DiaryMainScreen extends JFrame {
 		voteLabel.setBounds(305, 789, 55, 55);
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
+		
+		// 🔹 일기 추가 버튼
+		addDiaryLabel = createScaledImageLabel("TeamProject/diary.png", 40, 40);
+		addDiaryLabel.setBounds(313, 650, 40, 40);
+		addDiaryLabel.addMouseListener(commonMouseListener);
+		add(addDiaryLabel);
+		addDiaryLabel.setVisible(false);
+		
+		// 🔹 최신순 정렬
+		newLineUpLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
+		newLineUpLabel.setBounds(313, 590, 40, 40);
+		newLineUpLabel.addMouseListener(commonMouseListener);
+		add(newLineUpLabel);
+		newLineUpLabel.setVisible(false);
+		
+		// 🔹 오래된순 정렬
+		oldLineUpLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
+		oldLineUpLabel.setBounds(313, 530, 40, 40);
+		oldLineUpLabel.addMouseListener(commonMouseListener);
+		add(oldLineUpLabel);
+		oldLineUpLabel.setVisible(false);
+		
 
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
@@ -165,15 +233,17 @@ public class DiaryMainScreen extends JFrame {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
 
-
 		// 🔹 추가 버튼 (화면에 고정)
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-		addButtonLabel.setBounds(300, 700, 70, 70);
-		addButtonLabel.addMouseListener(commonMouseListener);
-		addButtonLabel.setOpaque(true);
-		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
-		addButtonLabel.setVisible(true);
-		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
+
+		menuLabel = createScaledImageLabel("TeamProject/menu.png", 60, 60);
+		menuLabel.setBounds(300, 700, 60, 60);
+		menuLabel.addMouseListener(commonMouseListener);
+		menuLabel.setOpaque(true);
+		menuLabel.setBackground(new Color(255, 255, 255, 0));
+		menuLabel.setVisible(true);
+		getLayeredPane().add(menuLabel, JLayeredPane.PALETTE_LAYER);
+	
+		
 		
 		addDiary();
 
@@ -196,10 +266,12 @@ public class DiaryMainScreen extends JFrame {
 		setVisible(true);
 	}
 
+
 	/**
 	 * 일기 추가 메서드
 	 */
-	private void addDiary() {
+	public void addDiary() {
+		diaryPanel.removeAll();
 		for (DiaryBean db : vlist) {
 			StaticData.diary_id = db.getDiary_id();
 			// 날짜 라벨 생성
@@ -231,7 +303,7 @@ public class DiaryMainScreen extends JFrame {
 
 			// 일기 날짜와 내용을 하나의 패널로 묶기
 			JPanel diaryWithContentPanel = new JPanel();
-			
+
 			diaryWithContentPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -239,7 +311,7 @@ public class DiaryMainScreen extends JFrame {
 					new DiaryResultDialog(DiaryMainScreen.this);
 				}
 			});
-			
+
 			// 일기 날짜 + 일기 내용 패널 (albumWithTagPanel) 설정
 			diaryWithContentPanel.setBackground(Color.WHITE); // 패널 배경을 흰색으로 설정
 
@@ -270,6 +342,10 @@ public class DiaryMainScreen extends JFrame {
 			// 🔹 스크롤 패널의 크기를 동적으로 맞추기
 			scrollPane.revalidate();
 		}
+		
+	    diaryPanel.revalidate();
+	    diaryPanel.repaint();
+		scrollPane.revalidate();
 	}
 
 	/**

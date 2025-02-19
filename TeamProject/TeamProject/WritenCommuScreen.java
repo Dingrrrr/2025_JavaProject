@@ -26,10 +26,13 @@ public class WritenCommuScreen extends JFrame {
 	private JButton SendButton;
 	TPMgr mgr;
 	Vector<CmtBean> vlist;
+	ComuBean cb;
+	private byte[] imageBytes;
+	JFrame preFrame;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
-	public WritenCommuScreen(JFrame preFrame, ComuBean cb) {
+	public WritenCommuScreen(CommuMainScreen preFrame, ComuBean cb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -37,6 +40,8 @@ public class WritenCommuScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		vlist = mgr.showCmt(cb.getPost_id());
+		this.preFrame = preFrame;  // CommuMainScreen을 받음
+	    this.cb = cb;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -278,9 +283,12 @@ public class WritenCommuScreen extends JFrame {
 
 	}
 
-	public void updateTitleContent(String title, String content) {
+	public void updateTitleContent(String title, String content, byte[] newImage) {
 		TitleTArea.setText(title);
 		ExplainTArea.setText(content);
+		ImageIcon icon = new ImageIcon(newImage);
+		Image img = icon.getImage().getScaledInstance(300, 150, Image.SCALE_SMOOTH);
+		grayFrameLabel.setIcon(new ImageIcon(img));
 	}
 
 	/**

@@ -774,7 +774,7 @@ public class TPMgr {
 		return flag;
 	}
 	
-	//앨범 화면에 출력
+	//앨범 화면에 출력(최신순)
 	public Vector<AlbumBean> showAlbum(int pet_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -796,6 +796,68 @@ public class TPMgr {
 				bean.setAlbum_desc(rs.getString("album_desc"));
 				vlist.add(bean);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//앨범 화면에 출력(오래된순)
+	public Vector<AlbumBean> showOldAlbum(int pet_id){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<AlbumBean> vlist = new Vector<AlbumBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from album where pet_id = ? ORDER BY album_date asc;";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				AlbumBean bean = new AlbumBean();
+				bean.setAlbum_id(rs.getInt("album_id"));
+				bean.setAlbum_image(rs.getBytes("album_image"));
+				bean.setAlbum_tags(rs.getString("album_tags"));
+				bean.setAlbum_date(rs.getTimestamp("album_date"));
+				bean.setAlbum_desc(rs.getString("album_desc"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//앨범에서 태그로 검색
+	public Vector<AlbumBean> showAlbumByTags(int pet_id, String tag){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<AlbumBean> vlist = new Vector<AlbumBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from album where pet_id = ? and album_tags like ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			pstmt.setString(2, "%"+tag+"%");
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				AlbumBean bean = new AlbumBean();
+				bean.setAlbum_id(rs.getInt("album_id"));
+				bean.setAlbum_image(rs.getBytes("album_image"));
+				bean.setAlbum_tags(rs.getString("album_tags"));
+				bean.setAlbum_date(rs.getTimestamp("album_date"));
+				bean.setAlbum_desc(rs.getString("album_desc"));
+				vlist.add(bean);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -903,7 +965,7 @@ public class TPMgr {
 		Vector<DiaryBean> vlist = new Vector<DiaryBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from diary where pet_id = ?";
+			sql = "select * from diary where pet_id = ? order by diary_date desc";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
 			rs = pstmt.executeQuery();
@@ -946,6 +1008,64 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return bean;
+	}
+	
+	//일기 최신순 정렬
+	public Vector<DiaryBean> newDiary(int pet_id){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<DiaryBean> vlist = new Vector<DiaryBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from diary where pet_id = ? order by diary_date desc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				DiaryBean bean = new DiaryBean();
+				bean.setDiary_id(rs.getInt("diary_id"));
+				bean.setDiary_date(rs.getTimestamp("diary_date"));
+				bean.setDiary_name(rs.getString("diary_name"));
+				bean.setDiary_content(rs.getString("diary_content"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//일기 오래된 순 정렬
+	public Vector<DiaryBean> oldDiary(int pet_id){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<DiaryBean> vlist = new Vector<DiaryBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from diary where pet_id = ? order by diary_date asc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				DiaryBean bean = new DiaryBean();
+				bean.setDiary_id(rs.getInt("diary_id"));
+				bean.setDiary_date(rs.getTimestamp("diary_date"));
+				bean.setDiary_name(rs.getString("diary_name"));
+				bean.setDiary_content(rs.getString("diary_content"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
 	}
 	
 	//커뮤니티 추가
@@ -1418,7 +1538,7 @@ public class TPMgr {
 		return flag;
 	}
 
-	//쪽지
+	//쪽지 보내기
 	public boolean sendMsg(String user_id, MsgBean bean) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -1443,7 +1563,62 @@ public class TPMgr {
 		return flag;
 	}
 	
-	//알림
+	//전체에게 알림 보내기(관리자 전용)
+	public void sendAllMsg(String title, String content) {
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql = null;
+	    Vector<String> userList = new Vector<String>();
+	    try {
+	        con = pool.getConnection();
+	        con.setAutoCommit(false);  // 트랜잭션 시작
+	        
+	        // 1. 전체 유저 가져오기
+	        sql = "SELECT user_id from user";
+	        pstmt = con.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
+	        
+	        while (rs.next()) {
+	        	userList.add(rs.getString("user_id"));
+	        }
+
+	        // 2. for문으로 전체 알림 보내기
+	        for (String user : userList) {
+		        sql = "insert msg values(null, ?, ?, ?, ?, now())";
+		        pstmt = con.prepareStatement(sql);
+		        pstmt.setString(1, title);
+		        pstmt.setString(2, "admin");
+		        pstmt.setString(3, user);
+		        pstmt.setString(4, content);
+		        pstmt.executeUpdate();
+			}
+	        pstmt.close();
+
+	        // 모든 SQL 실행이 정상적으로 끝났으면 커밋
+	        con.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        try {
+	            if (con != null) con.rollback();  // 오류 발생 시 롤백
+	        } catch (Exception rollbackEx) {
+	            rollbackEx.printStackTrace();
+	        }
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (pstmt != null) pstmt.close();
+	            if (con != null) {
+	                con.setAutoCommit(true); // 다시 기본값으로 변경
+	                pool.freeConnection(con);
+	            }
+	        } catch (Exception closeEx) {
+	            closeEx.printStackTrace();
+	        }
+	    }
+	}
+	
+	//받은 알림
 	public Vector<MsgBean> showMsgList(String user_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -1460,6 +1635,7 @@ public class TPMgr {
 				MsgBean bean = new MsgBean();
 				bean.setMsg_id(rs.getInt("msg_id"));
 				bean.setSender_id(rs.getString("sender_id"));
+				bean.setReceiver_id(rs.getString("receiver_id"));
 				bean.setMsg_title(rs.getString("msg_title"));
 				bean.setMsg_content(rs.getString("msg_content"));
 				bean.setMsg_date(rs.getTimestamp("msg_date"));
@@ -1471,6 +1647,58 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return vlist;
+	}
+	
+	//보낸 쪽지 출력
+	public Vector<MsgBean> showSendMsgList(String user_id){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<MsgBean> vlist = new Vector<MsgBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from msg where sender_id = ? order by msg_date desc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				MsgBean bean = new MsgBean();
+				bean.setMsg_id(rs.getInt("msg_id"));
+				bean.setSender_id(rs.getString("sender_id"));
+				bean.setReceiver_id(rs.getString("receiver_id"));
+				bean.setMsg_title(rs.getString("msg_title"));
+				bean.setMsg_content(rs.getString("msg_content"));
+				bean.setMsg_date(rs.getTimestamp("msg_date"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//알림 수정
+	public void updMsg(String title, String content, String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "update msg set msg_title = ?, msg_content = ? where receiver_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, content);
+			pstmt.setString(3, id);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
 	}
 	
 	//알림 삭제

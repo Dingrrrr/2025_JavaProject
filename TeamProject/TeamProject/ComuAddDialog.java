@@ -12,58 +12,56 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class AlbumPhotoAddDialog extends JFrame {
+public class ComuAddDialog extends JFrame{
 	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
+	private CommuAddScreen comuAddScreen;
 	private File selectedFile;
 	private JFrame frame;
-	private AlbumAddDialog albumAddDialog;
-
-	public AlbumPhotoAddDialog(AlbumAddDialog albumAddDialog) {
+	
+	public ComuAddDialog(CommuAddScreen comuAddScreen) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.albumAddDialog = albumAddDialog;
-
+		this.comuAddScreen = comuAddScreen;
+		
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		// 🔹 공통 마우스 클릭 이벤트 리스너
-		MouseAdapter commonMouseListener = new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Object source = e.getSource(); // 클릭된 컴포넌트 확인
-				if (source == addpicButton) {
-					System.out.println("추가 버튼 클릭됨");
-					selectImage();
-					dispose();
-				} else if (source == deletepicButton) {
-					System.out.println("삭제 버튼 클릭됨");
-					deleteImage();
-					dispose();
-				} else if (source == cancelButton) {
-					System.out.println("취소 버튼 클릭됨");
-					dispose();
-				}
+				MouseAdapter commonMouseListener = new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						Object source = e.getSource(); // 클릭된 컴포넌트 확인
+						if (source == addpicButton) {
+							System.out.println("추가 버튼 클릭됨");
+							selectImage();
+						} else if (source == deletepicButton) {
+							System.out.println("삭제 버튼 클릭됨");
+							deleteImage();
+						} else if (source == cancelButton) {
+							System.out.println("취소 버튼 클릭됨");
+							dispose();
+						}
 
-			}
-		};
-
-		// 사진 추가 버튼
+					}
+				};
+		
+		//사진 추가 라벨
 		addpicButton = new JButton("사진 추가");
 		addpicButton.setBounds(2, 2, 343, 53);
 		addpicButton.setBackground(Color.white);
 		addpicButton.setFocusable(false); // 포커스 끄기
 		addpicButton.addMouseListener(commonMouseListener);
 		add(addpicButton);
-
+		
 		// 사진 삭제 버튼
 		deletepicButton = new JButton("사진 삭제");
 		deletepicButton.setBounds(2, 55, 343, 53);
@@ -71,7 +69,7 @@ public class AlbumPhotoAddDialog extends JFrame {
 		deletepicButton.setFocusable(false); // 포커스 끄기
 		deletepicButton.addMouseListener(commonMouseListener);
 		add(deletepicButton);
-
+		
 		// 취소 버튼
 		cancelButton = new JButton("취소");
 		cancelButton.setBounds(2, 105, 343, 53);
@@ -79,7 +77,7 @@ public class AlbumPhotoAddDialog extends JFrame {
 		cancelButton.setFocusable(false); // 포커스 끄기
 		cancelButton.addMouseListener(commonMouseListener);
 		add(cancelButton);
-
+		
 		// JPanel 추가
 		JPanel panel = new JPanel() {
 			@Override
@@ -100,9 +98,9 @@ public class AlbumPhotoAddDialog extends JFrame {
 		panel.setLayout(null);
 		panel.setOpaque(false); // 🔹 배경을 투명하게 설정
 		add(panel);
-
+		
 		setVisible(true);
-
+		
 		/*
 		 * // 🔹 회색프레임 grayFrameLabel =
 		 * createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
@@ -130,15 +128,14 @@ public class AlbumPhotoAddDialog extends JFrame {
 	        System.out.println(resizedIcon);
 
 	        // 미리보기 업데이트
-	        albumAddDialog.getImageLabel().setIcon(resizedIcon);
-	        albumAddDialog.getImageLabel().setText(""); // 텍스트 제거
+	        comuAddScreen.getImageLabel().setIcon(resizedIcon);
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
 	        System.out.println(imageBytes);
 
 	        // 변환된 이미지를 updateUserScreen에 저장
-	        albumAddDialog.setImageBytes(imageBytes);
+	        comuAddScreen.setImageBytes(imageBytes);
 
 	    } else {
 	        // 파일 선택이 취소된 경우
@@ -161,15 +158,14 @@ public class AlbumPhotoAddDialog extends JFrame {
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		albumAddDialog.getImageLabel().setIcon(resizedIcon);
-		albumAddDialog.getImageLabel().setText(""); // 텍스트 제거
+		comuAddScreen.getImageLabel().setIcon(resizedIcon);
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
 		System.out.println(imageBytes);
 		
 		// 변환된 이미지를 updateUserScreen에 저장
-		albumAddDialog.setImageBytes(imageBytes);
+		comuAddScreen.setImageBytes(imageBytes);
 
 	}
 
@@ -188,7 +184,9 @@ public class AlbumPhotoAddDialog extends JFrame {
 	        return null;
 	    }
 	}
-
+	
+	
 	public static void main(String[] args) {
+	
 	}
 }

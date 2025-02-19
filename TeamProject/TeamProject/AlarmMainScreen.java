@@ -8,6 +8,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -17,12 +19,14 @@ import java.util.Vector;
 
 public class AlarmMainScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, backLabel;
+	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, sendMsgLabel, receiveMsgLabel;
 	private JPanel alarmPanel; // 알람 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private JButton SendButton;
+	private boolean flag;
+	private String name;
 	TPMgr mgr = new TPMgr();
-	Vector<MsgBean> vlist = mgr.showMsgList(StaticData.user_id);
+	Vector<MsgBean> vlist;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
@@ -32,6 +36,8 @@ public class AlarmMainScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		vlist = mgr.showMsgList(StaticData.user_id);
+		flag = true;
 		StaticData.jf = preFrame;
 
 		try {
@@ -62,6 +68,29 @@ public class AlarmMainScreen extends JFrame {
 					System.out.println("쪽지 보내기 버튼 클릭됨");
 					setEnabled(false);
 					new NoteSendScreen(AlarmMainScreen.this);
+				} else if(source == menuLabel) {
+					System.out.println("메뉴 버튼 클릭됨");
+					if(sendMsgLabel.isVisible() && receiveMsgLabel.isVisible()) {
+						sendMsgLabel.setVisible(false);
+						receiveMsgLabel.setVisible(false);
+					} else {
+						sendMsgLabel.setVisible(true);
+						receiveMsgLabel.setVisible(true);						
+					}
+				} else if(source == sendMsgLabel) {
+					System.out.println("보낸 쪽지 출력");
+					vlist = mgr.showSendMsgList(StaticData.user_id);
+					sendMsgLabel.setVisible(false);
+					receiveMsgLabel.setVisible(false);
+					flag = false;
+					addAlarm();
+				} else if(source == receiveMsgLabel) {
+					System.out.println("받은 쪽지 출력");
+					vlist = mgr.showMsgList(StaticData.user_id);
+					sendMsgLabel.setVisible(false);
+					receiveMsgLabel.setVisible(false);
+					flag = true;
+					addAlarm();
 				}
 			}
 		};
@@ -91,6 +120,26 @@ public class AlarmMainScreen extends JFrame {
 		SendButton.setForeground(Color.WHITE);
 		SendButton.addMouseListener(commonMouseListener);
 		add(SendButton);
+		
+		// 🔹 메뉴 아이콘
+		menuLabel = createScaledImageLabel("TeamProject/menu.png", 40, 40);
+		menuLabel.setBounds(310, 795, 40, 40);
+		menuLabel.addMouseListener(commonMouseListener);
+		add(menuLabel);
+		
+		// 🔹 보낸 알림 아이콘
+		sendMsgLabel = createScaledImageLabel("TeamProject/send_msg.png", 40, 40);
+		sendMsgLabel.setBounds(310, 720, 40, 40);
+		sendMsgLabel.addMouseListener(commonMouseListener);
+		add(sendMsgLabel);
+		sendMsgLabel.setVisible(false);
+		
+		// 🔹 받은 알림 아이콘
+		receiveMsgLabel = createScaledImageLabel("TeamProject/receive_msg.png", 40, 40);
+		receiveMsgLabel.setBounds(310, 660, 40, 40);
+		receiveMsgLabel.addMouseListener(commonMouseListener);
+		add(receiveMsgLabel);
+		receiveMsgLabel.setVisible(false);
 
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
@@ -114,6 +163,8 @@ public class AlarmMainScreen extends JFrame {
 		alarmPanel = new JPanel();
 		alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
 		alarmPanel.setBackground(Color.WHITE);
+	    // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
+	    alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
 
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
@@ -133,7 +184,13 @@ public class AlarmMainScreen extends JFrame {
 		closeButton.setForeground(Color.WHITE);
 		closeButton.setBorder(BorderFactory.createEmptyBorder());
 		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
 		panel.add(closeButton);
 
 		setVisible(true);
@@ -142,20 +199,23 @@ public class AlarmMainScreen extends JFrame {
 	/**
 	 * 알림 추가 메서드
 	 */
-	private void addAlarm() {
-	    // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
-	    alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
-
-		for (MsgBean mb : vlist) {
-			StaticData.msg_id = mb.getMsg_id();
-			 // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
-		    alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
+	public void addAlarm() {
+	    alarmPanel.removeAll();
+	    for (MsgBean mb : vlist) {
+		    name = mgr.showOneUserName(mb.getSender_id());
 		    
 		    alarmPanel.addMouseListener(new MouseAdapter() {
 		    	@Override
 		    	public void mouseClicked(MouseEvent e) {
 		    		setEnabled(false);
-		    		new NoteCheckScreen(AlarmMainScreen.this);
+		    		if(flag) {//받은 쪽지이기 때문에 쪽지 확인 화면
+		    			setEnabled(false);
+		    			new NoteCheckScreen(AlarmMainScreen.this, mb);
+		    		}
+		    		else {
+		    			setEnabled(false);
+		    			new NoteModifyScreen(AlarmMainScreen.this, mb);
+		    		}
 		    	}
 		    });
 		    // 알람 항목 패널
@@ -171,8 +231,13 @@ public class AlarmMainScreen extends JFrame {
 		    topPanel.setBackground(Color.WHITE);
 		    topPanel.setPreferredSize(new Dimension(353, 25)); // 상단 패널 높이 증가
 
-		    JLabel userIdLabel = new JLabel("from. " + mb.getSender_id());
-		    userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
+	    	JLabel userIdLabel = new JLabel("from. " + name);
+	    	userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가		    	
+	    	if(!flag) {
+	    		name = mgr.showOneUserName(mb.getReceiver_id());
+		    	userIdLabel = new JLabel("to. " + name);
+		    	userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가	
+		    }
 
 		    JLabel dateLabel = new JLabel(sdf.format(mb.getMsg_date()), SwingConstants.RIGHT);
 		    dateLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
@@ -223,6 +288,10 @@ public class AlarmMainScreen extends JFrame {
 		    alarmPanel.add(alarmItemPanel);
 		    alarmPanel.add(Box.createVerticalStrut(5)); // 알람 항목 간 간격 추가
 		}
+	    
+	    alarmPanel.revalidate();
+	    alarmPanel.repaint();
+		scrollPane.revalidate();
 	}
 
 
