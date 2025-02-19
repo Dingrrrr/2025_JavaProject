@@ -96,6 +96,7 @@ public class UpdateUserScreen extends JFrame {
 							bb.setPassword(pw);
 							bb.setEmail(email);
 							bb.setPhone(phone);
+							// 이미지 값이 null일 경우 기본 이미지 db에 저장
 							if (imageBytes == null || imageBytes.length == 0) {
 								File selectedFile = new File("TeamProject/profile.png");
 								byte[] imageBytes = convertFileToByteArray(selectedFile);
