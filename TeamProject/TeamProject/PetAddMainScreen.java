@@ -217,14 +217,22 @@
 	
 			for (PetBean pb : vlist) {
 				JPanel petAddMainPanel = new JPanel();
-				petAddMainPanel.setPreferredSize(new Dimension(353, 150)); // 크기 지정
+				petAddMainPanel.setPreferredSize(new Dimension(353, 160)); // 크기 지정
+				petAddMainPanel.setMaximumSize(new Dimension(353, 160)); // 최대 크기 고정	
 				petAddMainPanel.setBackground(Color.WHITE);
+				petAddMainPanel.setBorder(new LineBorder(Color.black, 0));
 				petAddMainPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
-				petAddMainPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
+				
+				
+
 	
 				// 2) 상단 패널 (USER_ID + 날짜)
 				JPanel topPanel = new JPanel(new BorderLayout());
-	
+				
+				// 3) 구분선
+				JSeparator separator = new JSeparator();
+				separator.setForeground(Color.BLACK);
+				
 				// 왼쪽 - 이미지
 				System.out.println(pb.getPet_image());
 				byte[] imgBytes = pb.getPet_image();
@@ -278,17 +286,20 @@
 				textPanel.add(ageLabel);
 				textPanel.add(genderLabel);
 				textPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-	
+				
+				
 				contentPanel.add(textPanel, BorderLayout.CENTER);
-	
 				// 5) 전체 구성
 				petAddMainPanel.add(contentPanel, BorderLayout.CENTER);
+				petAddMainPanel.add(separator, BorderLayout.SOUTH);
+				
+				// petaddPanel에 추가
 				petaddPanel.add(petAddMainPanel);
-	
+				
 				// 각 애완동물 항목 간에 간격을 둔다
 				petaddPanel.add(Box.createVerticalStrut(0)); // 0px 간격
 			}
-	
+													
 		}
 	
 		private JLabel createScaledImageLabel(String imagePath, int width, int height) {
