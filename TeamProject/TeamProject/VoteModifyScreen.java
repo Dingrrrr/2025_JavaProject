@@ -65,8 +65,8 @@ public class VoteModifyScreen extends JFrame {
 					flag = true;
 				} else if (source == delButton) {
 					System.out.println("삭제 버튼 클릭됨");
-					System.out.println(StaticData.vote_id);
-					if(mgr.delVote(StaticData.vote_id)) {
+					System.out.println(vb.getVote_id());
+					if(mgr.delVote(vb.getVote_id())) {
 						dispose();
 						preFrame.dispose();
 						new VoteMainScreen();

@@ -15,12 +15,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Vector;
 
 public class DiaryMainScreen extends JFrame {
 	// 추가 중
-
+	
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, photoLabel, homeLabel, commuLabel, voteLabel, menuLabel, addDiaryLabel, newLineUpLabel, oldLineUpLabel;
 	private JPanel diaryPanel; // 다이어리 패널
@@ -29,7 +28,7 @@ public class DiaryMainScreen extends JFrame {
 	TPMgr mgr = new TPMgr();
 
 	Vector<DiaryBean> vlist;
-
+	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
 	public DiaryMainScreen() {
@@ -57,7 +56,7 @@ public class DiaryMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(DiaryMainScreen.this);
-				} else if (source == imageProfileLabel) {
+				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(DiaryMainScreen.this);
@@ -87,6 +86,7 @@ public class DiaryMainScreen extends JFrame {
 						addDiaryLabel.setVisible(true);
 						newLineUpLabel.setVisible(true);
 						oldLineUpLabel.setVisible(true);						
+					}
 				} else if(source == addDiaryLabel) {
 					System.out.println("일기 추가 버튼 클릭됨");
 					if(pc==null) {
@@ -125,25 +125,11 @@ public class DiaryMainScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		System.out.println(bean.getUser_image());
-		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
-		// 상단 프로필 아이디
-		if (imgNull == "[]") {
-			imageProfileLabel = new JLabel();
-			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-			imageProfileLabel.setBounds(330, 120, 40, 40);
-			imageProfileLabel.addMouseListener(commonMouseListener);
-			add(imageProfileLabel);
-		} else {
-			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			imageProfileLabel = new JLabel();
-			imageProfileLabel.setIcon(new ImageIcon(img1));
-			imageProfileLabel.setBounds(330, 120, 40, 40);
-			imageProfileLabel.addMouseListener(commonMouseListener);
-			add(imageProfileLabel);
-		}
+		// 🔹 상단 프로필 아이콘
+		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+		profileLabel.setBounds(330, 120, 40, 40);
+		profileLabel.addMouseListener(commonMouseListener);
+		add(profileLabel);
 
 		// 🔹 앨범 & 일기 버튼
 		photoLabel = createScaledImageLabel("TeamProject/photo.png", 60, 60);
@@ -227,8 +213,8 @@ public class DiaryMainScreen extends JFrame {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
 
-		// 🔹 추가 버튼 (화면에 고정)
 
+		// 🔹 추가 버튼 (화면에 고정)
 		menuLabel = createScaledImageLabel("TeamProject/menu.png", 60, 60);
 		menuLabel.setBounds(300, 700, 60, 60);
 		menuLabel.addMouseListener(commonMouseListener);
@@ -296,7 +282,7 @@ public class DiaryMainScreen extends JFrame {
 
 			// 일기 날짜와 내용을 하나의 패널로 묶기
 			JPanel diaryWithContentPanel = new JPanel();
-
+			
 			diaryWithContentPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -304,7 +290,7 @@ public class DiaryMainScreen extends JFrame {
 					new DiaryResultDialog(DiaryMainScreen.this);
 				}
 			});
-
+			
 			// 일기 날짜 + 일기 내용 패널 (albumWithTagPanel) 설정
 			diaryWithContentPanel.setBackground(Color.WHITE); // 패널 배경을 흰색으로 설정
 
