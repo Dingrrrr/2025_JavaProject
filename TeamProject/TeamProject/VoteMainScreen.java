@@ -284,16 +284,18 @@ public class VoteMainScreen extends JFrame {
 				imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 176, 150);
 				imageLabel.setPreferredSize(new Dimension(176, 150));
 				imageLabel.setMaximumSize(new Dimension(176, 150));
+				imageLabel.setOpaque(false);
 			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes);
 				Image img1 = icon1.getImage().getScaledInstance(176, 150, Image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(img1));
 				imageLabel.setPreferredSize(new Dimension(176, 150));
 				imageLabel.setMaximumSize(new Dimension(176, 150));
+				imageLabel.setOpaque(false);
 			}
 			imageLabel.setBounds(0, 0, 176, 150);
 
-			contentPanel.add(imageLabel);
+
 
 			// contentPanel의 아랫부분에만 검정색 테두리 추가
 			Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
@@ -304,7 +306,8 @@ public class VoteMainScreen extends JFrame {
 			layeredPane.setLayout(null);
 			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
 			// 🔹 이미지 추가 (기본 레이어)
-
+			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
+			
 			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
 			
 			// 중복 투표 여부 확인
@@ -316,11 +319,6 @@ public class VoteMainScreen extends JFrame {
 				voteLabel.setBounds(130, 105, 40, 40);
 				voteLabel.setOpaque(false);
 			}
-
-			// 3️⃣ 투표 버튼 (하트 아이콘) 추가 → 이미지 내부의 오른쪽 아래에 배치
-//			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
-//			voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
-//			voteLabel.setOpaque(false);
 
 			// 🔹 하트 버튼을 이미지 위에 추가 (위쪽 레이어)
 			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
@@ -338,7 +336,6 @@ public class VoteMainScreen extends JFrame {
 			// 좋아요 개수 라벨 생성
 			likeCountLabel = new JLabel(String.valueOf(likeCount), SwingConstants.CENTER);
 			
-			likeCountLabel.setOpaque(false);
 			likeCountLabel.setBounds(135, 114, 30, 20);
 			likeCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
 			
@@ -349,10 +346,8 @@ public class VoteMainScreen extends JFrame {
 				likeCountLabel.setForeground(Color.BLACK);
 			}
 			
-			// 4 전체 투표 목록 패널 (votePanel)에 추가
-			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
-			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
-			layeredPane.add(likeCountLabel, JLayeredPane.DRAG_LAYER);
+			// 좋아요 개수
+			layeredPane.add(likeCountLabel, JLayeredPane.DRAG_LAYER, 0);
 			
 			// ✅ 디버깅을 위한 로그 추가
 			System.out.println("likeCountLabel 추가됨: " + likeCountLabel.getText());
