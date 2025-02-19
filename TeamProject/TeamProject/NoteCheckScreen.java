@@ -18,16 +18,14 @@ public class NoteCheckScreen extends JFrame {
 	private JTextArea TitleTArea, DescriptionTArea;
 	private JButton DeleteButton;
 	TPMgr mgr;
-	MsgBean bean;
 
-	public NoteCheckScreen(JFrame preFrame) {
+	public NoteCheckScreen(JFrame preFrame, MsgBean mb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
-		bean = mgr.showOneMsg(StaticData.msg_id);
 	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -47,8 +45,9 @@ public class NoteCheckScreen extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == DeleteButton) {
 					System.out.println("삭제 버튼클릭됨");
-					mgr.delMsg(StaticData.msg_id);
+					mgr.delMsg(mb.getMsg_id());
 					dispose();
+					preFrame.setEnabled(true);
 					preFrame.dispose();
 					new AlarmMainScreen(StaticData.jf);
 				}
@@ -62,7 +61,7 @@ public class NoteCheckScreen extends JFrame {
 				add(SendedIdLabel);
 
 				// 전송받은 아이디 필드 추가
-				SendedIdTField = new JTextField(bean.getSender_id());
+				SendedIdTField = new JTextField(mb.getSender_id());
 				SendedIdTField.setBounds(15, 60, 318, 40);
 				SendedIdTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
@@ -77,7 +76,7 @@ public class NoteCheckScreen extends JFrame {
 				add(TitleLabel);
 
 				// 제목 필드 추가
-				TitleTArea = new JTextArea(bean.getMsg_title());
+				TitleTArea = new JTextArea(mb.getMsg_title());
 				TitleTArea.setBounds(15, 130, 318, 40);
 				TitleTArea.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
@@ -92,7 +91,7 @@ public class NoteCheckScreen extends JFrame {
 				add(DescriptionLabel);
 				
 				//설명 필드 추가
-				DescriptionTArea = new JTextArea(bean.getMsg_content());
+				DescriptionTArea = new JTextArea(mb.getMsg_content());
 				DescriptionTArea.setBounds(15, 200, 318, 350);
 				DescriptionTArea.setLineWrap(true);
 				DescriptionTArea.setWrapStyleWord(true);
