@@ -308,26 +308,11 @@ public class VoteMainScreen extends JFrame {
 
 			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
 
-			// 중복 투표 여부 확인
+			/// 중복 투표 여부 확인
 			if (!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {
 				voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
 				voteLabel.setOpaque(false);
-				voteLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						System.out.println("투표 버튼이 클릭됨!");
-						mgr.likeVote(vb.getVote_id(), StaticData.user_id);
-						MsgBean bean = new MsgBean();
-						bean.setMsg_title("새로운 좋아요!");
-						bean.setReceiver_id(vb.getUser_id());
-						bean.setMsg_content(StaticData.user_id + "님이 당신의 투표에 좋아요를 눌렀습니다!");
-						mgr.sendMsg(StaticData.user_id, bean);
-						dispose();
-						new VoteMainScreen();
-					}
-				});
-			}
-			if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) { // 이미 투표했으면 true 출력
+			} else if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) { // 이미 투표했으면 true 출력
 				voteLabel = createScaledImageLabel("TeamProject/vote_complete.png", 40, 40);
 				voteLabel.setBounds(130, 105, 40, 40);
 				voteLabel.setOpaque(false);
@@ -339,23 +324,23 @@ public class VoteMainScreen extends JFrame {
 			contentPanel.add(layeredPane);
 
 			// 4️⃣ 전체 투표 목록 패널 (votePanel)에 추가
-	        int xPosition = (rowCount % itemsPerRow) * (176 + 10); // 좌측/우측 위치 설정
-	        int yPosition = (rowCount / itemsPerRow) * (150 + 10); // 아래로 배치
+			int xPosition = (rowCount % itemsPerRow) * (176 + 10); // 좌측/우측 위치 설정
+			int yPosition = (rowCount / itemsPerRow) * (150 + 10); // 아래로 배치
 
-	        contentPanel.setBounds(xPosition, yPosition, 176, 150); // 위치 설정
-	        votePanel.add(contentPanel);
+			contentPanel.setBounds(xPosition, yPosition, 176, 150); // 위치 설정
+			votePanel.add(contentPanel);
 
-	        rowCount++;
+			rowCount++;
 		}
-		 // votePanel의 크기 설정: 한 줄에 2개씩 배치하고, 그에 맞는 높이와 너비 계산
-	    int totalWidth = itemsPerRow * (176 + 1); // 두 개씩 배치되므로 너비는 2배
-	    int totalRows = (int) Math.ceil((double) vlist.size() / itemsPerRow); // 전체 행 수 계산
-	    votePanel.setPreferredSize(new Dimension(totalWidth, totalRows * (150 + 1))); // 높이 설정
+		// votePanel의 크기 설정: 한 줄에 2개씩 배치하고, 그에 맞는 높이와 너비 계산
+		int totalWidth = itemsPerRow * (176 + 1); // 두 개씩 배치되므로 너비는 2배
+		int totalRows = (int) Math.ceil((double) vlist.size() / itemsPerRow); // 전체 행 수 계산
+		votePanel.setPreferredSize(new Dimension(totalWidth, totalRows * (150 + 1))); // 높이 설정
 
-	    // 레이아웃 갱신
-	    votePanel.revalidate();
-	    votePanel.repaint();
-	    scrollPane.revalidate();
+		// 레이아웃 갱신
+		votePanel.revalidate();
+		votePanel.repaint();
+		scrollPane.revalidate();
 	}
 
 	/**
