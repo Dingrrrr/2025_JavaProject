@@ -75,8 +75,8 @@ public class VoteModifyScreen extends JFrame {
 					System.out.println("저장 버튼 클릭됨");
 					if (flag) {
 						vb.setVote_image(imageBytes);
-						System.out.println(StaticData.vote_id);
-						if (mgr.updVote(StaticData.vote_id, vb)) {
+						System.out.println(vb.getVote_id());
+						if (mgr.updVote(vb.getVote_id(), vb)) {
 							addButtonLabel.setEnabled(false);
 							saveButton.setEnabled(false);
 							delButton.setEnabled(false);

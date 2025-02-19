@@ -301,12 +301,11 @@ public class CommuMainScreen extends JFrame {
 
 		// commuPanel 크기 갱신
 		commuPanel.setPreferredSize(
-				new Dimension(353, 800)); // 항목
+				new Dimension(353, commuPanel.getComponentCount() * 99 + 5 * (commuPanel.getComponentCount() - 1))); // 항목
 																														// 수에
 																														// 맞게
 																														// 크기
 																														// 설정
-
 		// 스크롤 패널의 크기를 동적으로 맞추기
 		scrollPane.revalidate();
 	}
