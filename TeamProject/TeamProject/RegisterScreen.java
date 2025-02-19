@@ -322,12 +322,17 @@ public class RegisterScreen extends JFrame {
 				String email = email_textField.getText().trim();
 				String phone = phone_textField.getText().trim();
 				if(flag1) {	//아이디 중복 체크 성공
-					if(!pw.isEmpty() && !name.isEmpty() && !email.isEmpty() && !phone.isEmpty()) {	//모든 정보를 입력함
+					if(!pw.isEmpty() && !name.isEmpty() && !phone.isEmpty()) {	//모든 정보를 입력함
 						if(!pw.equals(pw_chk)) {		//비밀번호 확인 틀림
 							pwWarningLabel1.setVisible(true);
 //							pwWarningLabel2.setVisible(false);
 						} else {	//비밀번호 확인 맞음
-							if(phone.length() != 11 || !phone.substring(0, 2).equals("010")) {	//11글자가 아니거나 처음에 010으로 시작하지 않으면
+							if(phone.length() != 11 || !phone.substring(0, 3).equals("010")) {	//11글자가 아니거나 처음에 010으로 시작하지 않으면
+								System.out.println(phone.length());
+								System.out.println(phone.substring(0, 2));
+								phoneWarningLabel.setVisible(true);
+							} else if(mgr.phoneChk(phone)) {	//이미 등록한 전화번호
+								phoneWarningLabel.setText("이미 등록한 전화번호 입니다.");
 								phoneWarningLabel.setVisible(true);
 							} else {	//정상적인 전화번호까지 입력하면 회원가입 성공
 								bean.setUser_id(id);
@@ -343,7 +348,7 @@ public class RegisterScreen extends JFrame {
 					} else {	//정보가 다 입력되지 않음
 						allWarningLabel.setVisible(true);
 					}
-				} else {	
+				} else {	//중복체크X
 					if(id_textField.getText().trim().isEmpty()) {
 						warningLabel1.setVisible(false);
 						warningLabel2.setVisible(false);
