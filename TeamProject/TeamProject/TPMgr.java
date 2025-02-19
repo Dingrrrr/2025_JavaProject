@@ -1443,7 +1443,7 @@ public class TPMgr {
 		return flag;
 	}
 	
-	//알림
+	//받은 알림
 	public Vector<MsgBean> showMsgList(String user_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -1460,6 +1460,37 @@ public class TPMgr {
 				MsgBean bean = new MsgBean();
 				bean.setMsg_id(rs.getInt("msg_id"));
 				bean.setSender_id(rs.getString("sender_id"));
+				bean.setMsg_title(rs.getString("msg_title"));
+				bean.setMsg_content(rs.getString("msg_content"));
+				bean.setMsg_date(rs.getTimestamp("msg_date"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//보낸 쪽지 출력
+	public Vector<MsgBean> showSendMsgList(String user_id){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<MsgBean> vlist = new Vector<MsgBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from msg where sender_id = ? order by msg_date desc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				MsgBean bean = new MsgBean();
+				bean.setMsg_id(rs.getInt("msg_id"));
+				bean.setSender_id(rs.getString("sender_id"));
+				bean.setReceiver_id(rs.getString("receiver_id"));
 				bean.setMsg_title(rs.getString("msg_title"));
 				bean.setMsg_content(rs.getString("msg_content"));
 				bean.setMsg_date(rs.getTimestamp("msg_date"));
