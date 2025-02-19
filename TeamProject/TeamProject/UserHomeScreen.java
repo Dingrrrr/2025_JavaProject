@@ -52,6 +52,10 @@ public class UserHomeScreen extends JFrame {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(UserHomeScreen.this);
+				} else if (source == imageProfileLabel) {
+					System.out.println("👤 상단 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(UserHomeScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if (pc == null) {
@@ -93,8 +97,7 @@ public class UserHomeScreen extends JFrame {
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		}
-		
-		
+
 		// 상단 프로필 이미지
 		if (imgNull == "[]") {
 			imageProfileLabel = new JLabel();

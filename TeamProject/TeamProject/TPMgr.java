@@ -960,7 +960,7 @@ public class TPMgr {
 			pstmt.setString(1, user_id);
 			pstmt.setString(2, bean.getComu_title());
 			pstmt.setString(3, bean.getComu_content());
-			pstmt.setString(4, bean.getComu_image());
+			pstmt.setBytes(4, bean.getComu_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -982,7 +982,7 @@ public class TPMgr {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bean.getComu_title());
 			pstmt.setString(2, bean.getComu_content());
-			pstmt.setString(3, bean.getComu_image());
+			pstmt.setBytes(3, bean.getComu_image());
 			pstmt.setInt(4, post_id);
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)
@@ -1034,7 +1034,7 @@ public class TPMgr {
 				bean.setPost_id(rs.getInt("post_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setComu_date(rs.getTimestamp("comu_date"));
-				bean.setComu_image(rs.getString("comu_image"));
+				bean.setComu_image(rs.getBytes("comu_image"));
 				bean.setComu_title(rs.getString("comu_title"));
 				bean.setComu_content(rs.getString("comu_content"));
 				vlist.add(bean);

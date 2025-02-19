@@ -29,7 +29,6 @@ public class CommuAddScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		bean = new ComuBean();
-		bean.setComu_image("");
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {

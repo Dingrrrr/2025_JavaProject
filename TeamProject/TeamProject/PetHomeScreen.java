@@ -22,7 +22,7 @@ import java.util.Vector;
 
 public class PetHomeScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel backLabel, alarmLabel, profileLabel, petProfileLabel, addButtonLabel, imageLabel;
+	private JLabel backLabel, alarmLabel, profileLabel, petProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel;
 //	private JLabel petRcDateLabel, petRcWHLabel, petRecordLabel, petRcVcLabel, petRcCheckLabel, petRcTimeLabel;
 	private JLabel photoLabel, homeLabel, commuLabel, voteLabel;
@@ -32,6 +32,7 @@ public class PetHomeScreen extends JFrame {
 	TPMgr mgr;
 	PetBean bean;
 	Vector<HRBean> hrV;
+	private byte[] imageBytes;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
@@ -45,6 +46,7 @@ public class PetHomeScreen extends JFrame {
 		bean = mgr.showOnePet(petId); // 반려동물 정보 가져오기
 		hrV = mgr.showHRPet(petId); // 반려동물의 건강 기록 가져오기
 		StaticData.pet_id = petId;
+		UserBean bean1 = mgr.showUser(StaticData.user_id);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -63,13 +65,13 @@ public class PetHomeScreen extends JFrame {
 					dispose();
 					new AlarmMainScreen(PetHomeScreen.this);
 				} else if (source == profileLabel) {
-					System.out.println("👤 프로필 클릭됨!");
+					System.out.println("상단 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(PetHomeScreen.this);
 				} else if (source == imageLabel) {
-					System.out.println("반려동물 프로필 클릭됨!");
+					System.out.println("👤 프로필 클릭됨!");
 					dispose();
-					new PetModifyScreen(PetHomeScreen.this);
+					new UpdateUserScreen(PetHomeScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					dispose();
@@ -108,26 +110,40 @@ public class PetHomeScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
-
-		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-		profileLabel.setBounds(330, 120, 40, 40);
-		profileLabel.addMouseListener(commonMouseListener);
-		add(profileLabel);
+		
+		// 상단 프로필 아이디
+		System.out.println(bean1.getUser_image());
+		byte[] imgBytes = bean1.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		if (imgNull == "[]") {
+			profileLabel = new JLabel();
+			profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			profileLabel.setBounds(330, 120, 40, 40);
+			profileLabel.addMouseListener(commonMouseListener);
+			add(profileLabel);
+		} else {
+			ImageIcon icon1 = new ImageIcon(imgBytes);
+			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			profileLabel = new JLabel();
+			profileLabel.setIcon(new ImageIcon(img1));
+			profileLabel.setBounds(330, 120, 40, 40);
+			profileLabel.addMouseListener(commonMouseListener);
+			add(profileLabel);
+		}
 
 		// 메인 프로필 이미지
 		System.out.println(bean.getPet_image());
-		byte[] imgBytes = bean.getPet_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
-		if (imgBytes == null || imgBytes.length == 0) {
+		byte[] imgBytes1 = bean.getPet_image();
+		String imgNull1 = Arrays.toString(imgBytes1);
+		System.out.println(imgNull1);
+		if (imgBytes1 == null || imgBytes1.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);
 			imageLabel.setBounds(40, 190, 150, 150);
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		} else {
-			ImageIcon icon = new ImageIcon(imgBytes);
+			ImageIcon icon = new ImageIcon(imgBytes1);
 			Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 			imageLabel = new JLabel();
 			imageLabel.setIcon(new ImageIcon(img));
