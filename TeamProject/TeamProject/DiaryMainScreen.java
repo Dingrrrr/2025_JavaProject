@@ -155,18 +155,21 @@ public class DiaryMainScreen extends JFrame {
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
 		
+		// 🔹 일기 추가 버튼
 		addDiaryLabel = createScaledImageLabel("TeamProject/diary.png", 40, 40);
 		addDiaryLabel.setBounds(313, 650, 40, 40);
 		addDiaryLabel.addMouseListener(commonMouseListener);
 		add(addDiaryLabel);
 		addDiaryLabel.setVisible(false);
 		
+		// 🔹 최신순 정렬
 		newLineUpLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
 		newLineUpLabel.setBounds(313, 590, 40, 40);
 		newLineUpLabel.addMouseListener(commonMouseListener);
 		add(newLineUpLabel);
 		newLineUpLabel.setVisible(false);
 		
+		// 🔹 오래된순 정렬
 		oldLineUpLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
 		oldLineUpLabel.setBounds(313, 530, 40, 40);
 		oldLineUpLabel.addMouseListener(commonMouseListener);
