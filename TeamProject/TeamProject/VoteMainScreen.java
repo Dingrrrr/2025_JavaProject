@@ -23,7 +23,7 @@ public class VoteMainScreen extends JFrame {
 	private BufferedImage image;
 	private ImageIcon image2;
 	private JLabel alarmLabel, profileLabel, voteLabel, addButtonLabel, photoLabel, homeLabel, commuLabel,
-			imageProfileLabel;
+			imageProfileLabel, likeCountLabel;
 	private JPanel votePanel; // 투표 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private VoteAddDialog va;
@@ -255,11 +255,11 @@ public class VoteMainScreen extends JFrame {
 		votePanel.removeAll();
 
 		for (VoteBean vb : vlist) {
-			
 			StaticData.vote_id = vb.getVote_id();
-			// 1️⃣ 개별 투표 아이템을 담을 패널 생성
+			
+			// 1️ 개별 투표 아이템을 담을 패널 생성
 			JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
-			contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
+			contentPanel.setPreferredSize(new Dimension(176, 180)); // 크기 설정
 			contentPanel.setBackground(Color.WHITE);
 			contentPanel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -273,7 +273,7 @@ public class VoteMainScreen extends JFrame {
 					}
 				}
 			});
-
+			
 			// 투표 레이블 생성
 			System.out.println(vb.getVote_image());
 			byte[] imgBytes = vb.getVote_image();
@@ -291,6 +291,8 @@ public class VoteMainScreen extends JFrame {
 				imageLabel.setPreferredSize(new Dimension(176, 150));
 				imageLabel.setMaximumSize(new Dimension(176, 150));
 			}
+			imageLabel.setBounds(0, 0, 176, 150);
+
 			contentPanel.add(imageLabel);
 
 			// contentPanel의 아랫부분에만 검정색 테두리 추가
@@ -302,10 +304,9 @@ public class VoteMainScreen extends JFrame {
 			layeredPane.setLayout(null);
 			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
 			// 🔹 이미지 추가 (기본 레이어)
-			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
 
 			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
-
+			
 			// 중복 투표 여부 확인
 			if (!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {
 				voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
@@ -325,15 +326,48 @@ public class VoteMainScreen extends JFrame {
 			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
 			// 🔹 contentPanel에 `layeredPane` 추가 (이미지 & 버튼 함께 추가됨)
 			contentPanel.add(layeredPane);
-
-			// 4️⃣ 전체 투표 목록 패널 (votePanel)에 추가
+			
+			// 좋아요 개수 가져오기
+			int likeCount = mgr.getVoteLikeCount(vb.getVote_id());
+			if (likeCount < 0) {
+				likeCount = 0;
+			}
+			// 사용자가 좋아요를 눌렀는지 확인
+			boolean isLiked = mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id);
+			
+			// 좋아요 개수 라벨 생성
+			likeCountLabel = new JLabel(String.valueOf(likeCount), SwingConstants.CENTER);
+			
+			likeCountLabel.setOpaque(false);
+			likeCountLabel.setBounds(135, 114, 30, 20);
+			likeCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+			
+					
+			if (isLiked) {
+				likeCountLabel.setForeground(Color.WHITE);
+			}else {
+				likeCountLabel.setForeground(Color.BLACK);
+			}
+			
+			// 4 전체 투표 목록 패널 (votePanel)에 추가
+			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
+			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
+			layeredPane.add(likeCountLabel, JLayeredPane.DRAG_LAYER);
+			
+			// ✅ 디버깅을 위한 로그 추가
+			System.out.println("likeCountLabel 추가됨: " + likeCountLabel.getText());
+			System.out.println("현재 layeredPane에 포함된 컴포넌트 개수: " + layeredPane.getComponentCount());
+			
+			contentPanel.add(layeredPane);
 			votePanel.add(contentPanel);
+			
 		}
 		votePanel.revalidate();
 		votePanel.repaint();
 		scrollPane.revalidate();
 
 	}
+
 
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
