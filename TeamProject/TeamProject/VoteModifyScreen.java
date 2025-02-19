@@ -75,13 +75,17 @@ public class VoteModifyScreen extends JFrame {
 					System.out.println("저장 버튼 클릭됨");
 					if (flag) {
 						vb.setVote_image(imageBytes);
+						System.out.println(StaticData.vote_id);
 						if (mgr.updVote(StaticData.vote_id, vb)) {
 							addButtonLabel.setEnabled(false);
 							saveButton.setEnabled(false);
 							delButton.setEnabled(false);
 						}
-					}
+					} /*
+						 * dispose(); preFrame.dispose(); new VoteMainScreen();
+						 */
 				}
+				
 			}
 		};
 
@@ -103,6 +107,7 @@ public class VoteModifyScreen extends JFrame {
 			imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 318, 318);
 			imageLabel.setBounds(23, 45, 318, 318);
 		} else {
+			imageBytes = vb.getVote_image();
 			ImageIcon icon = new ImageIcon(imgBytes);
 			Image img = icon.getImage().getScaledInstance(318, 318, Image.SCALE_SMOOTH);
 			imageLabel = new JLabel();
