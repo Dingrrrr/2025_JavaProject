@@ -23,7 +23,6 @@ public class PetRecordAddScreen extends JFrame {
 	TPMgr mgr;
 	HRBean bean;
 
-	public PetRecordAddScreen() {
 
 	public PetRecordAddScreen(PetBean pb, JFrame previousFrame) {
 
@@ -217,6 +216,6 @@ public class PetRecordAddScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new PetRecordAddScreen();
+		new LoginScreen();
 	}
 }

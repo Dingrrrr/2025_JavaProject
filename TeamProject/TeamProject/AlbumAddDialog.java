@@ -81,11 +81,6 @@ public class AlbumAddDialog extends JFrame {
 				    ));
 				add(AlbumTagTField);
 
-		// 앨범 태그 라벨
-		AlbumTagLabel = new JLabel("태그");
-		AlbumTagLabel.setBounds(15, 315, 48, 60);
-		AlbumTagLabel.setForeground(Color.black);
-		add(AlbumTagLabel);
 
 				// 앨범 설명 라벨
 				AlbumWritelabel = new JLabel("설명");
@@ -93,19 +88,6 @@ public class AlbumAddDialog extends JFrame {
 				AlbumWritelabel.setForeground(Color.black);
 				add(AlbumWritelabel);
 
-		// 앨범 태그 텍스트 필드 추가
-		AlbumTagTField = new JTextField();
-		AlbumTagTField.setBounds(15, 355, 318, 40);
-		AlbumTagTField.setText("");
-		AlbumTagTField
-				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
-																														// 여백
-																														// (위,
-																														// 왼쪽,
-																														// 아래,
-																														// 오른쪽)
-				));
-		add(AlbumTagTField);
 
 				// 앨범 설명 텍스트 필드 추가
 				AlbumWriteTArea = new JTextArea();
@@ -132,33 +114,7 @@ public class AlbumAddDialog extends JFrame {
 				SaveButton.addMouseListener(commonMouseListener);
 				add(SaveButton);
 
-		// 앨범 설명 라벨
-		AlbumWritelabel = new JLabel("설명");
-		AlbumWritelabel.setBounds(15, 380, 48, 60);
-		AlbumWritelabel.setForeground(Color.black);
-		add(AlbumWritelabel);
 
-
-		// 앨범 설명 텍스트 필드 추가
-		AlbumWriteTArea = new JTextArea();
-		AlbumWriteTArea.setBounds(15, 420, 318, 130);
-		AlbumWriteTArea.setText("");
-		AlbumWriteTArea.setLineWrap(true);
-		AlbumWriteTArea.setWrapStyleWord(true);
-		AlbumWriteTArea.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) ));
-		add(AlbumWriteTArea);
-		
-		JScrollPane scrollPane = new JScrollPane(AlbumWriteTArea);
-		scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
-		add(scrollPane); // JScrollPane을 프레임에 추가
-
-		// 저장 버튼
-		SaveButton = new RoundedButton("저장");
-		SaveButton.setBounds(115, 565, 100, 40);
-		SaveButton.setBackground(new Color(91, 91, 91));
-		SaveButton.setForeground(Color.WHITE);
-		SaveButton.addMouseListener(commonMouseListener);
-		add(SaveButton);
 
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);

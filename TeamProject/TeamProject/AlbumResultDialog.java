@@ -12,11 +12,11 @@ import javax.imageio.ImageIO;
 
 public class AlbumResultDialog extends JFrame {
 	private BufferedImage image;
-	private JLabel closeLabel, addButtonLabel, grayFrameLabel, modifyLabel;
+	private JLabel closeLabel, addButtonLabel, grayFrameLabel, modifyLabel, deleteLabel;
 	private JLabel diaryTagLabel, diaryWritelabel;
 	private JTextArea diaryWriteArea;
 	private JTextField  diaryTagTField;
-	private JButton SaveButton, modifyButton;
+	private JButton SaveButton,  deleteButton;
 	private JScrollPane scrollpane;
 	
 	public AlbumResultDialog() {
@@ -46,6 +46,8 @@ public class AlbumResultDialog extends JFrame {
 					System.out.println("저장 버튼클릭됨");
 				}else if (source == modifyLabel) {
 					System.out.println("수정 버튼클릭됨");
+				}else if (source == deleteButton) {
+					System.out.println("삭제 버튼클릭됨");
 					diaryTagTField.setEnabled(true);
 					diaryWriteArea.setEnabled(true);
 				}
@@ -105,13 +107,13 @@ public class AlbumResultDialog extends JFrame {
 				SaveButton.addMouseListener(commonMouseListener);
 				add(SaveButton);
 				
-				// 수정
-				modifyButton = new RoundedButton("수정");
-				modifyButton.setBounds(200, 560, 100, 40);
-				modifyButton.setBackground(new Color(91, 91, 91));
-				modifyButton.setForeground(Color.WHITE);
-				modifyButton.addMouseListener(commonMouseListener);
-				add(modifyButton);
+				// 삭제
+				deleteButton = new RoundedButton("삭제");
+				deleteButton.setBounds(200, 560, 100, 40);
+				deleteButton.setBackground(new Color(91, 91, 91));
+				deleteButton.setForeground(Color.WHITE);
+				deleteButton.addMouseListener(commonMouseListener);
+				add(deleteButton);
 
 		
 		// 🔹 추가 버튼

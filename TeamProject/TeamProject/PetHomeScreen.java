@@ -15,7 +15,7 @@ public class PetHomeScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel backLabel, alarmLabel, profileLabel, petProfileLabel, addButtonLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel;
-//	private JLabel petRcDateLabel, petRcWHLabel, petRecordLabel, petRcVcLabel, petRcCheckLabel, petRcTimeLabel;
+	private JLabel petRcDateLabel, petRcWHLabel, petRecordLabel, petRcVcLabel, petRcCheckLabel, petRcTimeLabel;
 	private JLabel photoLabel, homeLabel, commuLabel, voteLabel;
 	private JPanel scrollPanel; //스크롤 패널
 	private JScrollPane scrollPane; 

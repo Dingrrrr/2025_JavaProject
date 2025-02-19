@@ -35,8 +35,15 @@ public class VoteModifyDialog extends JFrame {
 						if (source == closeLabel) {
 							System.out.println("닫기 버튼 클릭됨");
 							dispose(); // 창 닫기
-						} else  {
-
+						} else if (source == addButtonLabel) {
+							System.out.println("+아이콘 클릭됨");
+						} else if (source == delButton) {
+							System.out.println("삭제 버튼 클릭됨");
+						} else if (source == saveButton) {
+							System.out.println("저장 버튼 클릭됨");
+						} else if (source == modifyLabel) {
+							System.out.println("수정 버튼 클릭됨");
+							
 						}
 
 					}

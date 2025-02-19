@@ -132,10 +132,6 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
-					id = id_textField.getText().trim();
-					new PetHomeScreen();
-
-				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.isPet(StaticData.user_id)) {
 						dispose();
@@ -156,6 +152,7 @@ public class LoginScreen extends JFrame {
 					warningLabel.setVisible(true);
 				}
 			}
+		});
 		
 		warningLabel = new JLabel("아이디 또는 비밀번호가 틀렸습니다");
 		warningLabel.setForeground(Color.RED);
@@ -170,9 +167,6 @@ public class LoginScreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
-					id = id_textField.getText().trim();
-					new PetHomeScreen();
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.isPet(StaticData.user_id)) {
@@ -194,6 +188,7 @@ public class LoginScreen extends JFrame {
 					warningLabel.setVisible(true);
 				}
 			}
+		});
 
 		// 회원가입 라벨 추가
 		registerLabel = new JLabel("회원가입");
@@ -245,6 +240,7 @@ public class LoginScreen extends JFrame {
 
 		setVisible(true);
 	}
+			
 
 	@Override
 	public void paint(Graphics g) {
@@ -256,8 +252,10 @@ public class LoginScreen extends JFrame {
 			g.drawImage(scaledLogo, 0, 98, this); // 위치도 조정 가능
 		}
 	}
+		
 
 	public static void main(String[] args) {
 		new LoginScreen();
 	}
+		
 		}

@@ -155,7 +155,7 @@ public class VoteMainScreen extends JFrame {
 		panel.add(scrollPane);
 
 		// 🔹 더미 투표 데이터 추가
-		for (int i = 1; i <= 15; i++) {
+		for (int i = 1; i <= 16; i++) {
 			addVote();
 		}
 
