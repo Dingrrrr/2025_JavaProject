@@ -114,6 +114,7 @@ public class LoginScreen extends JFrame {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.userCheck(StaticData.user_id)) {	//이미 접속했다면 실행
+						warningLabel.setVisible(false);
 						warningLabel2.setVisible(true);
 						id_textField.setText("아이디를 입력하세요");
 						id_textField.setForeground(Color.GRAY);
@@ -143,6 +144,7 @@ public class LoginScreen extends JFrame {
 					flag1 = true;
 					flag2 = true;
 					warningLabel.setVisible(true);
+					warningLabel2.setVisible(false);
 				}
 			}
 		});
@@ -166,6 +168,7 @@ public class LoginScreen extends JFrame {
 				if(mgr.loginChk(id_textField.getText().trim(), pw_textField.getText().trim())) {
 					StaticData.user_id = id_textField.getText().trim();
 					if(mgr.userCheck(StaticData.user_id)) {	//이미 접속했다면 실행
+						warningLabel.setVisible(false);
 						warningLabel2.setVisible(true);
 						id_textField.setText("아이디를 입력하세요");
 						id_textField.setForeground(Color.GRAY);
@@ -194,6 +197,7 @@ public class LoginScreen extends JFrame {
 					flag1 = true;
 					flag2 = true;
 					warningLabel.setVisible(true);
+					warningLabel2.setVisible(false);
 				}
 			}
 		});

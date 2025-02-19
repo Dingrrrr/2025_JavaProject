@@ -23,13 +23,13 @@ public class VoteMainScreen extends JFrame {
 	private BufferedImage image;
 	private ImageIcon image2;
 	private JLabel alarmLabel, profileLabel, voteLabel, addButtonLabel, photoLabel, homeLabel, commuLabel,
-			imageProfileLabel, likeCountLabel;
+			imageProfileLabel;
 	private JPanel votePanel; // 투표 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private VoteAddDialog va;
 	private JButton popularButton, recentButton, oldButton;
 	private TPMgr mgr = new TPMgr();
-	
+
 	private Vector<VoteBean> vlist = mgr.showVote(StaticData.vote_id);;
 
 	public VoteMainScreen() {
@@ -213,8 +213,9 @@ public class VoteMainScreen extends JFrame {
 
 		// 🔹 votePanel 설정 수정
 		votePanel = new JPanel();
-		votePanel.setLayout(new GridLayout(0, 2, 2, 2)); // 2열 정렬
+		votePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // 왼쪽 정렬, 수평 간격 0, 수직 간격 0으로 설정
 		votePanel.setBackground(Color.WHITE);
+		votePanel.setPreferredSize(new Dimension(334, 380));
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		// 이전 코드에서는 scrollPane이 이 부분 앞에 있을 수 있어, 여기에 잘못된 위치에서 접근되고 있었을 가능성이 있습니다.
@@ -253,14 +254,20 @@ public class VoteMainScreen extends JFrame {
 	public void addVote() {
 		// 기존 투표 목록을 삭제하여 중복 추가 방지
 		votePanel.removeAll();
+		// 투표 항목 개수
+		int totalHeight = 0;
+		int itemsPerRow = 2; // 한 줄에 2개의 항목
+		int rowCount = 0; // 현재 행 수
 
 		for (VoteBean vb : vlist) {
-			StaticData.vote_id = vb.getVote_id();
-			
-			// 1️ 개별 투표 아이템을 담을 패널 생성
+			// 1️⃣ 개별 투표 아이템을 담을 패널 생성
 			JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
-			contentPanel.setPreferredSize(new Dimension(176, 180)); // 크기 설정
+			contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
+			contentPanel.setMaximumSize(new Dimension(176, 150)); // 최대 크기 설정
+			contentPanel.setMinimumSize(new Dimension(176, 150)); // 최소 크기 설정
 			contentPanel.setBackground(Color.WHITE);
+			contentPanel.setBorder(new LineBorder(Color.black, 1)); // 테두리 추가
+			contentPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함 레이아웃 설정
 			contentPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -273,18 +280,18 @@ public class VoteMainScreen extends JFrame {
 					}
 				}
 			});
-			
-			// 투표 레이블 생성
+
+			// 이미지 처리
 			System.out.println(vb.getVote_image());
 			byte[] imgBytes = vb.getVote_image();
 			String imgNull = Arrays.toString(imgBytes);
-			System.out.println(imgNull);
-			JLabel imageLabel = new JLabel(); // JLabel을 먼저 생성
+			JLabel imageLabel = new JLabel();
 			if (imgBytes == null || imgBytes.length == 0) {
 				imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 176, 150);
 				imageLabel.setPreferredSize(new Dimension(176, 150));
 				imageLabel.setMaximumSize(new Dimension(176, 150));
 				imageLabel.setOpaque(false);
+				imageLabel.setBounds(0, 0, 176, 150);
 			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes);
 				Image img1 = icon1.getImage().getScaledInstance(176, 150, Image.SCALE_SMOOTH);
@@ -296,6 +303,8 @@ public class VoteMainScreen extends JFrame {
 			imageLabel.setBounds(0, 0, 176, 150);
 
 
+				imageLabel.setBounds(0, 0, 176, 150);
+			}
 
 			// contentPanel의 아랫부분에만 검정색 테두리 추가
 			Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
@@ -303,18 +312,32 @@ public class VoteMainScreen extends JFrame {
 
 			// 🔹 `JLayeredPane`을 사용해 이미지 위에 하트 버튼을 배치
 			JLayeredPane layeredPane = new JLayeredPane();
-			layeredPane.setLayout(null);
 			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
 			// 🔹 이미지 추가 (기본 레이어)
 			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
-			
+
 			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
-			
+
 			// 중복 투표 여부 확인
 			if (!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {
 				voteLabel.setBounds(130, 105, 40, 40); // 💡 오른쪽 아래로 이동
 				voteLabel.setOpaque(false);
-			} else if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) { // 이미 투표했으면 true 출력
+				voteLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("투표 버튼이 클릭됨!");
+						mgr.likeVote(vb.getVote_id(), StaticData.user_id);
+						MsgBean bean = new MsgBean();
+						bean.setMsg_title("새로운 좋아요!");
+						bean.setReceiver_id(vb.getUser_id());
+						bean.setMsg_content(StaticData.user_id + "님이 당신의 투표에 좋아요를 눌렀습니다!");
+						mgr.sendMsg(StaticData.user_id, bean);
+						dispose();
+						new VoteMainScreen();
+					}
+				});
+			}
+			if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) { // 이미 투표했으면 true 출력
 				voteLabel = createScaledImageLabel("TeamProject/vote_complete.png", 40, 40);
 				voteLabel.setBounds(130, 105, 40, 40);
 				voteLabel.setOpaque(false);
@@ -361,8 +384,25 @@ public class VoteMainScreen extends JFrame {
 		votePanel.repaint();
 		scrollPane.revalidate();
 
-	}
+			// 4️⃣ 전체 투표 목록 패널 (votePanel)에 추가
+	        int xPosition = (rowCount % itemsPerRow) * (176 + 10); // 좌측/우측 위치 설정
+	        int yPosition = (rowCount / itemsPerRow) * (150 + 10); // 아래로 배치
 
+	        contentPanel.setBounds(xPosition, yPosition, 176, 150); // 위치 설정
+	        votePanel.add(contentPanel);
+
+	        rowCount++;
+		}
+		 // votePanel의 크기 설정: 한 줄에 2개씩 배치하고, 그에 맞는 높이와 너비 계산
+	    int totalWidth = itemsPerRow * (176 + 1); // 두 개씩 배치되므로 너비는 2배
+	    int totalRows = (int) Math.ceil((double) vlist.size() / itemsPerRow); // 전체 행 수 계산
+	    votePanel.setPreferredSize(new Dimension(totalWidth, totalRows * (150 + 1))); // 높이 설정
+
+	    // 레이아웃 갱신
+	    votePanel.revalidate();
+	    votePanel.repaint();
+	    scrollPane.revalidate();
+	}
 
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
