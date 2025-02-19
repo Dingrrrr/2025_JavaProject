@@ -903,7 +903,7 @@ public class TPMgr {
 		Vector<DiaryBean> vlist = new Vector<DiaryBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from diary where pet_id = ?";
+			sql = "select * from diary where pet_id = ? order by diary_date desc";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
 			rs = pstmt.executeQuery();

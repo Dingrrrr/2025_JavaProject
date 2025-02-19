@@ -7,6 +7,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
+
 import javax.imageio.ImageIO;
 
 public class VoteScreenDialog extends JFrame {
@@ -14,7 +16,11 @@ public class VoteScreenDialog extends JFrame {
 	private JLabel closeLabel, heartLabel, grayFrameLabel;
 	private JLabel albumphoto;
 	TPMgr mgr;
+
 	
+
+	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
+
 	public VoteScreenDialog(VoteMainScreen preFrame, VoteBean vb) {
 		setTitle("프레임 설정");
 		setSize(350, 350);
@@ -22,14 +28,12 @@ public class VoteScreenDialog extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
-	
+
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-
 
 		// 🔹 공통 마우스 클릭 이벤트 리스너
 		MouseAdapter commonMouseListener = new MouseAdapter() {
@@ -42,7 +46,7 @@ public class VoteScreenDialog extends JFrame {
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
 				} else if (source == heartLabel) {
-					 if(!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {	//누르지 않았다면
+					if (!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) { // 누르지 않았다면
 						System.out.println("하트 클릭됨");
 						mgr.likeVote(vb.getVote_id(), StaticData.user_id);
 						MsgBean bean = new MsgBean();
@@ -58,35 +62,38 @@ public class VoteScreenDialog extends JFrame {
 				}
 			}
 		};
-		
-				// 일기 제목 라벨
-			albumphoto = new JLabel("앨범 사진");
-			albumphoto.setBounds(140, 145, 60, 30);
-			albumphoto.setForeground(Color.black);
-			add(albumphoto);
-				
-				
-			// 🔹 하트 버튼 이미지 추가
-			if(mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {		//이미 눌렀다면
-				heartLabel = createScaledImageLabel("TeamProject/vote_complete.png", 70, 70);
-				heartLabel.setBounds(235, 240, 70, 70);
-				heartLabel.setOpaque(false);
-			} else {
-				heartLabel = createScaledImageLabel("TeamProject/vote.png", 70, 70);
-				heartLabel.setBounds(235, 240, 70, 70);
-				heartLabel.addMouseListener(commonMouseListener);
-			}
-			add(heartLabel); // 🔹 패널에 추가
-						
-			// 🔹 회색프레임
+
+		// 🔹 하트 버튼 이미지 추가
+		if (mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) { // 이미 눌렀다면
+			heartLabel = createScaledImageLabel("TeamProject/vote_complete.png", 70, 70);
+			heartLabel.setBounds(235, 240, 70, 70);
+			heartLabel.setOpaque(false);
+		} else {
+			heartLabel = createScaledImageLabel("TeamProject/vote.png", 70, 70);
+			heartLabel.setBounds(235, 240, 70, 70);
+			heartLabel.addMouseListener(commonMouseListener);
+		}
+		add(heartLabel); // 🔹 패널에 추가
+
+		// 투표 이미지
+		System.out.println(vb.getVote_image());
+		byte[] imgBytes = vb.getVote_image();
+		imageBytes = vb.getVote_image();
+		String imgNull = Arrays.toString(imgBytes);
+		System.out.println(imgNull);
+		if (imgBytes == null || imgBytes.length == 0) {
+			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
 			grayFrameLabel.setBounds(35, 35, 280, 280);
-			grayFrameLabel.addMouseListener(commonMouseListener);
-			add(grayFrameLabel);
-			
-				
-			
-				
+		} else {
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+			grayFrameLabel = new JLabel();
+			grayFrameLabel.setIcon(new ImageIcon(img));
+			grayFrameLabel.setBounds(35, 35, 280, 280);
+		}
+		add(grayFrameLabel);
+
 		// JPanel 추가
 		JPanel panel = new JPanel() {
 			@Override
@@ -109,10 +116,6 @@ public class VoteScreenDialog extends JFrame {
 		closeLabel.setBounds(315, 7, 28, 28);
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
-		
-				
-				
-				
 
 		setVisible(true);
 	}
