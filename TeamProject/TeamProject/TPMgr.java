@@ -1521,6 +1521,30 @@ public class TPMgr {
 		return bean;
 	}
 	
+	// 특정 투표(vote_id)의 좋아요 개수 가져오기
+	public int getVoteLikeCount(int voteId) {
+		Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql = null;
+	    int likeCount = 0; // 기본값 0
+	    
+	    try {
+			con = pool.getConnection();
+			sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
+			pstmt = con.prepareStatement(sql);
+		    pstmt.setInt(1, voteId);
+		    rs = pstmt.executeQuery();
+		    if (rs.next()) {
+		    	likeCount = rs.getInt("vote_like");
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+	    return likeCount;
+	}
 	
 	
 	public static void main(String[] args) {
