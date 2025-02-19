@@ -56,6 +56,13 @@ public class VoteScreenDialog extends JFrame {
 						dispose();
 						preFrame.setVisible(true);
 						new VoteScreenDialog(preFrame, vb);
+					}else {
+						System.out.println("하트 클릭됨");
+						mgr.cancelVote(vb.getVote_id(), StaticData.user_id);
+						preFrame.addVote();
+						dispose();
+						preFrame.setVisible(true);
+						new VoteScreenDialog(preFrame, vb);
 					}
 				}
 			}
@@ -66,6 +73,7 @@ public class VoteScreenDialog extends JFrame {
 			heartLabel = createScaledImageLabel("TeamProject/vote_complete.png", 70, 70);
 			heartLabel.setBounds(235, 240, 70, 70);
 			heartLabel.setOpaque(false);
+			heartLabel.addMouseListener(commonMouseListener);
 		} else {
 			heartLabel = createScaledImageLabel("TeamProject/vote.png", 70, 70);
 			heartLabel.setBounds(235, 240, 70, 70);
