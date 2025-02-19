@@ -298,14 +298,9 @@ public class CommuMainScreen extends JFrame {
 			// 각 커뮤니티 게시글 항목 간에 간격을 둡니다
 			commuPanel.add(Box.createVerticalStrut(5)); // 5px 간격
 		}
-
-		// commuPanel 크기 갱신
-		commuPanel.setPreferredSize(
-				new Dimension(353, commuPanel.getComponentCount() * 99 + 5 * (commuPanel.getComponentCount() - 1))); // 항목
-																														// 수에
-																														// 맞게
-																														// 크기
-																														// 설정
+		
+		commuPanel.revalidate();
+		commuPanel.repaint();
 
 		// 스크롤 패널의 크기를 동적으로 맞추기
 		scrollPane.revalidate();

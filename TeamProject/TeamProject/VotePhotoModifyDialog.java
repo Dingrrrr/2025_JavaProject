@@ -120,8 +120,8 @@ public class VotePhotoModifyDialog extends JFrame {
 	        Image img = icon.getImage();
 	        System.out.println(img);
 
-	        // 이미지 크기 조정 (280x280)
-	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+	        // 이미지 크기 조정 (318x318)
+	        Image resizedImg = img.getScaledInstance(318, 318, Image.SCALE_SMOOTH);
 
 	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
@@ -153,7 +153,7 @@ public class VotePhotoModifyDialog extends JFrame {
 		Image img = icon.getImage();
 
 		// getScaledInstance로 이미지 크기 조정
-		Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+		Image resizedImg = img.getScaledInstance(318, 318, Image.SCALE_SMOOTH);
 
 		// 새로운 ImageIcon 생성
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);

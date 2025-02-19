@@ -265,7 +265,7 @@ public class VoteMainScreen extends JFrame {
 			
 			// 1️ 개별 투표 아이템을 담을 패널 생성
 			JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
-			contentPanel.setPreferredSize(new Dimension(176, 180)); // 크기 설정
+			contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
 			contentPanel.setBackground(Color.WHITE);
 			contentPanel.addMouseListener(new MouseAdapter() {
 				@Override
