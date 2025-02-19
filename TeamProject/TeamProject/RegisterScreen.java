@@ -187,6 +187,7 @@ public class RegisterScreen extends JFrame {
                 	pwWarningLabel1.setForeground(Color.BLUE);
                 } else {
                 	pwWarningLabel1.setText("비밀번호가 일치하지 않습니다");
+                	pwWarningLabel1.setForeground(Color.RED);
                 }
             }
 		});
@@ -328,8 +329,6 @@ public class RegisterScreen extends JFrame {
 //							pwWarningLabel2.setVisible(false);
 						} else {	//비밀번호 확인 맞음
 							if(phone.length() != 11 || !phone.substring(0, 3).equals("010")) {	//11글자가 아니거나 처음에 010으로 시작하지 않으면
-								System.out.println(phone.length());
-								System.out.println(phone.substring(0, 2));
 								phoneWarningLabel.setVisible(true);
 							} else if(mgr.phoneChk(phone)) {	//이미 등록한 전화번호
 								phoneWarningLabel.setText("이미 등록한 전화번호 입니다.");
