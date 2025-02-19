@@ -288,11 +288,21 @@ public class VoteMainScreen extends JFrame {
 			JLabel imageLabel = new JLabel();
 			if (imgBytes == null || imgBytes.length == 0) {
 				imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 176, 150);
+				imageLabel.setPreferredSize(new Dimension(176, 150));
+				imageLabel.setMaximumSize(new Dimension(176, 150));
+				imageLabel.setOpaque(false);
 				imageLabel.setBounds(0, 0, 176, 150);
 			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes);
 				Image img1 = icon1.getImage().getScaledInstance(176, 150, Image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(img1));
+				imageLabel.setPreferredSize(new Dimension(176, 150));
+				imageLabel.setMaximumSize(new Dimension(176, 150));
+				imageLabel.setOpaque(false);
+			}
+			imageLabel.setBounds(0, 0, 176, 150);
+
+
 				imageLabel.setBounds(0, 0, 176, 150);
 			}
 
@@ -337,6 +347,42 @@ public class VoteMainScreen extends JFrame {
 			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
 			// 🔹 contentPanel에 `layeredPane` 추가 (이미지 & 버튼 함께 추가됨)
 			contentPanel.add(layeredPane);
+			
+			// 좋아요 개수 가져오기
+			int likeCount = mgr.getVoteLikeCount(vb.getVote_id());
+			if (likeCount < 0) {
+				likeCount = 0;
+			}
+			// 사용자가 좋아요를 눌렀는지 확인
+			boolean isLiked = mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id);
+			
+			// 좋아요 개수 라벨 생성
+			likeCountLabel = new JLabel(String.valueOf(likeCount), SwingConstants.CENTER);
+			
+			likeCountLabel.setBounds(135, 114, 30, 20);
+			likeCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+			
+					
+			if (isLiked) {
+				likeCountLabel.setForeground(Color.WHITE);
+			}else {
+				likeCountLabel.setForeground(Color.BLACK);
+			}
+			
+			// 좋아요 개수
+			layeredPane.add(likeCountLabel, JLayeredPane.DRAG_LAYER, 0);
+			
+			// ✅ 디버깅을 위한 로그 추가
+			System.out.println("likeCountLabel 추가됨: " + likeCountLabel.getText());
+			System.out.println("현재 layeredPane에 포함된 컴포넌트 개수: " + layeredPane.getComponentCount());
+			
+			contentPanel.add(layeredPane);
+			votePanel.add(contentPanel);
+			
+		}
+		votePanel.revalidate();
+		votePanel.repaint();
+		scrollPane.revalidate();
 
 			// 4️⃣ 전체 투표 목록 패널 (votePanel)에 추가
 	        int xPosition = (rowCount % itemsPerRow) * (176 + 10); // 좌측/우측 위치 설정
