@@ -68,6 +68,29 @@ public class TPMgr {
 		return !flag;	//중복되지 않으면 true 반환, 중복이 있으면 false 반환
 	}
 	
+	//전화번호 중복 체크(이미 저장된 전화번호면 true 반환)
+	public boolean phoneChk(String phone) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select phone from user where phone = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, phone);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
 	//로그인
 	public boolean loginChk(String user_id, String pwd) {
 		Connection con = null;
@@ -1513,6 +1536,71 @@ public class TPMgr {
 	    }
 	}
 	
+	//투표 취소
+	public void cancelVote(int vote_id, String user_id) {
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql = null;
+
+	    try {
+	        con = pool.getConnection();
+	        con.setAutoCommit(false);  // 트랜잭션 시작
+	    
+	        
+	        // 1. 현재 투표 좋아요 개수 가져오기
+	        sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_id);
+	        rs = pstmt.executeQuery();
+	        
+	        int vote_like = 0;
+	        if (rs.next()) {
+	        	vote_like = rs.getInt("vote_like");
+	        }else {
+	        	System.out.println("❌ vote_id " + vote_id + " 에 해당하는 데이터가 없습니다.");
+	        	return;
+	        }
+
+	        // 2. 좋아요 개수 감소
+	        sql = "UPDATE vote SET vote_like = ? WHERE vote_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_like - 1);
+	        pstmt.setInt(2, vote_id);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+
+	        // 3. 투표한 사용자 정보 저장
+	        sql = "delete from vote_mgr where vote_id = ? and vt_user_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_id);
+	        pstmt.setString(2, user_id);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+
+	        // 모든 SQL 실행이 정상적으로 끝났으면 커밋
+	        con.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        try {
+	            if (con != null) con.rollback();  // 오류 발생 시 롤백
+	        } catch (Exception rollbackEx) {
+	            rollbackEx.printStackTrace();
+	        }
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (pstmt != null) pstmt.close();
+	            if (con != null) {
+	                con.setAutoCommit(true); // 다시 기본값으로 변경
+	                pool.freeConnection(con);
+	            }
+	        } catch (Exception closeEx) {
+	            closeEx.printStackTrace();
+	        }
+	    }
+	}
+	
 	//투표 유무(이미 투표했으면 true 반환)
 	public boolean alrLikeVote(int vote_id, String user_id) {
 		//투표 게시글의 아이디, 투표한 사용자의 아이디
@@ -1749,6 +1837,30 @@ public class TPMgr {
 		return bean;
 	}
 	
+	// 특정 투표(vote_id)의 좋아요 개수 가져오기
+	public int getVoteLikeCount(int voteId) {
+		Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql = null;
+	    int likeCount = 0; // 기본값 0
+	    
+	    try {
+			con = pool.getConnection();
+			sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
+			pstmt = con.prepareStatement(sql);
+		    pstmt.setInt(1, voteId);
+		    rs = pstmt.executeQuery();
+		    if (rs.next()) {
+		    	likeCount = rs.getInt("vote_like");
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+	    return likeCount;
+	}
 	
 	
 	public static void main(String[] args) {

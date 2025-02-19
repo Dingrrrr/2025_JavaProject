@@ -28,6 +28,7 @@ public class ComuAddDialog extends JFrame{
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.comuAddScreen = comuAddScreen;
+		// 수정 용
 		
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기

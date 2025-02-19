@@ -88,8 +88,6 @@ public class DiaryMainScreen extends JFrame {
 						newLineUpLabel.setVisible(true);
 						oldLineUpLabel.setVisible(true);						
 					}
-				} else if(source == addDiaryLabel) {
-					} 
 				}else if(source == addDiaryLabel) {
 					System.out.println("일기 추가 버튼 클릭됨");
 					if(pc==null) {
@@ -119,7 +117,7 @@ public class DiaryMainScreen extends JFrame {
 					newLineUpLabel.setVisible(false);
 					oldLineUpLabel.setVisible(false);
 				}
-		
+			}
 		};
 	
 
