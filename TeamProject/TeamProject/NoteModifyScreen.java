@@ -19,16 +19,14 @@ public class NoteModifyScreen extends JFrame {
 	private JButton ModifyButton, delButton;
 	private String id, title, content;
 	TPMgr mgr;
-	MsgBean bean;
 
-	public NoteModifyScreen(JFrame preFrame, MsgBean mb) {
+	public NoteModifyScreen(AlarmMainScreen preFrame, MsgBean mb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
-		bean = new MsgBean();
 	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -51,20 +49,16 @@ public class NoteModifyScreen extends JFrame {
 					id = SendIdTField.getText().trim();
 					title = TitleTArea.getText().trim();
 					content = DescriptionTArea.getText().trim();
-					bean.setReceiver_id(id);
-					bean.setMsg_title(title);
-					bean.setMsg_content(content);
-					mgr.sendMsg(StaticData.user_id, bean);
-					StaticData.msg_user_id = "";
+					mgr.updMsg(title, content, id);
 					dispose();
-					preFrame.setEnabled(true);
-					preFrame.setVisible(true);
+					preFrame.dispose();
+					new AlarmMainScreen(StaticData.jf);
 				} else if (source == delButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					mgr.delMsg(mb.getMsg_id());
 					dispose();
 					preFrame.dispose();
-					new AlarmMainScreen(preFrame);
+					new AlarmMainScreen(StaticData.jf);
 				}
 			}
 		};
@@ -76,12 +70,13 @@ public class NoteModifyScreen extends JFrame {
 				add(SendIdLabel);
 
 				// 전송할 아이디 필드 추가
-				SendIdTField = new JTextField(StaticData.msg_user_id);
+				SendIdTField = new JTextField(mb.getReceiver_id());
 				SendIdTField.setBounds(15, 60, 318, 40);
 				SendIdTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
 				add(SendIdTField);
+				SendIdTField.setEnabled(false);
 
 				// 제목 라벨
 				TitleLabel = new JLabel("제목");
@@ -90,9 +85,8 @@ public class NoteModifyScreen extends JFrame {
 				add(TitleLabel);
 
 				// 제목 필드 추가
-				TitleTArea = new JTextArea();
+				TitleTArea = new JTextArea(mb.getMsg_title());
 				TitleTArea.setBounds(15, 130, 318, 40);
-				TitleTArea.setText("");
 				TitleTArea.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
@@ -105,9 +99,8 @@ public class NoteModifyScreen extends JFrame {
 				add(DescriptionLabel);
 				
 				//설명 필드 추가
-				DescriptionTArea = new JTextArea();
+				DescriptionTArea = new JTextArea(mb.getMsg_content());
 				DescriptionTArea.setBounds(15, 200, 318, 350);
-				DescriptionTArea.setText("");
 				DescriptionTArea.setLineWrap(true);
 				DescriptionTArea.setWrapStyleWord(true);
 				DescriptionTArea.setBorder(BorderFactory.createCompoundBorder(
