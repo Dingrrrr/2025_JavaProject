@@ -9,25 +9,24 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.*;
 
-public class PetPhotoModifyDialog extends JFrame {
-	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
+public class UserPhotoModifyDialog extends JFrame {
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
+	private UpdateUserScreen updateUserScreen; // UpdateUserScreen 객체를 저장할 변수
 	private JFrame frame;
 	private File selectedFile;
-	private PetModifyScreen petModifyScreen;
 
-	public PetPhotoModifyDialog(PetModifyScreen petModifyScreen) {
+	public UserPhotoModifyDialog(UpdateUserScreen updateUserScreen) {
 		setTitle("프레임 설정");
 		setSize(358, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.petModifyScreen = petModifyScreen;  // 'petModifyScreen'을 여기서 받음
+		this.updateUserScreen = updateUserScreen;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -100,8 +99,15 @@ public class PetPhotoModifyDialog extends JFrame {
 		add(panel);
 
 		setVisible(true);
+
+		/*
+		 * // 🔹 회색프레임 grayFrameLabel =
+		 * createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
+		 * grayFrameLabel.setBounds(35, 90, 280, 280); add(grayFrameLabel,
+		 * BorderLayout.SOUTH);
+		 */
 	}
-	
+
 	private void selectImage() {
 	    JFileChooser fileChooser = new JFileChooser();
 	    if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
@@ -113,23 +119,23 @@ public class PetPhotoModifyDialog extends JFrame {
 	        Image img = icon.getImage();
 	        System.out.println(img);
 
-	        // 이미지 크기 조정 (200x200)
-	        Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+	        // 이미지 크기 조정 (270x270)
+	        Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
 
 	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
 	        System.out.println(resizedIcon);
 
 	        // 미리보기 업데이트
-	        petModifyScreen.getImageLabel().setIcon(resizedIcon);
-	        petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+	        updateUserScreen.getImageLabel().setIcon(resizedIcon);
+	        updateUserScreen.getImageLabel().setText(""); // 텍스트 제거
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
 	        System.out.println(imageBytes);
 
 	        // 변환된 이미지를 updateUserScreen에 저장
-	        petModifyScreen.setImageBytes(imageBytes);
+	        updateUserScreen.setImageBytes(imageBytes);
 
 	    } else {
 	        // 파일 선택이 취소된 경우
@@ -139,46 +145,46 @@ public class PetPhotoModifyDialog extends JFrame {
 	
 	private void deleteImage() {
 		// 직접 파일 경로 지정
-		File selectedFile = new File("TeamProject/dog.png");
+		File selectedFile = new File("TeamProject/profile.png");
 
 		// 이미지 읽기
 		ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 		Image img = icon.getImage();
 
 		// getScaledInstance로 이미지 크기 조정
-		Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
 
 		// 새로운 ImageIcon 생성
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		petModifyScreen.getImageLabel().setIcon(resizedIcon);
-		petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+		updateUserScreen.getImageLabel().setIcon(resizedIcon);
+		updateUserScreen.getImageLabel().setText(""); // 텍스트 제거
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
 		System.out.println(imageBytes);
 		
-		// 변환된 이미지를 PetAddScreen에 저장
-		petModifyScreen.setImageBytes(imageBytes);
+		// 변환된 이미지를 updateUserScreen에 저장
+        updateUserScreen.setImageBytes(imageBytes);
 
 	}
-	
+
 	// 파일을 byte 배열로 변환하는 메서드
-		private byte[] convertFileToByteArray(File file) {
-		    try (FileInputStream fis = new FileInputStream(file);
-		         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-		        byte[] buffer = new byte[1024];
-		        int bytesRead;
-		        while ((bytesRead = fis.read(buffer)) != -1) {
-		            baos.write(buffer, 0, bytesRead);
-		        }
-		        return baos.toByteArray();
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		        return null;
-		    }
-		}
+	private byte[] convertFileToByteArray(File file) {
+	    try (FileInputStream fis = new FileInputStream(file);
+	         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+	        byte[] buffer = new byte[1024];
+	        int bytesRead;
+	        while ((bytesRead = fis.read(buffer)) != -1) {
+	            baos.write(buffer, 0, bytesRead);
+	        }
+	        return baos.toByteArray();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
 
 	public static void main(String[] args) {
 	}

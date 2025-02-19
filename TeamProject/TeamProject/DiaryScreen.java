@@ -3,16 +3,20 @@ package TeamProject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Vector;
 
 public class DiaryScreen extends JFrame{
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
 	private JLabel additionLabel, welcomeLabel1, welcomeLabel2, welcomeLabel3;
 	private DiaryAddDialog pc;
+	TPMgr mgr = new TPMgr();
 	
 	
 	public DiaryScreen() {
@@ -35,26 +39,39 @@ public class DiaryScreen extends JFrame{
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
+					dispose();
+					new AlarmMainScreen(DiaryScreen.this);
 				} else if (source == profileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(DiaryScreen.this);
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if(pc==null) {
-						pc = new DiaryAddDialog();
+						pc = new DiaryAddDialog(DiaryScreen.this);
 						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
 						pc.setLocation(getX()+25, getY()+270);
 					}else {
 						pc.setLocation(getX()+25, getY()+270);
 						pc.setVisible(true);
 					}
+					setEnabled(false);
 				}else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+					setEnabled(false);
+					new AlbumChooseDialog(DiaryScreen.this);
 				}else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
+					dispose();
+					new PetHomeScreen(StaticData.pet_id);
 				}else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
+					dispose();
+					new CommuMainScreen();
 				}else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
+					dispose();
+					new VoteMainScreen();
 				}
 			}
 		};
@@ -152,7 +169,13 @@ public class DiaryScreen extends JFrame{
 			closeButton.setForeground(Color.WHITE);
 			closeButton.setBorder(BorderFactory.createEmptyBorder());
 			closeButton.setFocusPainted(false);
-			closeButton.addActionListener(e -> System.exit(0));
+			closeButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					mgr.userOut(StaticData.user_id);
+					System.exit(0);
+				}
+			});
 			panel.add(closeButton);
 
 			setVisible(true);

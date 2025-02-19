@@ -91,6 +91,68 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//접속 시작
+	public void userIn(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "insert id_check values(?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
+	//동시 접속 확인(이미 접속해있으면 true)
+	public boolean userCheck(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from id_check where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
+	//접속 끊음
+	public void userOut(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "delete from id_check where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
 	//사용자 이름
 	public String userName(String id) {
 		Connection con = null;
@@ -134,7 +196,9 @@ public class TPMgr {
 				bean.setPassword(rs.getString("password"));
 				bean.setEmail(rs.getString("email"));
 				bean.setPhone(rs.getString("phone"));
-				bean.setUser_image(rs.getString("user_image"));
+				// 이미지 데이터는 byte[]로 받아오기
+	            byte[] imageData = rs.getBytes("user_image");
+	            bean.setUser_image(imageData); // UserBean에서 byte[]를 저장하도록 설정
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -142,6 +206,29 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return bean;
+	}
+	
+	//한 유저 이름 출력
+	public String showOneUserName(String user_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String userName = "";
+		try {
+			con = pool.getConnection();
+			sql = "select username from user where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				userName = rs.getString("username");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return userName;
 	}
 	
 	//유저 프로필 수정
@@ -158,7 +245,8 @@ public class TPMgr {
 			pstmt.setString(2, bean.getPassword());
 			pstmt.setString(3, bean.getEmail());
 			pstmt.setString(4, bean.getPhone());
-			pstmt.setString(5, bean.getUser_image());
+			// user_image를 byte[]로 설정
+	        pstmt.setBytes(5, bean.getUser_image());  // setBytes를 사용하여 byte[] 데이터 저장
 			pstmt.setString(6, user_id);	//id를 매개변수로 받아 업데이트
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)	//수정 성공
@@ -185,7 +273,7 @@ public class TPMgr {
 			pstmt.setString(3, bean.getPet_species());
 			pstmt.setString(4, bean.getPet_age());
 			pstmt.setString(5, bean.getPet_gender());
-			pstmt.setString(6, bean.getPet_image());
+			pstmt.setBytes(6, bean.getPet_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -209,8 +297,8 @@ public class TPMgr {
 			pstmt.setString(2, bean.getPet_species());
 			pstmt.setString(3, bean.getPet_age());
 			pstmt.setString(4, bean.getPet_gender());
-			pstmt.setString(5, bean.getPet_image());
-			pstmt.setInt(6, bean.getPet_id());
+			pstmt.setBytes(5, bean.getPet_image());
+			pstmt.setInt(6, pet_id);
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)
 				flag = true;
@@ -264,6 +352,7 @@ public class TPMgr {
 				bean.setPet_species(rs.getString("pet_species"));
 				bean.setPet_age(rs.getString("pet_age"));
 				bean.setPet_gender(rs.getString("pet_gender"));
+				bean.setPet_image(rs.getBytes("pet_image"));
 				vlist.add(bean);
 			}
 		} catch (Exception e) {
@@ -343,6 +432,7 @@ public class TPMgr {
 				bean.setPet_species(rs.getString("pet_species"));
 				bean.setPet_age(rs.getString("pet_age"));
 				bean.setPet_gender(rs.getString("pet_gender"));
+				bean.setPet_image(rs.getBytes("pet_image"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -350,6 +440,84 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return bean;
+	}
+	
+	//개 품종 출력
+	public Vector<DogBean> showDog() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<DogBean> vlist = new Vector<DogBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from dog_species";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				DogBean bean = new DogBean();
+				bean.setDog(rs.getString("dog"));
+				vlist.add(bean);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//개 품종 검색 출력
+	public Vector<DogBean> showSearchDog(String dogSearch){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<DogBean> vlist = new Vector<DogBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from dog_species where dog like ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, dogSearch);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				DogBean bean = new DogBean();
+				bean.setDog(rs.getString("dog"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//고양이 품종 출력
+	public Vector<CatBean> showCat() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<CatBean> vlist = new Vector<CatBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from cat_species";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				CatBean bean = new CatBean();
+				bean.setCat(rs.getString("cat"));
+				vlist.add(bean);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
 	}
 	
 	//반려동물 정보 추가(선택 사항)
@@ -496,6 +664,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				HRBean bean = new HRBean();
+				bean.setRecord_id(rs.getInt("record_id"));
 				bean.setHr_date(rs.getTimestamp("hr_date"));
 				bean.setHeight(rs.getBigDecimal("height"));
 				bean.setWeight(rs.getBigDecimal("weight"));
@@ -546,7 +715,7 @@ public class TPMgr {
 			sql = "insert album values(null, ?, ?, ?, ?, now())";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, pet_id);
-			pstmt.setString(2, bean.getAlbum_image());
+			pstmt.setBytes(2, bean.getAlbum_image());
 			pstmt.setString(3, bean.getAlbum_desc());
 			pstmt.setString(4, bean.getAlbum_tags());
 			pstmt.executeUpdate();
@@ -568,7 +737,7 @@ public class TPMgr {
 			con = pool.getConnection();
 			sql = "update album set album_image = ?, album_desc = ?, album_tags = ? where album_id = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, bean.getAlbum_image());
+			pstmt.setBytes(1, bean.getAlbum_image());
 			pstmt.setString(2, bean.getAlbum_desc());
 			pstmt.setString(3, bean.getAlbum_tags());
 			pstmt.setInt(4, album_id);
@@ -620,7 +789,8 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				AlbumBean bean = new AlbumBean();
-				bean.setAlbum_image(rs.getString("album_image"));
+				bean.setAlbum_id(rs.getInt("album_id"));
+				bean.setAlbum_image(rs.getBytes("album_image"));
 				bean.setAlbum_tags(rs.getString("album_tags"));
 				bean.setAlbum_date(rs.getTimestamp("album_date"));
 				bean.setAlbum_desc(rs.getString("album_desc"));
@@ -632,6 +802,29 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return vlist;
+	}
+	
+	//일기가 존재 유무(이미 일기가 있으면 true 반환)
+	public boolean isDiary(int pet_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from diary where pet_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
 	}
 	
 	//일기 추가
@@ -716,6 +909,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				DiaryBean bean = new DiaryBean();
+				bean.setDiary_id(rs.getInt("diary_id"));
 				bean.setDiary_date(rs.getTimestamp("diary_date"));
 				bean.setDiary_name(rs.getString("diary_name"));
 				bean.setDiary_content(rs.getString("diary_content"));
@@ -727,6 +921,31 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt, rs);
 		}
 		return vlist;
+	}
+	
+	//일기 한개 출력
+	public DiaryBean showOneDiary(int diary_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		DiaryBean bean = new DiaryBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from diary where diary_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, diary_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setDiary_name(rs.getString("diary_name"));
+				bean.setDiary_content(rs.getString("diary_content"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
 	}
 	
 	//커뮤니티 추가
@@ -741,7 +960,7 @@ public class TPMgr {
 			pstmt.setString(1, user_id);
 			pstmt.setString(2, bean.getComu_title());
 			pstmt.setString(3, bean.getComu_content());
-			pstmt.setString(5, bean.getComu_image());
+			pstmt.setString(4, bean.getComu_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -807,11 +1026,12 @@ public class TPMgr {
 		Vector<ComuBean> vlist = new Vector<ComuBean>();
 		try {
 			con = pool.getConnection();
-			sql = "select * from comu_post";
+			sql = "select * from comu_post order by comu_date desc";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				ComuBean bean = new ComuBean();
+				bean.setPost_id(rs.getInt("post_id"));
 				bean.setUser_id(rs.getString("user_id"));
 				bean.setComu_date(rs.getTimestamp("comu_date"));
 				bean.setComu_image(rs.getString("comu_image"));
@@ -827,8 +1047,9 @@ public class TPMgr {
 		return vlist;
 	}
 	
+	
 	//커뮤니티 댓글 추가
-	public void addCmt(int post_id, int user_id, String cmt) {
+	public void addCmt(int post_id, String user_id, String cmt) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -837,7 +1058,7 @@ public class TPMgr {
 			sql = "insert cmt values(null, ?, ?, ?, now())";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, post_id);
-			pstmt.setInt(2, user_id);
+			pstmt.setString(2, user_id);
 			pstmt.setString(3, cmt);
 			pstmt.executeUpdate();
 
@@ -922,7 +1143,7 @@ public class TPMgr {
 	}
 	
 	//투표 추가(수정 필요)
-	public void addVote(String user_id, int pet_id, String image) {
+	public void addVote(String user_id, int pet_id, VoteBean bean) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -932,7 +1153,7 @@ public class TPMgr {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, user_id);
 			pstmt.setInt(2, pet_id);
-			pstmt.setString(3, image);
+			pstmt.setBytes(3, bean.getVote_image());
 			pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -943,7 +1164,7 @@ public class TPMgr {
 	}
 	
 	//투표 수정
-	public boolean updVote(String image, int vote_id) {
+	public boolean updVote(int vote_id, VoteBean bean) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -952,7 +1173,7 @@ public class TPMgr {
 			con = pool.getConnection();
 			sql = "update vote set vote_image = ? where vote_id = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, image);
+			pstmt.setBytes(1, bean.getVote_image());
 			pstmt.setInt(2, vote_id);
 			int cnt = pstmt.executeUpdate();
 			if(cnt == 1)
@@ -988,7 +1209,7 @@ public class TPMgr {
 	}
 	
 	//투표 화면에 출력(최신순이 디폴트)
-	public Vector<VoteBean> showVote(){
+	public Vector<VoteBean> showVote(int vote_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1002,8 +1223,9 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);
@@ -1031,8 +1253,9 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);
@@ -1060,8 +1283,9 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);
@@ -1089,8 +1313,9 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				VoteBean bean = new VoteBean();
+				bean.setVote_id(rs.getInt("vote_id"));
 				bean.setUser_id(rs.getString("user_id"));
-				bean.setVote_image(rs.getString("vote_image"));
+				bean.setVote_image(rs.getBytes("vote_image"));
 				bean.setVote_like(rs.getInt("vote_like"));
 				bean.setVote_date(rs.getTimestamp("vote_date"));
 				vlist.add(bean);
@@ -1105,37 +1330,67 @@ public class TPMgr {
 	
 	//투표 좋아요
 	public void likeVote(int vote_id, String user_id) {
-		//한 투표 게시글의 아이디, 투표한 사용자의 아이디
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = null;
-		try {
-			con = pool.getConnection();
-			
-			sql = "select vote_like from vote where vote_id = ?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vote_id);
-			rs = pstmt.executeQuery();
-			int vote_like = rs.getInt("vote_like");
-			
-			sql = "update vote set vote_like = ? where vote_id = ?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, (vote_like+1));
-			pstmt.setInt(2, vote_id);
-			pstmt.executeUpdate();
-			
-			sql = "insert vote_mgr values(?, ?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vote_id);
-			pstmt.setString(2, user_id);
-			pstmt.executeUpdate();
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql = null;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			pool.freeConnection(con, pstmt, rs);
-		}
+	    try {
+	        con = pool.getConnection();
+	        con.setAutoCommit(false);  // 트랜잭션 시작
+	    
+	        
+	        // 1. 현재 투표 좋아요 개수 가져오기
+	        sql = "SELECT vote_like FROM vote WHERE vote_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_id);
+	        rs = pstmt.executeQuery();
+	        
+	        int vote_like = 0;
+	        if (rs.next()) {
+	        	vote_like = rs.getInt("vote_like");
+	        }else {
+	        	System.out.println("❌ vote_id " + vote_id + " 에 해당하는 데이터가 없습니다.");
+	        	return;
+	        }
+
+	        // 2. 좋아요 개수 증가
+	        sql = "UPDATE vote SET vote_like = ? WHERE vote_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_like + 1);
+	        pstmt.setInt(2, vote_id);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+
+	        // 3. 투표한 사용자 정보 저장
+	        sql = "INSERT INTO vote_mgr (vote_id, vt_user_id) VALUES (?, ?)";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, vote_id);
+	        pstmt.setString(2, user_id);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+
+	        // 모든 SQL 실행이 정상적으로 끝났으면 커밋
+	        con.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        try {
+	            if (con != null) con.rollback();  // 오류 발생 시 롤백
+	        } catch (Exception rollbackEx) {
+	            rollbackEx.printStackTrace();
+	        }
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (pstmt != null) pstmt.close();
+	            if (con != null) {
+	                con.setAutoCommit(true); // 다시 기본값으로 변경
+	                pool.freeConnection(con);
+	            }
+	        } catch (Exception closeEx) {
+	            closeEx.printStackTrace();
+	        }
+	    }
 	}
 	
 	//투표 유무(이미 투표했으면 true 반환)
@@ -1164,7 +1419,7 @@ public class TPMgr {
 	}
 
 	//쪽지
-	public boolean msg(String user_id, MsgBean bean) {
+	public boolean sendMsg(String user_id, MsgBean bean) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -1189,7 +1444,7 @@ public class TPMgr {
 	}
 	
 	//알림
-	public Vector<MsgBean> msgList(String user_id){
+	public Vector<MsgBean> showMsgList(String user_id){
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1203,6 +1458,7 @@ public class TPMgr {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				MsgBean bean = new MsgBean();
+				bean.setMsg_id(rs.getInt("msg_id"));
 				bean.setSender_id(rs.getString("sender_id"));
 				bean.setMsg_title(rs.getString("msg_title"));
 				bean.setMsg_content(rs.getString("msg_content"));
@@ -1237,6 +1493,32 @@ public class TPMgr {
 			pool.freeConnection(con, pstmt);
 		}
 		return flag;
+	}
+	
+	//알림 하나 출력
+	public MsgBean showOneMsg(int msg_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		MsgBean bean = new MsgBean();
+		try {
+			con = pool.getConnection();
+			sql = "select * from msg where msg_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, msg_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bean.setMsg_title(rs.getString("msg_title"));
+				bean.setMsg_content(rs.getString("msg_content"));
+				bean.setSender_id(rs.getString("sender_id"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return bean;
 	}
 	
 	

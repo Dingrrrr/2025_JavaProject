@@ -8,16 +8,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
+import java.util.Arrays;
 
 public class UserHomeScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel;
+	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, additionLabel;
 	private PetChooseDialog pc;
-
 
 	public UserHomeScreen() {
 		setTitle("프레임 설정");
@@ -25,6 +29,8 @@ public class UserHomeScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		UserBean bean = mgr.showUser(StaticData.user_id);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -33,11 +39,10 @@ public class UserHomeScreen extends JFrame {
 		}
 
 		// 🔹 공통 마우스 클릭 이벤트 리스너
-				MouseAdapter commonMouseListener = new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						Object source = e.getSource(); // 클릭된 컴포넌트 확인
-
+		MouseAdapter commonMouseListener = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 						if (source == alarmLabel) {
 							System.out.println("🔔 알람 클릭됨!");
 							dispose();
@@ -61,9 +66,29 @@ public class UserHomeScreen extends JFrame {
 								pc.setVisible(true);
 							}
 						}
+				if (source == alarmLabel) {
+					System.out.println("🔔 알람 클릭됨!");
+					dispose();
+					new AlarmMainScreen(UserHomeScreen.this);
+				} else if (source == imageLabel) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(UserHomeScreen.this);
+				} else if (source == addButtonLabel) {
+					System.out.println("➕ 추가 버튼 클릭됨!");
+					if (pc == null) {
+						pc = new PetChooseDialog(UserHomeScreen.this);
+						// ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX() + 25, getY() + 300);
+					} else {
+						pc.setLocation(getX() + 25, getY() + 300);
+						pc.setVisible(true);
 					}
-				};
-		
+					setEnabled(false);
+				}
+			}
+		};
+
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
@@ -76,11 +101,48 @@ public class UserHomeScreen extends JFrame {
 		profileLabel.addMouseListener(commonMouseListener);
 		add(profileLabel);
 
+		// 메인 프로필 이미지
+		System.out.println(bean.getUser_image());
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
 		// 🔹 메인 프로필 이미지
 		mainProfileLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
 		mainProfileLabel.setBounds(101, 178, 200, 200);
 		mainProfileLabel.addMouseListener(commonMouseListener);
 		add(mainProfileLabel);
+		if (imgNull == "[]") {
+			imageLabel = new JLabel();
+			imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
+			imageLabel.setBounds(101, 178, 200, 200);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		} else {
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			imageLabel = new JLabel();
+			imageLabel.setIcon(new ImageIcon(img));
+			imageLabel.setBounds(101, 178, 200, 200);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		}
+		
+		
+		// 상단 프로필 이미지
+		if (imgNull == "[]") {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		} else {
+			ImageIcon icon1 = new ImageIcon(imgBytes);
+			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			imageProfileLabel = new JLabel();
+			imageProfileLabel.setIcon(new ImageIcon(img1));
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		}
 
 		// 🔹 추가 버튼
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
@@ -115,6 +177,7 @@ public class UserHomeScreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				mgr.userOut(StaticData.user_id);
 				new LoginScreen();
 			}
 		});
@@ -150,7 +213,13 @@ public class UserHomeScreen extends JFrame {
 		closeButton.setForeground(Color.WHITE);
 		closeButton.setBorder(BorderFactory.createEmptyBorder());
 		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
 		panel.add(closeButton);
 
 		setVisible(true);
@@ -166,6 +235,9 @@ public class UserHomeScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
+
 		new UserHomeScreen();
+
+		new LoginScreen();
 	}
 }

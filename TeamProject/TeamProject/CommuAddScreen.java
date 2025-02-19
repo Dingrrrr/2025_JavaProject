@@ -17,14 +17,19 @@ public class CommuAddScreen extends JFrame {
 	private JTextField  CommuAddTagTField;
 	private JTextArea CommuAddWriteTArea;
 	private JButton SaveButton;
+	private String title, content;
+	TPMgr mgr;
+	ComuBean bean;
 
-	public CommuAddScreen() {
+	public CommuAddScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
+		mgr = new TPMgr();
+		bean = new ComuBean();
+		bean.setComu_image("");
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
 		} catch (Exception e) {
@@ -39,10 +44,21 @@ public class CommuAddScreen extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
+					//이미지 추가
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
+					title = CommuAddTagTField.getText().trim();
+					content = CommuAddWriteTArea.getText().trim();
+					bean.setComu_title(title);
+					bean.setComu_content(content);
+					mgr.addComu(StaticData.user_id, bean);
+					dispose();
+					preFrame.dispose();
+					new CommuMainScreen();
 				}
 			}
 		};
@@ -148,6 +164,6 @@ public class CommuAddScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new CommuAddScreen();
+		new LoginScreen();
 	}
 }

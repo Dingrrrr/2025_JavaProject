@@ -17,13 +17,18 @@ public class NoteSendScreen extends JFrame {
 	private JTextField  SendIdTField;
 	private JTextArea TitleTArea, DescriptionTArea;
 	private JButton SendButton;
+	private String id, title, content;
+	TPMgr mgr;
+	MsgBean bean;
 
-	public NoteSendScreen() {
+	public NoteSendScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mgr = new TPMgr();
+		bean = new MsgBean();
 	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -39,8 +44,21 @@ public class NoteSendScreen extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == SendButton) {
 					System.out.println("전송 버튼클릭됨");
+					id = SendIdTField.getText().trim();
+					title = TitleTArea.getText().trim();
+					content = DescriptionTArea.getText().trim();
+					bean.setReceiver_id(id);
+					bean.setMsg_title(title);
+					bean.setMsg_content(content);
+					mgr.sendMsg(StaticData.user_id, bean);
+					StaticData.msg_user_id = "";
+					dispose();
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				}
 			}
 		};
@@ -52,9 +70,8 @@ public class NoteSendScreen extends JFrame {
 				add(SendIdLabel);
 
 				// 전송할 아이디 필드 추가
-				SendIdTField = new JTextField();
+				SendIdTField = new JTextField(StaticData.msg_user_id);
 				SendIdTField.setBounds(15, 60, 318, 40);
-				SendIdTField.setText("");
 				SendIdTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
@@ -142,6 +159,6 @@ public class NoteSendScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new NoteSendScreen();
+		new LoginScreen();
 	}
 }

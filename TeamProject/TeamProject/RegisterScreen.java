@@ -18,40 +18,6 @@ import java.beans.beancontext.BeanContext;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-
-class RoundedButton extends JButton {
-    public RoundedButton(String text) {
-        super(text);
-        setBorderPainted(false);
-        setOpaque(false);	//불투명하게 만듦 -> background색이 보임
-        setContentAreaFilled(false); // 기본 버튼 배경 제거
-        setFocusPainted(false); // 클릭 시 테두리 제거
-        setBorder(new RoundedBorder(20)); // 둥근 테두리 적용
-        setForeground(Color.WHITE);
-        setBackground(Color.GRAY);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-        super.paintComponent(g);
-        g2.dispose();
-    }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.GRAY);
-        g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
-        g2.dispose();
-    }
-}
-
-
 public class RegisterScreen extends JFrame {
 	private BufferedImage image;
 	private JTextField id_textField, name_textField, email_textField, phone_textField;

@@ -3,6 +3,8 @@ package TeamProject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -67,12 +69,16 @@ public class PetRecordAddScreen extends JFrame {
 					bean.setDate(petMtTimeTField.getText().trim());
 					mgr.addPet(StaticData.user_id, pb);
 					pet_id = mgr.showPetId(StaticData.user_id, pb);
-					System.out.println(pet_id);
 					mgr.addHRPet(pet_id, bean);
 					dispose();
+
 					new PetAddMainScreen();
 				} else if (source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
+
+					new PetHomeScreen(pet_id);
+				} else if(source == backLabel) {
+					System.out.println("뒤로가기 버튼 클릭됨");	
 					dispose();
 					previousFrame.setVisible(true);
 				}
@@ -200,7 +206,13 @@ public class PetRecordAddScreen extends JFrame {
 		closeButton.setForeground(Color.WHITE);
 		closeButton.setBorder(BorderFactory.createEmptyBorder());
 		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
 		panel.add(closeButton);
 
 		setVisible(true);

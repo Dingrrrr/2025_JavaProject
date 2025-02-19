@@ -5,9 +5,9 @@ import java.sql.Timestamp;
 public class AlbumBean {
 	private int album_id;
 	private int pet_id;
-	private String album_image;
 	private String album_desc;
 	private String album_tags;
+	private byte[] album_image;
 	private Timestamp album_date;
 	
 	public int getAlbum_id() {
@@ -22,12 +22,6 @@ public class AlbumBean {
 	public void setPet_id(int pet_id) {
 		this.pet_id = pet_id;
 	}
-	public String getAlbum_image() {
-		return album_image;
-	}
-	public void setAlbum_image(String album_image) {
-		this.album_image = album_image;
-	}
 	public String getAlbum_desc() {
 		return album_desc;
 	}
@@ -39,6 +33,13 @@ public class AlbumBean {
 	}
 	public void setAlbum_tags(String album_tags) {
 		this.album_tags = album_tags;
+	}
+
+	public byte[] getAlbum_image() {
+		return album_image;
+	}
+	public void setAlbum_image(byte[] album_image) {
+		this.album_image = album_image;
 	}
 	public Timestamp getAlbum_date() {
 		return album_date;

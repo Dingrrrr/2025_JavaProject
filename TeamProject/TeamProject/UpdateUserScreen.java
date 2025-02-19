@@ -11,17 +11,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
+import java.io.*;
 
 public class UpdateUserScreen extends JFrame {
 
 	private BufferedImage image;
-	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel;
+	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, imageLabel;
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton;
 	boolean flag = false;
-	private JFrame previousFrame;  // 이전 프레임 저장
+	private JFrame previousFrame; // 이전 프레임 저장
 	TPMgr mgr;
+	private UserPhotoModifyDialog upm;
+	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 
 	public UpdateUserScreen(JFrame previousFrame) {
 		setTitle("회원정보 수정");
@@ -46,17 +50,24 @@ public class UpdateUserScreen extends JFrame {
 
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-					if(mgr.isPet(StaticData.user_id)) {		//반려동물 정보가 있는 경우
+					if (mgr.isPet(StaticData.user_id)) { // 반려동물 정보가 있는 경우
 						dispose();
-						previousFrame.setVisible(true);
+						new PetAddMainScreen();
 					} else {
-						dispose();						
+						dispose();
 						new UserHomeScreen();
 					}
-				} else if (source == delLabel) {
-					System.out.println("유저 프로필 사진 삭제 클릭됨!");
 				} else if (source == addButton) {
 					System.out.println("유저 프로필 사진 추가 클릭됨!");
+					if (upm == null) {
+						// UserPhotoModifyDialog 생성 시 'this'는 JFrame, UpdateUserScreen.this는
+						// UpdateUserScreen 객체
+						upm = new UserPhotoModifyDialog(UpdateUserScreen.this);
+						upm.setLocation(getX() + 22, getY() + 630);
+					} else {
+						upm.setLocation(getX() + 22, getY() + 630);
+						upm.setVisible(true);
+					}
 				} else if (source == updataButton) {
 					System.out.println("유저 정보 수정 버튼 클릭됨!");
 					nameField.setEnabled(true);
@@ -66,19 +77,21 @@ public class UpdateUserScreen extends JFrame {
 					flag = true;
 				} else if (source == fisButton) {
 					System.out.println("유저 정보 완료 버튼 클릭됨!");
-					if(flag) {
+					if (flag) {
 						UserBean bb = new UserBean();
 						bb.setUsername(nameField.getText().trim());
 						bb.setPassword(pwField.getText().trim());
 						bb.setEmail(emailField.getText().trim());
 						bb.setPhone(phoneField.getText().trim());
-//						bb.setUser_image();
-						if(mgr.userUpd(StaticData.user_id, bb)) {
+						bb.setUser_image(imageBytes);
+						if (mgr.userUpd(StaticData.user_id, bb)) {
 							nameField.setEnabled(false);
 							pwField.setEnabled(false);
 							emailField.setEnabled(false);
 							phoneField.setEnabled(false);
 						}
+
+						System.out.println(imageBytes);
 					}
 				}
 			}
@@ -90,33 +103,32 @@ public class UpdateUserScreen extends JFrame {
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
 
-		// 삭제 아이콘
-		delLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
-		delLabel.setBounds(332, 180, 28, 28);
-		delLabel.addMouseListener(commonMouseListener);
-		delLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-//				UserBean b = new UserBean();
-//				b.setUser_image("");		//기본이미지 주소
-//				mgr.userUpd(LoginScreen.id, b);
-				revalidate(); 	//새로고침
-			}
-		});
-		add(delLabel);
-
-		// 메인 프로필 이미지
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
-		profileLabel.setBounds(70, 189, 270, 270);
-		add(profileLabel);
-
-		// 추가 버튼
+		// 이미지 추가 버튼
 		addButton = new RoundedButton("추가");
 		addButton.setBounds(277, 450, 80, 35);
 		addButton.setBackground(new Color(91, 91, 91));
 		addButton.setForeground(Color.WHITE);
 		addButton.addMouseListener(commonMouseListener);
 		add(addButton);
+
+		// 메인 프로필 이미지
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		
+		if (imgNull == "[]") {
+			imageLabel = new JLabel();
+			imageLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
+			imageLabel.setBounds(70, 189, 270, 270);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
+		} else {
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage().getScaledInstance(270, 270, Image.SCALE_SMOOTH);
+			imageLabel = new JLabel();
+			imageLabel.setIcon(new ImageIcon(img));
+			imageLabel.setBounds(70, 189, 270, 270);
+			add(imageLabel);
+		}
 
 		// 이름
 		nameLabel = new JLabel("이름");
@@ -126,9 +138,13 @@ public class UpdateUserScreen extends JFrame {
 
 		nameField = new JTextField(bean.getUsername());
 		nameField.setBounds(43, 510, 220, 40);
-		nameField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		nameField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(nameField);
 
 		// 비밀번호
@@ -139,9 +155,13 @@ public class UpdateUserScreen extends JFrame {
 
 		pwField = new JPasswordField(bean.getPassword());
 		pwField.setBounds(43, 580, 320, 40);
-		pwField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		pwField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																													// 여백
+																													// (위,
+																													// 왼쪽,
+																													// 아래,
+																													// 오른쪽)
+		));
 		add(pwField);
 
 		// 이메일
@@ -152,9 +172,13 @@ public class UpdateUserScreen extends JFrame {
 
 		emailField = new JTextField(bean.getEmail());
 		emailField.setBounds(43, 650, 320, 40);
-		emailField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		emailField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(emailField);
 
 		// 휴대폰 번호
@@ -165,9 +189,13 @@ public class UpdateUserScreen extends JFrame {
 
 		phoneField = new JTextField(bean.getPhone());
 		phoneField.setBounds(43, 720, 320, 40);
-		phoneField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		phoneField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(phoneField);
 
 		// 수정 버튼
@@ -195,7 +223,7 @@ public class UpdateUserScreen extends JFrame {
 		fisButton.setForeground(Color.WHITE);
 		fisButton.addMouseListener(commonMouseListener);
 		add(fisButton);
-		
+
 		nameField.setEnabled(false);
 		pwField.setEnabled(false);
 		emailField.setEnabled(false);
@@ -227,7 +255,13 @@ public class UpdateUserScreen extends JFrame {
 		closeButton.setForeground(Color.WHITE);
 		closeButton.setBorder(BorderFactory.createEmptyBorder());
 		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
 		panel.add(closeButton);
 
 		setVisible(true);
@@ -237,6 +271,20 @@ public class UpdateUserScreen extends JFrame {
 		ImageIcon icon = new ImageIcon(imagePath);
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
+	}
+
+	public JLabel getImageLabel() {
+		return imageLabel;
+	}
+
+	// 이미지 바이트 배열을 설정하는 setter
+	public void setImageBytes(byte[] imageBytes) {
+		this.imageBytes = imageBytes;
+	}
+
+	// imageBytes를 얻는 메서드
+	public byte[] getImageBytes() {
+		return imageBytes;
 	}
 
 	public static void main(String[] args) {

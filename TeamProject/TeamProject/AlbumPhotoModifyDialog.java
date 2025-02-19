@@ -12,22 +12,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class PetPhotoModifyDialog extends JFrame {
+public class AlbumPhotoModifyDialog extends JFrame {
 	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
-	private JFrame frame;
 	private File selectedFile;
-	private PetModifyScreen petModifyScreen;
+	private JFrame frame;
+	private AlbumResultDialog albumResultDialog;
 
-	public PetPhotoModifyDialog(PetModifyScreen petModifyScreen) {
+	public AlbumPhotoModifyDialog(AlbumResultDialog albumResultDialog) {
 		setTitle("프레임 설정");
-		setSize(358, 160);
+		setSize(347, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.petModifyScreen = petModifyScreen;  // 'petModifyScreen'을 여기서 받음
+		this.albumResultDialog = albumResultDialog;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -56,7 +56,7 @@ public class PetPhotoModifyDialog extends JFrame {
 
 		// 사진 추가 버튼
 		addpicButton = new JButton("사진 추가");
-		addpicButton.setBounds(2, 2, 354, 53);
+		addpicButton.setBounds(2, 2, 343, 53);
 		addpicButton.setBackground(Color.white);
 		addpicButton.setFocusable(false); // 포커스 끄기
 		addpicButton.addMouseListener(commonMouseListener);
@@ -64,7 +64,7 @@ public class PetPhotoModifyDialog extends JFrame {
 
 		// 사진 삭제 버튼
 		deletepicButton = new JButton("사진 삭제");
-		deletepicButton.setBounds(2, 55, 354, 53);
+		deletepicButton.setBounds(2, 55, 343, 53);
 		deletepicButton.setBackground(Color.white);
 		deletepicButton.setFocusable(false); // 포커스 끄기
 		deletepicButton.addMouseListener(commonMouseListener);
@@ -72,7 +72,7 @@ public class PetPhotoModifyDialog extends JFrame {
 
 		// 취소 버튼
 		cancelButton = new JButton("취소");
-		cancelButton.setBounds(2, 105, 354, 53);
+		cancelButton.setBounds(2, 105, 343, 53);
 		cancelButton.setBackground(Color.white);
 		cancelButton.setFocusable(false); // 포커스 끄기
 		cancelButton.addMouseListener(commonMouseListener);
@@ -85,7 +85,7 @@ public class PetPhotoModifyDialog extends JFrame {
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(358, 160, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(347, 160, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				// y=158 위치에 가로로 회색 선 그리기
@@ -100,6 +100,13 @@ public class PetPhotoModifyDialog extends JFrame {
 		add(panel);
 
 		setVisible(true);
+
+		/*
+		 * // 🔹 회색프레임 grayFrameLabel =
+		 * createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
+		 * grayFrameLabel.setBounds(35, 90, 280, 280); add(grayFrameLabel,
+		 * BorderLayout.SOUTH);
+		 */
 	}
 	
 	private void selectImage() {
@@ -113,23 +120,22 @@ public class PetPhotoModifyDialog extends JFrame {
 	        Image img = icon.getImage();
 	        System.out.println(img);
 
-	        // 이미지 크기 조정 (200x200)
-	        Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+	        // 이미지 크기 조정 (280x280)
+	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 
 	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
 	        System.out.println(resizedIcon);
 
 	        // 미리보기 업데이트
-	        petModifyScreen.getImageLabel().setIcon(resizedIcon);
-	        petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+	        albumResultDialog.getImageLabel().setIcon(resizedIcon);
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
 	        System.out.println(imageBytes);
 
 	        // 변환된 이미지를 updateUserScreen에 저장
-	        petModifyScreen.setImageBytes(imageBytes);
+	        albumResultDialog.setImageBytes(imageBytes);
 
 	    } else {
 	        // 파일 선택이 취소된 경우
@@ -139,46 +145,45 @@ public class PetPhotoModifyDialog extends JFrame {
 	
 	private void deleteImage() {
 		// 직접 파일 경로 지정
-		File selectedFile = new File("TeamProject/dog.png");
+		File selectedFile = new File("TeamProject/photo_frame.png");
 
 		// 이미지 읽기
 		ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 		Image img = icon.getImage();
 
 		// getScaledInstance로 이미지 크기 조정
-		Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 
 		// 새로운 ImageIcon 생성
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		petModifyScreen.getImageLabel().setIcon(resizedIcon);
-		petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+		albumResultDialog.getImageLabel().setIcon(resizedIcon);
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
 		System.out.println(imageBytes);
 		
-		// 변환된 이미지를 PetAddScreen에 저장
-		petModifyScreen.setImageBytes(imageBytes);
+		// 변환된 이미지를 updateUserScreen에 저장
+		albumResultDialog.setImageBytes(imageBytes);
 
 	}
-	
+
 	// 파일을 byte 배열로 변환하는 메서드
-		private byte[] convertFileToByteArray(File file) {
-		    try (FileInputStream fis = new FileInputStream(file);
-		         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-		        byte[] buffer = new byte[1024];
-		        int bytesRead;
-		        while ((bytesRead = fis.read(buffer)) != -1) {
-		            baos.write(buffer, 0, bytesRead);
-		        }
-		        return baos.toByteArray();
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		        return null;
-		    }
-		}
+	private byte[] convertFileToByteArray(File file) {
+	    try (FileInputStream fis = new FileInputStream(file);
+	         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+	        byte[] buffer = new byte[1024];
+	        int bytesRead;
+	        while ((bytesRead = fis.read(buffer)) != -1) {
+	            baos.write(buffer, 0, bytesRead);
+	        }
+	        return baos.toByteArray();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
 
 	public static void main(String[] args) {
 	}

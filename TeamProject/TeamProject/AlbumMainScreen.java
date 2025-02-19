@@ -7,20 +7,25 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class AlbumMainScreen extends JFrame {
-	
+
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
+	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel;
 	private JPanel albumPanel; // 앨범 패널
 	private JScrollPane scrollPane; // 스크롤 패널
-	TPMgr mgr;
-	Vector<AlbumBean> vlist;
+	private AlbumAddDialog pc;
+	TPMgr mgr = new TPMgr();
+
+	Vector<AlbumBean> vlist = mgr.showAlbum(StaticData.pet_id);
 
 	public AlbumMainScreen() {
 		setTitle("프레임 설정");
@@ -29,8 +34,7 @@ public class AlbumMainScreen extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
-		vlist = mgr.showAlbum(StaticData.pet_id);
-		
+		UserBean bean = mgr.showUser(StaticData.user_id);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -46,23 +50,39 @@ public class AlbumMainScreen extends JFrame {
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
-				} else if (source == profileLabel) {
+					dispose();
+					new AlarmMainScreen(AlbumMainScreen.this);
+				} else if (source == imageProfileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(AlbumMainScreen.this);
 				} else if (source == photoLabel) {
 					System.out.println("앨범 & 일기 버튼 클릭됨");
+					setEnabled(false);
+					new AlbumChooseDialog(AlbumMainScreen.this);
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
-					new PetAddMainScreen();
+					new PetHomeScreen(StaticData.pet_id);
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
+					dispose();
+					new CommuMainScreen();
 				} else if (source == voteLabel) {
 					System.out.println("투표 버튼 클릭됨");
+					dispose();
+					new VoteMainScreen();
 				} else if (source == addButtonLabel) {
-					System.out.println("앨범 추가 버튼 클릭됨");
-					new AlbumAddDialog();
+					System.out.println("➕ 추가 버튼 클릭됨!");
+					if (pc == null) {
+						pc = new AlbumAddDialog(AlbumMainScreen.this);
+						// ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX() + 25, getY() + 150);
+					} else {
+						pc.setLocation(getX() + 25, getY() + 150);
+						pc.setVisible(true);
+					}
+					setEnabled(false);
 				}
 			}
 		};
@@ -72,12 +92,26 @@ public class AlbumMainScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
-
-		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-		profileLabel.setBounds(330, 120, 40, 40);
-		profileLabel.addMouseListener(commonMouseListener);
-		add(profileLabel);
+		
+		System.out.println(bean.getUser_image());
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		// 상단 프로필 아이디
+		if (imgNull == "[]") {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		} else {
+			ImageIcon icon1 = new ImageIcon(imgBytes);
+			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			imageProfileLabel = new JLabel();
+			imageProfileLabel.setIcon(new ImageIcon(img1));
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		}
 
 		// 🔹 앨범 & 일기 버튼
 		photoLabel = createScaledImageLabel("TeamProject/photo.png", 60, 60);
@@ -150,21 +184,62 @@ public class AlbumMainScreen extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
-		
-//		// 🔹 더미 앨범 데이터 추가
-//		for (int i = 1; i <= vlist.size(); i++) {
-//			addAlbum();
-//		}
-		
-		for (AlbumBean ab : vlist) {
-			// 앨범 레이블 생성
-			JLabel albumLabel = new JLabel("📸 앨범 " + (albumPanel.getComponentCount() + 1));
-			albumLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			albumLabel.setOpaque(true);
-			albumLabel.setBackground(Color.white);
-			albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
-			albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
 
+		addAlbum();
+
+		// 🔹 닫기 버튼
+		JButton closeButton = new JButton("X");
+		closeButton.setBounds(370, 10, 20, 20);
+		closeButton.setBackground(Color.RED);
+		closeButton.setForeground(Color.WHITE);
+		closeButton.setBorder(BorderFactory.createEmptyBorder());
+		closeButton.setFocusPainted(false);
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mgr.userOut(StaticData.user_id);
+				System.exit(0);
+			}
+		});
+		panel.add(closeButton);
+
+		setVisible(true);
+	}
+
+	public void addAlbum() {
+		for (AlbumBean ab : vlist) {
+			/**
+			 * 앨범 추가
+			 */
+			StaticData.album_id = ab.getAlbum_id();
+			
+			// 앨범 레이블 생성
+			System.out.println(ab.getAlbum_image());
+			byte[] imgBytes = ab.getAlbum_image();
+			String imgNull = Arrays.toString(imgBytes);
+			System.out.println(imgNull);
+			JLabel albumLabel = new JLabel(); // JLabel을 먼저 생성
+			if (imgBytes == null || imgBytes.length == 0) {
+				albumLabel = createScaledImageLabel("TeamProject/photo_frame.png", 173, 100);
+				albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
+				albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
+				} else {
+				ImageIcon icon1 = new ImageIcon(imgBytes);
+				Image img1 = icon1.getImage().getScaledInstance(173, 100, Image.SCALE_SMOOTH);
+				albumLabel.setIcon(new ImageIcon(img1));
+				albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
+				albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
+			}
+			
+			/*
+			 * // 앨범 레이블 생성 JLabel albumLabel = new JLabel("📸 앨범 " +
+			 * (albumPanel.getComponentCount() + 1));
+			 * albumLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			 * albumLabel.setOpaque(true); albumLabel.setBackground(Color.white);
+			 * albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
+			 * albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
+			 */
+			
 			// 검정색 외각선 추가
 			Border blackBorder = BorderFactory.createLineBorder(Color.BLACK);
 			albumLabel.setBorder(blackBorder);
@@ -184,14 +259,15 @@ public class AlbumMainScreen extends JFrame {
 
 			// 앨범과 태그를 하나의 패널로 묶기
 			JPanel albumWithTagPanel = new JPanel();
-			
+
 			albumWithTagPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					new AlbumResultDialog();	//매개변수로 ab 넣어야함 -> albumResultDialog 수정되면 수정
+					setEnabled(false);
+					new AlbumResultDialog(ab, AlbumMainScreen.this); // 매개변수로 ab 넣어야함 -> albumResultDialog 수정되면 수정
 				}
 			});
-			
+
 			// 앨범 + 태그 패널 (albumWithTagPanel) 설정
 			albumWithTagPanel.setBackground(Color.WHITE); // 패널 배경을 흰색으로 설정
 
@@ -222,80 +298,6 @@ public class AlbumMainScreen extends JFrame {
 			// 🔹 스크롤 패널의 크기를 동적으로 맞추기
 			scrollPane.revalidate();
 		}
-
-		// 🔹 닫기 버튼
-		JButton closeButton = new JButton("X");
-		closeButton.setBounds(370, 10, 20, 20);
-		closeButton.setBackground(Color.RED);
-		closeButton.setForeground(Color.WHITE);
-		closeButton.setBorder(BorderFactory.createEmptyBorder());
-		closeButton.setFocusPainted(false);
-		closeButton.addActionListener(e -> System.exit(0));
-		panel.add(closeButton);
-
-		setVisible(true);
-	}
-
-	/**
-	 * 앨범 추가 메서드
-	 */
-	private void addAlbum() {
-		// 앨범 레이블 생성
-		JLabel albumLabel = new JLabel("📸 앨범 " + (albumPanel.getComponentCount() + 1));
-		albumLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		albumLabel.setOpaque(true);
-		albumLabel.setBackground(Color.white);
-		albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
-		albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
-
-		// 검정색 외각선 추가
-		Border blackBorder = BorderFactory.createLineBorder(Color.BLACK);
-		albumLabel.setBorder(blackBorder);
-
-		// 태그 레이블 생성
-		JLabel tagLabel = new JLabel("태그");
-		tagLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		tagLabel.setPreferredSize(new Dimension(165, 20)); // 크기 고정
-		tagLabel.setOpaque(true);
-		tagLabel.setBackground(Color.white);
-
-		// 태그 입력창 (JTextArea) 설정
-		JLabel tagText = new JLabel("#오늘의 기분 # 오늘 어때 ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ");
-		tagText.setPreferredSize(new Dimension(160, 20)); // 크기 고정
-		tagText.setOpaque(true); // 배경을 흰색으로 설정하려면 true
-		tagText.setBackground(Color.WHITE); // 배경을 흰색으로 설정
-
-		// 앨범과 태그를 하나의 패널로 묶기
-		JPanel albumWithTagPanel = new JPanel();
-		// 앨범 + 태그 패널 (albumWithTagPanel) 설정
-		albumWithTagPanel.setBackground(Color.WHITE); // 패널 배경을 흰색으로 설정
-
-		albumWithTagPanel.setLayout(new BoxLayout(albumWithTagPanel, BoxLayout.Y_AXIS)); // 세로로 배치
-		albumWithTagPanel.add(albumLabel);
-		albumWithTagPanel.add(tagLabel);
-		albumWithTagPanel.add(tagText);
-
-		// 앨범 + 태그 패널 크기 고정
-		albumWithTagPanel.setPreferredSize(new Dimension(176, 140)); // 앨범과 태그 합친 크기
-
-		// 테두리 추가
-		albumWithTagPanel.setBorder(new LineBorder(Color.lightGray, 1)); // 회색 1픽셀 두께의 테두리 추가
-
-		// FlowLayout 사용하여 여백 없애기
-		albumPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 1, 1)); // 수평 간격과 수직 간격을 0으로 설정
-
-		albumPanel.add(albumWithTagPanel);
-
-		// 패널 크기 갱신 (앨범 개수에 따라 스크롤 가능하도록 조정)
-		int rows = (albumPanel.getComponentCount() + 1) / 2;
-		albumPanel.setPreferredSize(new Dimension(338, rows * 141)); // 크기 유지
-
-		// 패널 업데이트
-		albumPanel.revalidate();
-		albumPanel.repaint();
-
-		// 🔹 스크롤 패널의 크기를 동적으로 맞추기
-		scrollPane.revalidate();
 	}
 
 	/**
@@ -308,6 +310,6 @@ public class AlbumMainScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new AlbumMainScreen();
+		new LoginScreen();
 	}
 }

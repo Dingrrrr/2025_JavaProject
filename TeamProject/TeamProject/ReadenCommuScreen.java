@@ -15,11 +15,11 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
-public class WritenCommuScreen extends JFrame {
+public class ReadenCommuScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel closeLabel, modifyLabel,  grayFrameLabel;
+	private JLabel closeLabel, grayFrameLabel;
 	private JLabel TitleLabel,ExplainLabel, PhotoLabel, commentLabel, useridLabel;
-	private JTextArea ExplainTArea, CommentTArea, TitleTArea;
+	private JTextArea ExplainTArea, CommentTArea, TitleArea;
 	private JPanel CommuPanel;
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
 	private JButton SendButton;
@@ -28,7 +28,7 @@ public class WritenCommuScreen extends JFrame {
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
-	public WritenCommuScreen(JFrame preFrame, ComuBean cb) {
+	public ReadenCommuScreen(JFrame preFrame, ComuBean cb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -53,35 +53,30 @@ public class WritenCommuScreen extends JFrame {
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
-				} else if (source == modifyLabel) {
-					System.out.println("수정버튼 클릭됨");
-					setEnabled(false);
-					new ComuModifyScreen(preFrame , WritenCommuScreen.this, cb);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
 					mgr.addCmt(cb.getPost_id(), StaticData.user_id, CommentTArea.getText().trim());
 					dispose();
 					preFrame.setVisible(true);
-					new WritenCommuScreen(preFrame, cb);
+					new ReadenCommuScreen(preFrame, cb);
 				}
 			}
 		};		
 				
 				//댓글 텍스트필드
 				CommentTArea = new JTextArea();
-				CommentTArea.setBounds(15, 560, 290, 40);
 				CommentTArea.setText("");
+				CommentTArea.setBounds(15, 560, 290, 40);
 				CommentTArea.setLineWrap(true);
 				CommentTArea.setWrapStyleWord(true);
 				CommentTArea.setBackground(Color.WHITE);
-					
+			
 				JScrollPane scrollPane = new JScrollPane(CommentTArea);
 				scrollPane.setBounds(15, 560, 290, 40); // 텍스트 영역 크기와 위치 설정
-				scrollPane.setBackground(Color.WHITE);
 				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				scrollPane.setBackground(Color.WHITE);
 				scrollPane.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) )); // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		
 				add(scrollPane); // JScrollPane을 프레임에 추가
 				
 				// 전송 버튼
@@ -135,6 +130,14 @@ public class WritenCommuScreen extends JFrame {
 		useridLabel = new JLabel(cb.getUser_id());
 		useridLabel.setBounds(5, 8, 66, 30);
 		useridLabel.setForeground(Color.BLACK);
+		useridLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setEnabled(false);
+				StaticData.msg_user_id = cb.getUser_id();
+				new NoteSendScreen(ReadenCommuScreen.this);
+			}
+		});
 
 		// 제목 라벨
 		TitleLabel = new JLabel("제목");
@@ -142,10 +145,11 @@ public class WritenCommuScreen extends JFrame {
 		TitleLabel.setForeground(Color.black);
 
 		// 제목 텍스트 필드
-		TitleTArea = new JTextArea(cb.getComu_title());
-		TitleTArea.setBounds(5, 70, 330, 30);
-		TitleTArea.setEditable(false);
-		TitleTArea.setBorder(BorderFactory.createCompoundBorder(
+		TitleArea = new JTextArea(cb.getComu_title());
+		TitleArea.setBounds(5, 70, 330, 30);
+		TitleArea.setEditable(false);
+		TitleArea.setBackground(Color.WHITE);
+		TitleArea.setBorder(BorderFactory.createCompoundBorder(
 		    new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)
 		));
 
@@ -158,8 +162,9 @@ public class WritenCommuScreen extends JFrame {
 		ExplainTArea = new JTextArea(cb.getComu_content());
 		ExplainTArea.setBounds(5, 155, 330, 100);
 		ExplainTArea.setEditable(false);
+		ExplainTArea.setBackground(Color.WHITE);
 		ExplainTArea.setBorder(BorderFactory.createCompoundBorder(
-		    new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)
+		    new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)
 		));
 
 		// 사진 라벨
@@ -179,7 +184,7 @@ public class WritenCommuScreen extends JFrame {
 		// 컨텐츠 패널에 컴포넌트 추가
 		contentPanel.add(useridLabel);
 		contentPanel.add(TitleLabel);
-		contentPanel.add(TitleTArea);
+		contentPanel.add(TitleArea);
 		contentPanel.add(ExplainLabel);
 		contentPanel.add(ExplainTArea);
 		contentPanel.add(PhotoLabel);
@@ -199,13 +204,6 @@ public class WritenCommuScreen extends JFrame {
 		scrollPane1.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 				panel.add(scrollPane1);
 				
-				
-				
-//	 // 🔹 더미 게시글 데이터 추가
-//		for (int i = 1; i <= 15; i++) {
-//			addCommu();
-//		}
-				
 		addCommu();
 	    
 		// 🔹 닫기 버튼 이미지 추가
@@ -214,75 +212,63 @@ public class WritenCommuScreen extends JFrame {
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
 		
-		// 🔹 수정 버튼 이미지 추가
-		modifyLabel = createScaledImageLabel("TeamProject/modify_icon.png", 30, 30);
-		modifyLabel.setBounds(280, 7, 30, 30);
-		modifyLabel.addMouseListener(commonMouseListener);
-		panel.add(modifyLabel); // 🔹 패널에 추가
-		
 		setVisible(true);
 	}
 	
 				
-			//댓글창 추가 메소드
-
-			private void addCommu() {
+				//댓글창 추가 메소드
+	
+				private void addCommu() {
 					
-				for (CmtBean cmb : vlist) {
-					// 1) 전체 항목을 감싸는 패널
-				    JPanel commuItemPanel = new JPanel();
-				    commuItemPanel.setPreferredSize(new Dimension(75, 99)); // 크기 지정
-				    commuItemPanel.setBackground(Color.WHITE);
-				    commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
-				    commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
+					for (CmtBean cmb : vlist) {
+						// 1) 전체 항목을 감싸는 패널
+					    JPanel commuItemPanel = new JPanel();
+					    commuItemPanel.setPreferredSize(new Dimension(75, 99)); // 크기 지정
+					    commuItemPanel.setBackground(Color.WHITE);
+					    commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+					    commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
+						
+						// 2) 상단 패널 (작성자 + 날짜)
+					    JPanel topPanel = new JPanel(new BorderLayout());
+					    topPanel.setBackground(Color.WHITE);
+					    topPanel.setPreferredSize(new Dimension(340, 20)); // 가로 340px, 세로 15px
+					    topPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY)); // 아래쪽만 테두리 1px
+					    
+					    JLabel userIdLabel = new JLabel(cmb.getUser_id());
+					    userIdLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0)); // 왼쪽에 3px 여백 추가
+					    
+					    JLabel dateLabel = new JLabel(sdf.format(cmb.getCmt_date()), SwingConstants.RIGHT);
+					    dateLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3)); // 오른쪽에 3px 여백 추가
+					    topPanel.add(userIdLabel, BorderLayout.WEST);
+					    topPanel.add(dateLabel, BorderLayout.EAST);
+					    
+					    
+					    // 3) 구분선
+					    JSeparator separator = new JSeparator();
+					    separator.setForeground(Color.GRAY);
+
+					    // 4) 본문 패널 (이미지 + 텍스트)
+					    JPanel contentPanel = new JPanel(new BorderLayout(10, 0));
+					    contentPanel.setBackground(Color.WHITE);
+
+
+					    // 오른쪽 - 제목 & 내용
+					    JPanel textPanel = new JPanel();
+					    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+					    textPanel.setBackground(Color.WHITE);
+
+					    JLabel titleLabel = new JLabel(cmb.getCmt_content());
+					    textPanel.add(titleLabel);
+					    textPanel.add(Box.createVerticalStrut(10)); // 10px 간격
+					    contentPanel.add(textPanel, BorderLayout.CENTER);
+
+					    // 5) 전체 구성
+					    commuItemPanel.add(topPanel, BorderLayout.NORTH);
+					    commuItemPanel.add(contentPanel,BorderLayout.CENTER);
+					   CommuPanel.add(commuItemPanel);
+					}
 					
-					// 2) 상단 패널 (작성자 + 날짜)
-				    JPanel topPanel = new JPanel(new BorderLayout());
-				    topPanel.setBackground(Color.WHITE);
-				    topPanel.setPreferredSize(new Dimension(340, 20)); // 가로 340px, 세로 15px
-				    topPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY)); // 아래쪽만 테두리 1px
-				    
-				    JLabel userIdLabel = new JLabel(cmb.getUser_id());
-				    userIdLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0)); // 왼쪽에 3px 여백 추가
-				    
-				    JLabel dateLabel = new JLabel(sdf.format(cmb.getCmt_date()), SwingConstants.RIGHT);
-				    dateLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3)); // 오른쪽에 3px 여백 추가
-				    topPanel.add(userIdLabel, BorderLayout.WEST);
-				    topPanel.add(dateLabel, BorderLayout.EAST);
-
-				    
-				    
-				    // 3) 구분선
-				    JSeparator separator = new JSeparator();
-				    separator.setForeground(Color.GRAY);
-
-				    // 4) 본문 패널 (이미지 + 텍스트)
-				    JPanel contentPanel = new JPanel(new BorderLayout(10, 0));
-				    contentPanel.setBackground(Color.WHITE);
-
-
-				    // 오른쪽 - 제목 & 내용
-				    JPanel textPanel = new JPanel();
-				    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
-				    textPanel.setBackground(Color.WHITE);
-
-				    JLabel titleLabel = new JLabel(cmb.getCmt_content());
-				    textPanel.add(titleLabel);
-				    textPanel.add(Box.createVerticalStrut(10)); // 10px 간격
-				    contentPanel.add(textPanel, BorderLayout.CENTER);
-
-				    // 5) 전체 구성
-				    commuItemPanel.add(topPanel, BorderLayout.NORTH);
-				    commuItemPanel.add(contentPanel,BorderLayout.CENTER);
-				   CommuPanel.add(commuItemPanel);
 				}
-					
-			}
-				
-	public void updateTitleContent(String title, String content) {
-		TitleTArea.setText(title);
-		ExplainTArea.setText(content);
-	}
 	
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
@@ -294,6 +280,6 @@ public class WritenCommuScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new LoginScreen();
+//		new ReadenCommuScreen();
 	}
 }

@@ -15,7 +15,7 @@ public class PetChooseDialog extends JFrame {
 	private JLabel dogLabel, catLabel;
 	
 
-	public PetChooseDialog() {
+	public PetChooseDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 254);
 		setUndecorated(true);
@@ -38,11 +38,18 @@ public class PetChooseDialog extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == dogLabel) {
 					System.out.println("강아지 선택 아이콘 클릭됨");
 
 					dispose();
+
 					new PetAddScreen();
+
+					preFrame.dispose();
+					preFrame.setEnabled(true);
+					new PetAddScreen(preFrame);
 				} else if (source == catLabel) {
 					System.out.println("고양이 선택 아이콘 클릭됨");
 				}
@@ -103,5 +110,6 @@ public class PetChooseDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		new LoginScreen();
 	}
 }
