@@ -163,7 +163,7 @@ public class CommuMainScreen extends JFrame {
 
 		// 🔹 스크롤 가능한 게시글 패널 설정
 		commuPanel = new JPanel();
-		commuPanel.setLayout(new BoxLayout(commuPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
+		commuPanel.setLayout(new BoxLayout(commuPanel, BoxLayout.Y_AXIS)); // 세로로 정렬
 		commuPanel.setBackground(Color.WHITE);
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
@@ -173,6 +173,7 @@ public class CommuMainScreen extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
+
 
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
@@ -209,9 +210,9 @@ public class CommuMainScreen extends JFrame {
 	 */
 	// 커뮤니티 게시글 추가
 	private void addCommu() {
-		// commuPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 합니다.
-		commuPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 5)); // 0px 간격, 항목 간 여백 5px
-
+		// 🔹 기존 게시글 지우기 (중복 방지)
+		commuPanel.removeAll();
+		
 		for (ComuBean cb : vlist) {
 			// 1) 전체 항목을 감싸는 패널
 			JPanel commuItemPanel = new JPanel();
@@ -299,13 +300,8 @@ public class CommuMainScreen extends JFrame {
 			commuPanel.add(Box.createVerticalStrut(5)); // 5px 간격
 		}
 
-		// commuPanel 크기 갱신
-		commuPanel.setPreferredSize(
-				new Dimension(353, commuPanel.getComponentCount() * 99 + 5 * (commuPanel.getComponentCount() - 1))); // 항목
-																														// 수에
-																														// 맞게
-																														// 크기
-																														// 설정
+		commuPanel.revalidate();
+		commuPanel.repaint();
 		// 스크롤 패널의 크기를 동적으로 맞추기
 		scrollPane.revalidate();
 	}
