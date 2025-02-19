@@ -42,12 +42,20 @@ public class UserPhotoModifyDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
+					dispose();
+					updateUserScreen.setEnabled(true);
+					updateUserScreen.setVisible(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
+					dispose();
+					updateUserScreen.setEnabled(true);
+					updateUserScreen.setVisible(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					updateUserScreen.setEnabled(true);
+					updateUserScreen.setVisible(true);
 				}
 
 			}

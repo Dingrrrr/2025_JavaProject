@@ -43,12 +43,20 @@ public class PetPhotoAddDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
+					dispose();
+					petAddScreen.setEnabled(true);
+					petAddScreen.setVisible(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
+					dispose();
+					petAddScreen.setEnabled(true);
+					petAddScreen.setVisible(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					petAddScreen.setEnabled(true);
+					petAddScreen.setVisible(true);
 				}
 
 			}
