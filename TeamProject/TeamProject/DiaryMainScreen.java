@@ -15,20 +15,21 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class DiaryMainScreen extends JFrame {
 	// 추가 중
-	
+
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
+	private JLabel alarmLabel, imageProfileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
 	private JPanel diaryPanel; // 다이어리 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private DiaryAddDialog pc;
 	TPMgr mgr = new TPMgr();
 
 	Vector<DiaryBean> vlist = mgr.showDiary(StaticData.pet_id);
-	
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
 	public DiaryMainScreen() {
@@ -37,7 +38,7 @@ public class DiaryMainScreen extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		UserBean bean = mgr.showUser(StaticData.user_id);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -55,7 +56,7 @@ public class DiaryMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(DiaryMainScreen.this);
-				} else if (source == profileLabel) {
+				} else if (source == imageProfileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(DiaryMainScreen.this);
@@ -77,12 +78,12 @@ public class DiaryMainScreen extends JFrame {
 					new VoteMainScreen();
 				} else if (source == addButtonLabel) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
-					if(pc==null) {
+					if (pc == null) {
 						pc = new DiaryAddDialog(DiaryMainScreen.this);
-						//ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
-						pc.setLocation(getX()+25, getY()+270);
-					}else {
-						pc.setLocation(getX()+25, getY()+270);
+						// ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX() + 25, getY() + 270);
+					} else {
+						pc.setLocation(getX() + 25, getY() + 270);
 						pc.setVisible(true);
 					}
 					setEnabled(false);
@@ -96,11 +97,25 @@ public class DiaryMainScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-		profileLabel.setBounds(330, 120, 40, 40);
-		profileLabel.addMouseListener(commonMouseListener);
-		add(profileLabel);
+		System.out.println(bean.getUser_image());
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		// 상단 프로필 아이디
+		if (imgNull == "[]") {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		} else {
+			ImageIcon icon1 = new ImageIcon(imgBytes);
+			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			imageProfileLabel = new JLabel();
+			imageProfileLabel.setIcon(new ImageIcon(img1));
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
+		}
 
 		// 🔹 앨범 & 일기 버튼
 		photoLabel = createScaledImageLabel("TeamProject/photo.png", 60, 60);
@@ -165,7 +180,6 @@ public class DiaryMainScreen extends JFrame {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
 
-
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
 		addButtonLabel.setBounds(300, 700, 70, 70);
@@ -174,7 +188,7 @@ public class DiaryMainScreen extends JFrame {
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
 		addButtonLabel.setVisible(true);
 		getLayeredPane().add(addButtonLabel, JLayeredPane.PALETTE_LAYER);
-		
+
 		addDiary();
 
 		// 🔹 닫기 버튼
@@ -231,7 +245,7 @@ public class DiaryMainScreen extends JFrame {
 
 			// 일기 날짜와 내용을 하나의 패널로 묶기
 			JPanel diaryWithContentPanel = new JPanel();
-			
+
 			diaryWithContentPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -239,7 +253,7 @@ public class DiaryMainScreen extends JFrame {
 					new DiaryResultDialog(DiaryMainScreen.this);
 				}
 			});
-			
+
 			// 일기 날짜 + 일기 내용 패널 (albumWithTagPanel) 설정
 			diaryWithContentPanel.setBackground(Color.WHITE); // 패널 배경을 흰색으로 설정
 
