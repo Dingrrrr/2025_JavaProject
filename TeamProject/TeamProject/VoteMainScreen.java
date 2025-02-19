@@ -259,8 +259,9 @@ public class VoteMainScreen extends JFrame {
 			
 			// 1️ 개별 투표 아이템을 담을 패널 생성
 			JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
-			contentPanel.setPreferredSize(new Dimension(176, 180)); // 크기 설정
+			contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
 			contentPanel.setBackground(Color.WHITE);
+			
 			contentPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -270,7 +271,7 @@ public class VoteMainScreen extends JFrame {
 						new VoteModifyScreen(vb, VoteMainScreen.this);
 					} else { // 남이 올린 투표
 						new VoteScreenDialog(VoteMainScreen.this, vb);
-					}
+					} 
 				}
 			});
 			
@@ -295,8 +296,6 @@ public class VoteMainScreen extends JFrame {
 			}
 			imageLabel.setBounds(0, 0, 176, 150);
 
-
-
 			// contentPanel의 아랫부분에만 검정색 테두리 추가
 			Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
 			imageLabel.setBorder(blackBottomBorder);
@@ -307,7 +306,6 @@ public class VoteMainScreen extends JFrame {
 			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
 			// 🔹 이미지 추가 (기본 레이어)
 			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
-			
 			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
 			
 			// 중복 투표 여부 확인
@@ -319,7 +317,7 @@ public class VoteMainScreen extends JFrame {
 				voteLabel.setBounds(130, 105, 40, 40);
 				voteLabel.setOpaque(false);
 			}
-
+			
 			// 🔹 하트 버튼을 이미지 위에 추가 (위쪽 레이어)
 			layeredPane.add(voteLabel, JLayeredPane.PALETTE_LAYER);
 			// 🔹 contentPanel에 `layeredPane` 추가 (이미지 & 버튼 함께 추가됨)
@@ -330,9 +328,9 @@ public class VoteMainScreen extends JFrame {
 			if (likeCount < 0) {
 				likeCount = 0;
 			}
-			// 사용자가 좋아요를 눌렀는지 확인
-			boolean isLiked = mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id);
 			
+			boolean isLiked = mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id);
+		
 			// 좋아요 개수 라벨 생성
 			likeCountLabel = new JLabel(String.valueOf(likeCount), SwingConstants.CENTER);
 			
@@ -342,6 +340,7 @@ public class VoteMainScreen extends JFrame {
 					
 			if (isLiked) {
 				likeCountLabel.setForeground(Color.WHITE);
+				
 			}else {
 				likeCountLabel.setForeground(Color.BLACK);
 			}
