@@ -266,7 +266,7 @@ public class CommuMainScreen extends JFrame {
 				comuImageLabel= createScaledImageLabel("TeamProject/photo_frame.png", 70, 70);
 			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes1);
-				Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+				Image img1 = icon1.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
 				comuImageLabel.setIcon(new ImageIcon(img1));
 			}
 
