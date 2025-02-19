@@ -50,13 +50,8 @@ public class UpdateUserScreen extends JFrame {
 
 				if (source == backLabel) {
 					System.out.println("뒤로가기 클릭됨");
-					if (mgr.isPet(StaticData.user_id)) { // 반려동물 정보가 있는 경우
-						dispose();
-						new PetAddMainScreen();
-					} else {
-						dispose();
-						new UserHomeScreen();
-					}
+					dispose();
+					previousFrame.setVisible(true);
 				} else if (source == addButton) {
 					System.out.println("유저 프로필 사진 추가 클릭됨!");
 					if (upm == null) {
@@ -89,6 +84,8 @@ public class UpdateUserScreen extends JFrame {
 							pwField.setEnabled(false);
 							emailField.setEnabled(false);
 							phoneField.setEnabled(false);
+							dispose();
+							new PetAddMainScreen();
 						}
 
 						System.out.println(imageBytes);
@@ -114,7 +111,7 @@ public class UpdateUserScreen extends JFrame {
 		// 메인 프로필 이미지
 		byte[] imgBytes = bean.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
-		
+
 		if (imgNull == "[]") {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);

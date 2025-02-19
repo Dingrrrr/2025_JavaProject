@@ -25,7 +25,6 @@ public class ComuModifyScreen extends JFrame {
 	ComuBean bean;
 	TPMgr mgr;
 	private byte[] imageBytes;
-	
 
 	public ComuModifyScreen(JFrame prePreFrame, WritenCommuScreen preFrame, ComuBean cb) {
 		setTitle("프레임 설정");
@@ -61,11 +60,14 @@ public class ComuModifyScreen extends JFrame {
 					bean.setComu_content(content);
 					bean.setComu_image(imageBytes);
 					mgr.updComu(cb.getPost_id(), bean);
+
+					// 화면 닫기
 					dispose();
-					preFrame.updateTitleContent(title, content);
-					preFrame.setEnabled(true);
-					prePreFrame.setVisible(true);
-					preFrame.setVisible(true);
+					preFrame.dispose();
+					prePreFrame.dispose();
+
+					// 새로 화면을 띄우기
+					new CommuMainScreen();
 				} else if (source == delButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					mgr.delComu(cb.getPost_id());
@@ -203,7 +205,7 @@ public class ComuModifyScreen extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
-	
+
 	public JLabel getImageLabel() {
 		return grayFrameLabel;
 	}
