@@ -22,7 +22,7 @@ public class DiaryMainScreen extends JFrame {
 	// 추가 중
 
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, photoLabel, homeLabel, commuLabel, voteLabel, menuLabel, addDiaryLabel, newLineUpLabel, oldLineUpLabel;
+	private JLabel alarmLabel, profileLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel, menuLabel, addDiaryLabel, newLineUpLabel, oldLineUpLabel;
 	private JPanel diaryPanel; // 다이어리 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private DiaryAddDialog pc;
@@ -39,6 +39,7 @@ public class DiaryMainScreen extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		vlist = mgr.showDiary(StaticData.pet_id);
+		UserBean bean = mgr.showUser(StaticData.user_id);
 
 
 		try {
@@ -87,7 +88,8 @@ public class DiaryMainScreen extends JFrame {
 						addDiaryLabel.setVisible(true);
 						newLineUpLabel.setVisible(true);
 						oldLineUpLabel.setVisible(true);						
-				} else if(source == addDiaryLabel) {
+					} 
+				}else if(source == addDiaryLabel) {
 					System.out.println("일기 추가 버튼 클릭됨");
 					if(pc==null) {
 					pc = new DiaryAddDialog(DiaryMainScreen.this);
@@ -118,6 +120,7 @@ public class DiaryMainScreen extends JFrame {
 				}
 			}
 		};
+	
 
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
@@ -169,18 +172,21 @@ public class DiaryMainScreen extends JFrame {
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
 		
+		// 🔹 일기 추가 버튼
 		addDiaryLabel = createScaledImageLabel("TeamProject/diary.png", 40, 40);
 		addDiaryLabel.setBounds(313, 650, 40, 40);
 		addDiaryLabel.addMouseListener(commonMouseListener);
 		add(addDiaryLabel);
 		addDiaryLabel.setVisible(false);
 		
+		// 🔹 최신순 정렬
 		newLineUpLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
 		newLineUpLabel.setBounds(313, 590, 40, 40);
 		newLineUpLabel.addMouseListener(commonMouseListener);
 		add(newLineUpLabel);
 		newLineUpLabel.setVisible(false);
 		
+		// 🔹 오래된순 정렬
 		oldLineUpLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
 		oldLineUpLabel.setBounds(313, 530, 40, 40);
 		oldLineUpLabel.addMouseListener(commonMouseListener);
@@ -259,6 +265,7 @@ public class DiaryMainScreen extends JFrame {
 
 		setVisible(true);
 	}
+
 
 	/**
 	 * 일기 추가 메서드
