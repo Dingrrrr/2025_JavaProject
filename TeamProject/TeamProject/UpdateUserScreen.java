@@ -3,6 +3,11 @@ package TeamProject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +26,6 @@ public class UpdateUserScreen extends JFrame {
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton;
-	boolean flag = false;
 	private JFrame previousFrame; // 이전 프레임 저장
 	TPMgr mgr;
 	private UserPhotoModifyDialog upm;
@@ -63,33 +67,49 @@ public class UpdateUserScreen extends JFrame {
 						upm.setLocation(getX() + 22, getY() + 630);
 						upm.setVisible(true);
 					}
+					setEnabled(false);
 				} else if (source == updataButton) {
 					System.out.println("유저 정보 수정 버튼 클릭됨!");
 					nameField.setEnabled(true);
 					pwField.setEnabled(true);
 					emailField.setEnabled(true);
 					phoneField.setEnabled(true);
-					flag = true;
+					addButton.setEnabled(true);
+					fisButton.setEnabled(true);
 				} else if (source == fisButton) {
 					System.out.println("유저 정보 완료 버튼 클릭됨!");
-					if (flag) {
-						UserBean bb = new UserBean();
-						bb.setUsername(nameField.getText().trim());
-						bb.setPassword(pwField.getText().trim());
-						bb.setEmail(emailField.getText().trim());
-						bb.setPhone(phoneField.getText().trim());
-						bb.setUser_image(imageBytes);
-						if (mgr.userUpd(StaticData.user_id, bb)) {
-							nameField.setEnabled(false);
-							pwField.setEnabled(false);
-							emailField.setEnabled(false);
-							phoneField.setEnabled(false);
-							dispose();
-							new PetAddMainScreen();
+					String name = nameField.getText().trim();
+					String pw = pwField.getText().trim();
+					String email = emailField.getText().trim();
+					String phone = phoneField.getText().trim();
+					if(name.isEmpty())
+						nameField.requestFocus();
+					else if(!name.isEmpty() && pw.isEmpty())
+						pwField.requestFocus();
+					else if(!name.isEmpty() && !pw.isEmpty() && phone.isEmpty())
+						phoneField.requestFocus();
+					else if(!name.isEmpty() && !pw.isEmpty() && !phone.isEmpty()) {
+						if(phone.length()!=11 || !phone.substring(0, 3).equals("010")) {
+							phoneField.setForeground(Color.RED);
+						} else {
+							UserBean bb = new UserBean();
+							bb.setUsername(name);
+							bb.setPassword(pw);
+							bb.setEmail(email);
+							bb.setPhone(phone);
+							bb.setUser_image(imageBytes);
+							if (mgr.userUpd(StaticData.user_id, bb)) {
+								nameField.setEnabled(false);
+								pwField.setEnabled(false);
+								emailField.setEnabled(false);
+								phoneField.setEnabled(false);
+								dispose();
+								new PetAddMainScreen();
+							}
 						}
-
-						System.out.println(imageBytes);
+						
 					}
+					
 				}
 			}
 		};
@@ -106,6 +126,7 @@ public class UpdateUserScreen extends JFrame {
 		addButton.setBackground(new Color(91, 91, 91));
 		addButton.setForeground(Color.WHITE);
 		addButton.addMouseListener(commonMouseListener);
+		addButton.setEnabled(false);
 		add(addButton);
 
 		// 메인 프로필 이미지
@@ -193,6 +214,37 @@ public class UpdateUserScreen extends JFrame {
 																														// 아래,
 																														// 오른쪽)
 		));
+		  // DocumentFilter를 사용하여 전화번호 형식 제한
+        ((AbstractDocument) phoneField.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string != null) {
+                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
+                    if (newText.matches("\\d{0,11}")) { // 11자리 숫자 체크
+                        super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
+                    }
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text != null) {
+                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
+                    if (newText.matches("\\d{0,11}")) { // 11자리 숫자 체크
+                        super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
+                    }
+                }
+            }
+
+            @Override
+            public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+                super.remove(fb, offset, length);
+            }
+        });
 		add(phoneField);
 
 		// 수정 버튼
@@ -201,16 +253,6 @@ public class UpdateUserScreen extends JFrame {
 		updataButton.setBackground(new Color(91, 91, 91));
 		updataButton.setForeground(Color.WHITE);
 		updataButton.addMouseListener(commonMouseListener);
-		updataButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				nameField.setEnabled(true);
-				pwField.setEnabled(true);
-				emailField.setEnabled(true);
-				phoneField.setEnabled(true);
-				flag = true;
-			}
-		});
 		add(updataButton);
 
 		// 완료 버튼
@@ -225,6 +267,7 @@ public class UpdateUserScreen extends JFrame {
 		pwField.setEnabled(false);
 		emailField.setEnabled(false);
 		phoneField.setEnabled(false);
+		fisButton.setEnabled(false);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
