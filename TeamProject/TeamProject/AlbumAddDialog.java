@@ -7,7 +7,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -65,7 +68,13 @@ public class AlbumAddDialog extends JFrame {
 					write = AlbumWriteTArea.getText().trim();
 					bean.setAlbum_tags(tags);
 					bean.setAlbum_desc(write);
-					bean.setAlbum_image(imageBytes);
+					if (imageBytes == null || imageBytes.length == 0) {
+						File selectedFile = new File("TeamProject/photo_frame.png");
+						byte[] imageBytes = convertFileToByteArray(selectedFile);
+						bean.setAlbum_image(imageBytes);
+					} else {
+						bean.setAlbum_image(imageBytes);
+					}
 					mgr.addAlbum(StaticData.pet_id, bean);
 					dispose();
 					preFrame.dispose();
@@ -189,7 +198,23 @@ public class AlbumAddDialog extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
-	
+
+	// 파일을 byte 배열로 변환하는 메서드
+	private byte[] convertFileToByteArray(File file) {
+		try (FileInputStream fis = new FileInputStream(file);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+			return baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public JLabel getImageLabel() {
 		return grayFrameLabel;
 	}

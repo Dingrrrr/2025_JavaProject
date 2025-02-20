@@ -87,7 +87,6 @@
 			add(alarmLabel);
 	
 			// 메인 프로필 이미지
-			System.out.println(bean1.getUser_image());
 			byte[] imgBytes = bean1.getUser_image();
 			String imgNull = Arrays.toString(imgBytes);
 			if (imgBytes == null || imgBytes.length == 0) {
@@ -234,10 +233,8 @@
 				separator.setForeground(Color.BLACK);
 				
 				// 왼쪽 - 이미지
-				System.out.println(pb.getPet_image());
 				byte[] imgBytes = pb.getPet_image();
 				String imgNull = Arrays.toString(imgBytes);
-				System.out.println(imgNull);
 				petImageLabel = new JLabel(); // JLabel을 먼저 생성
 				if (imgBytes == null || imgBytes.length == 0) {
 					petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);

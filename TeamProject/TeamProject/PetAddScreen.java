@@ -95,10 +95,7 @@ public class PetAddScreen extends JFrame {
 		add(backLabel);
 
 		// 메인 프로필 이미지
-		System.out.println(bean.getPet_image());
 		byte[] imgBytes = bean.getPet_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 		    imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200); // 기본 이미지
 		} else {
