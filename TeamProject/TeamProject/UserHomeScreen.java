@@ -78,7 +78,6 @@ public class UserHomeScreen extends JFrame {
 		add(alarmLabel);
 
 		// 메인 프로필 이미지
-		System.out.println(bean.getUser_image());
 		byte[] imgBytes = bean.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
 

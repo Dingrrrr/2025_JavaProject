@@ -58,6 +58,13 @@ public class VoteScreenDialog extends JFrame {
 						dispose();
 						preFrame.setVisible(true);
 						new VoteScreenDialog(preFrame, vb);
+					}else {
+						System.out.println("하트 클릭됨");
+						mgr.cancelVote(vb.getVote_id(), StaticData.user_id);
+						preFrame.addVote();
+						dispose();
+						preFrame.setVisible(true);
+						new VoteScreenDialog(preFrame, vb);
 					}
 				}
 			}
@@ -68,6 +75,7 @@ public class VoteScreenDialog extends JFrame {
 			heartLabel = createScaledImageLabel("TeamProject/vote_complete.png", 70, 70);
 			heartLabel.setBounds(235, 240, 70, 70);
 			heartLabel.setOpaque(false);
+			heartLabel.addMouseListener(commonMouseListener);
 		} else {
 			heartLabel = createScaledImageLabel("TeamProject/vote.png", 70, 70);
 			heartLabel.setBounds(235, 240, 70, 70);
@@ -76,11 +84,8 @@ public class VoteScreenDialog extends JFrame {
 		add(heartLabel); // 🔹 패널에 추가
 
 		// 투표 이미지
-		System.out.println(vb.getVote_image());
 		byte[] imgBytes = vb.getVote_image();
 		imageBytes = vb.getVote_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);

@@ -112,11 +112,8 @@ public class ComuModifyScreen extends JFrame {
 		add(addButtonLabel);
 
 		// 회색 프레임
-		System.out.println(cb.getComu_image());
 		byte[] imgBytes = cb.getComu_image();
 		imageBytes = cb.getComu_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);

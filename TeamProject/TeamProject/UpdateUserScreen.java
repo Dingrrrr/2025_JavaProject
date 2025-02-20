@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Arrays;
 import java.io.*;
 
@@ -25,8 +24,9 @@ public class UpdateUserScreen extends JFrame {
 	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, imageLabel;
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
-	private JButton updataButton, fisButton, addButton;
+	private JButton updataButton, fisButton, addButton, deleteButton;
 	private JFrame previousFrame; // 이전 프레임 저장
+	private UserDeleteDialog udd;
 	TPMgr mgr;
 	private UserPhotoModifyDialog upm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
@@ -82,14 +82,14 @@ public class UpdateUserScreen extends JFrame {
 					String pw = pwField.getText().trim();
 					String email = emailField.getText().trim();
 					String phone = phoneField.getText().trim();
-					if(name.isEmpty())
+					if (name.isEmpty())
 						nameField.requestFocus();
-					else if(!name.isEmpty() && pw.isEmpty())
+					else if (!name.isEmpty() && pw.isEmpty())
 						pwField.requestFocus();
-					else if(!name.isEmpty() && !pw.isEmpty() && phone.isEmpty())
+					else if (!name.isEmpty() && !pw.isEmpty() && phone.isEmpty())
 						phoneField.requestFocus();
-					else if(!name.isEmpty() && !pw.isEmpty() && !phone.isEmpty()) {
-						if(phone.length()!=11 || !phone.substring(0, 3).equals("010")) {
+					else if (!name.isEmpty() && !pw.isEmpty() && !phone.isEmpty()) {
+						if (phone.length() != 11 || !phone.substring(0, 3).equals("010")) {
 							phoneField.setForeground(Color.RED);
 						} else {
 							UserBean bb = new UserBean();
@@ -97,19 +97,33 @@ public class UpdateUserScreen extends JFrame {
 							bb.setPassword(pw);
 							bb.setEmail(email);
 							bb.setPhone(phone);
-							bb.setUser_image(imageBytes);
+							// 이미지 값이 null일 경우 기본 이미지 db에 저장
+							if (imageBytes == null || imageBytes.length == 0) {
+								File selectedFile = new File("TeamProject/profile.png");
+								byte[] imageBytes = convertFileToByteArray(selectedFile);
+								bb.setUser_image(imageBytes);
+							} else {
+								bb.setUser_image(imageBytes);
+							}
 							if (mgr.userUpd(StaticData.user_id, bb)) {
 								nameField.setEnabled(false);
 								pwField.setEnabled(false);
 								emailField.setEnabled(false);
 								phoneField.setEnabled(false);
 								dispose();
-								new PetAddMainScreen();
+								mgr.userIn(StaticData.user_id);
+								if (mgr.isPet(StaticData.user_id)) {
+									dispose();
+									new PetAddMainScreen(); // 반려동물 정보가 이미 있는 경우
+								} else {
+									dispose();
+									new UserHomeScreen(); // 반려동물 정보가 없는 경우
+								}
 							}
 						}
-						
-					}
-					
+					} 
+				} else if (source == deleteButton) {
+					new UserDeleteDialog(UpdateUserScreen.this, mgr);
 				}
 			}
 		};
@@ -214,38 +228,48 @@ public class UpdateUserScreen extends JFrame {
 																														// 아래,
 																														// 오른쪽)
 		));
-		  // DocumentFilter를 사용하여 전화번호 형식 제한
-        ((AbstractDocument) phoneField.getDocument()).setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                if (string != null) {
-                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                    String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
-                    if (newText.matches("\\d{0,11}")) { // 11자리 숫자 체크
-                        super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
-                    }
-                }
-            }
+		// DocumentFilter를 사용하여 전화번호 형식 제한
+		((AbstractDocument) phoneField.getDocument()).setDocumentFilter(new DocumentFilter() {
+			@Override
+			public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+					throws BadLocationException {
+				if (string != null) {
+					// 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+					String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+					String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
+					if (newText.matches("\\d{0,11}")) { // 11자리 숫자 체크
+						super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
+					}
+				}
+			}
 
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                if (text != null) {
-                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                    String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
-                    if (newText.matches("\\d{0,11}")) { // 11자리 숫자 체크
-                        super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
-                    }
-                }
-            }
+			@Override
+			public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+					throws BadLocationException {
+				if (text != null) {
+					// 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+					String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+					String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
+					if (newText.matches("\\d{0,11}")) { // 11자리 숫자 체크
+						super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
+					}
+				}
+			}
 
-            @Override
-            public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-                super.remove(fb, offset, length);
-            }
-        });
+			@Override
+			public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+				super.remove(fb, offset, length);
+			}
+		});
 		add(phoneField);
+		
+		// 회원 탈퇴 버튼
+		deleteButton = new RoundedButton("탈퇴");
+		deleteButton.setBounds(295, 125, 70, 30);
+		deleteButton.setBackground(new Color(91, 91, 91));
+		deleteButton.setForeground(Color.WHITE);
+		deleteButton.addMouseListener(commonMouseListener);
+		add(deleteButton);
 
 		// 수정 버튼
 		updataButton = new RoundedButton("수정");
@@ -325,6 +349,22 @@ public class UpdateUserScreen extends JFrame {
 	// imageBytes를 얻는 메서드
 	public byte[] getImageBytes() {
 		return imageBytes;
+	}
+
+	// 파일을 byte 배열로 변환하는 메서드
+	private byte[] convertFileToByteArray(File file) {
+		try (FileInputStream fis = new FileInputStream(file);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+			return baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static void main(String[] args) {

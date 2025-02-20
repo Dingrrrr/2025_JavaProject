@@ -142,7 +142,7 @@ public class ReadenCommuScreen extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				setEnabled(false);
 				StaticData.msg_user_id = cb.getUser_id();
-				new NoteSendScreen(ReadenCommuScreen.this);
+				new NoteSendScreen(preFrame, ReadenCommuScreen.this);
 			}
 		});
 
@@ -172,10 +172,7 @@ public class ReadenCommuScreen extends JFrame {
 				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)));
 
 		// 커뮤 이미지
-		System.out.println(cb.getComu_image());
 		byte[] imgBytes1 = cb.getComu_image();
-		String imgNull = Arrays.toString(imgBytes1);
-		System.out.println(imgNull);
 		if (imgBytes1 == null || imgBytes1.length == 0) {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 300, 150);

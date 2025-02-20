@@ -112,7 +112,6 @@ public class PetHomeScreen extends JFrame {
 		add(alarmLabel);
 		
 		// 상단 프로필 아이디
-		System.out.println(bean1.getUser_image());
 		byte[] imgBytes = bean1.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
 		if (imgNull == "[]") {
@@ -132,10 +131,7 @@ public class PetHomeScreen extends JFrame {
 		}
 
 		// 메인 프로필 이미지
-		System.out.println(bean.getPet_image());
 		byte[] imgBytes1 = bean.getPet_image();
-		String imgNull1 = Arrays.toString(imgBytes1);
-		System.out.println(imgNull1);
 		if (imgBytes1 == null || imgBytes1.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/dog.png", 150, 150);

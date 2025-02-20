@@ -75,8 +75,7 @@ public class VoteModifyScreen extends JFrame {
 					System.out.println("저장 버튼 클릭됨");
 					if (flag) {
 						vb.setVote_image(imageBytes);
-						System.out.println(StaticData.vote_id);
-						if (mgr.updVote(StaticData.vote_id, vb)) {
+						if (mgr.updVote(vb.getVote_id(), vb)) {
 							addButtonLabel.setEnabled(false);
 							saveButton.setEnabled(false);
 							delButton.setEnabled(false);
@@ -97,11 +96,8 @@ public class VoteModifyScreen extends JFrame {
 		add(addButtonLabel);
 
 		// 투표 이미지
-		System.out.println(vb.getVote_image());
 		byte[] imgBytes = vb.getVote_image();
 		imageBytes = vb.getVote_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 318, 318);

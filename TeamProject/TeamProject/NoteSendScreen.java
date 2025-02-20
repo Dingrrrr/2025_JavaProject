@@ -21,7 +21,7 @@ public class NoteSendScreen extends JFrame {
 	TPMgr mgr;
 	MsgBean bean;
 
-	public NoteSendScreen(JFrame preFrame) {
+	public NoteSendScreen(JFrame prePreFrame, JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -57,8 +57,8 @@ public class NoteSendScreen extends JFrame {
 					mgr.sendMsg(StaticData.user_id, bean);
 					StaticData.msg_user_id = "";
 					dispose();
-					preFrame.setEnabled(true);
-					preFrame.setVisible(true);
+					preFrame.dispose();
+					new AlarmMainScreen(prePreFrame);
 				} 
 			}
 		};
