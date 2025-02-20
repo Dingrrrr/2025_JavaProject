@@ -57,7 +57,7 @@ public class UpdateUserScreen extends JFrame {
 					System.out.println("뒤로가기 클릭됨");
 					dispose();
 					previousFrame.setVisible(true);
-				} else if (source == addButton) {
+				} else if (source == addButton && addButton.isEnabled()) {
 					System.out.println("유저 프로필 사진 추가 클릭됨!");
 					if (upm == null) {
 						// UserPhotoModifyDialog 생성 시 'this'는 JFrame, UpdateUserScreen.this는
@@ -77,7 +77,7 @@ public class UpdateUserScreen extends JFrame {
 					phoneField.setEnabled(true);
 					addButton.setEnabled(true);
 					fisButton.setEnabled(true);
-				} else if (source == fisButton) {
+				} else if (source == fisButton && fisButton.isEnabled()) {
 					System.out.println("유저 정보 완료 버튼 클릭됨!");
 					String name = nameField.getText().trim();
 					String pw = pwField.getText().trim();

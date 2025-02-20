@@ -9,7 +9,33 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
+	
+class RoundedBorder extends javax.swing.border.AbstractBorder {
+    private int radius;
 
+    RoundedBorder(int radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        g2d.dispose();
+    }
+
+    @Override
+    public Insets getBorderInsets(Component c) {
+        return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
+    }
+
+    @Override
+    public boolean isBorderOpaque() {
+        return true;
+    }
+}
 public class DiaryAddDialog extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel;
@@ -89,19 +115,24 @@ public class DiaryAddDialog extends JFrame {
 				DiaryWriteTArea.setLineWrap(true);
 				DiaryWriteTArea.setWrapStyleWord(true);
 				DiaryWriteTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
+				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
+				add(DiaryWriteTArea);        
 				
 				scrollPane = new JScrollPane(DiaryWriteTArea);
 				scrollPane.setBounds(15, 160, 318, 250); // 텍스트 영역 크기와 위치 설정
 				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				//scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
 				scrollPane.setBorder(BorderFactory.createCompoundBorder(
-							new RoundedBorder(0), new EmptyBorder(0, 0, 0, 0)
+							new RoundedBorder(20), new EmptyBorder(0, 0, 0, 0)
 						));
-
-				add(scrollPane); // JScrollPane을 프레임에 추가
+				add(scrollPane);
+				//JScrollPane scrollPane = new JScrollPane(DiaryWriteTArea);
+				//scrollPane.setBounds(15, 160, 318, 250); // 텍스트 영역 크기와 위치 설정
+				//scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				//add(scrollPane); // JScrollPane을 프레임에 추가
+				
 				
 				// 저장 버튼
 				SaveButton = new RoundedButton("저장");

@@ -22,6 +22,7 @@ public class AlbumAddDialog extends JFrame {
 	private JTextField  AlbumTagTField;
 	private JTextArea AlbumWriteTArea;
 	private JButton SaveButton;
+	private JScrollPane scrollPane;
 	private String tags, write;
 	TPMgr mgr;
 	AlbumBean bean;
@@ -119,13 +120,22 @@ public class AlbumAddDialog extends JFrame {
 				AlbumWriteTArea.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
-				add(AlbumWriteTArea);
-			
+				add(AlbumWriteTArea);             
+				
+				scrollPane = new JScrollPane(AlbumWriteTArea);
+				scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
+				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(
+							new RoundedBorder(20), new EmptyBorder(0, 0, 0, 0)
+						));
+				add(scrollPane);
 
 				
-				JScrollPane scrollPane = new JScrollPane(AlbumWriteTArea);
-				scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
-				add(scrollPane); // JScrollPane을 프레임에 추가
+				//JScrollPane scrollPane = new JScrollPane(AlbumWriteTArea);
+				//scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
+				//scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				//add(scrollPane); // JScrollPane을 프레임에 추가
 				
 				// 저장 버튼
 				SaveButton = new RoundedButton("저장");
