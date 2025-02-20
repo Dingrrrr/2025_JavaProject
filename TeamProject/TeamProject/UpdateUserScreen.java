@@ -26,6 +26,7 @@ public class UpdateUserScreen extends JFrame {
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton, deleteButton;
 	private JFrame previousFrame; // 이전 프레임 저장
+	private UserDeleteDialog udd;
 	TPMgr mgr;
 	private UserPhotoModifyDialog upm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
@@ -122,13 +123,7 @@ public class UpdateUserScreen extends JFrame {
 						}
 					} 
 				} else if (source == deleteButton) {
-					int confirm = JOptionPane.showConfirmDialog(null, "정말로 회원을 탈퇴하시겠습니까?", "회원 탈퇴", JOptionPane.YES_NO_OPTION);
-					if (confirm == JOptionPane.YES_OPTION) {
-						mgr.delUser(StaticData.user_id);
-						JOptionPane.showMessageDialog(null, "회원 탈퇴가 완료되었습니다.");
-						dispose();
-						new LoginScreen();
-					}
+					new UserDeleteDialog(UpdateUserScreen.this, mgr);
 				}
 			}
 		};
