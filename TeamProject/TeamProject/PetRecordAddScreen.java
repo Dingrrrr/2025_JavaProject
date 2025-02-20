@@ -65,11 +65,10 @@ public class PetRecordAddScreen extends JFrame {
 					System.out.println("기입완료 버튼 클릭됨");
 					//값을 입력했는데 0으로 시작하거나 8자리를 다 입력하지 않았다면 실행
 					String time = petMtTimeTField.getText().trim();
-					if(!time.isEmpty()) {
-						if(time.substring(0, 1).equals("0") || time.length()!=8) {
-							warningLabel.setVisible(true);
-						}
-					} else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length()==8)){
+                    if(!time.isEmpty()) {
+                    	if(time.substring(0, 1).equals("0") || time.length()!= 8)
+                    		warningLabel.setVisible(true);
+                    } else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length()==8)){
 						BigDecimal height = new BigDecimal(0);
 						BigDecimal weight = new BigDecimal(0);
 						try {
@@ -82,7 +81,10 @@ public class PetRecordAddScreen extends JFrame {
 							bean.setHeight(height);
 							bean.setWeight(weight);
 						} catch (Exception e2) {	//텍스트 필드값이 숫자가 아닌 경우
-							e2.printStackTrace();
+							height = new BigDecimal(0);
+							weight = new BigDecimal(0);
+							bean.setHeight(height);
+							bean.setWeight(weight);
 						}
 						bean.setMedical_history(petMtTField.getText().trim());
 						bean.setVaccination_status(petVsTField.getText().trim());
@@ -226,37 +228,36 @@ public class PetRecordAddScreen extends JFrame {
 			}
 		});
 		
-		  // DocumentFilter를 사용하여 전화번호 형식 제한
-        ((AbstractDocument) petMtTimeTField.getDocument()).setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                if (string != null) {
-                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                    String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
-                    if (newText.matches("\\d{0,8}")) { // 11자리 숫자 체크
-                        super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
-                    }
-                }
-            }
+		((AbstractDocument) petMtTimeTField.getDocument()).setDocumentFilter(new DocumentFilter() {
+		    @Override
+		    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+		        if (string != null) {
+		            // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+		            String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+		            String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
+		            if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크 
+		                super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
+		            }
+		        }
+		    }
 
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                if (text != null) {
-                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                    String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
-                    if (newText.matches("\\d{0,8}")) { // 11자리 숫자 체크
-                        super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
-                    }
-                }
-            }
+		    @Override
+		    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+		        if (text != null) {
+		            // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+		            String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+		            String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
+		            if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크 
+		                super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
+		            }
+		        }
+		    }
 
-            @Override
-            public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-                super.remove(fb, offset, length);
-            }
-        });
+		    @Override
+		    public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+		        super.remove(fb, offset, length);
+		    }
+		});
         
         warningLabel = new JLabel("올바른 진료 시간을 기입하시오");
         warningLabel.setForeground(Color.RED);
