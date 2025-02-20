@@ -115,19 +115,16 @@ public class AlbumPhotoAddDialog extends JFrame {
 	    JFileChooser fileChooser = new JFileChooser();
 	    if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 	        selectedFile = fileChooser.getSelectedFile();
-	        System.out.println(selectedFile);
 
 	        // 이미지 읽기
 	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 	        Image img = icon.getImage();
-	        System.out.println(img);
 
 	        // 이미지 크기 조정 (280x280)
 	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 
 	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
-	        System.out.println(resizedIcon);
 
 	        // 미리보기 업데이트
 	        albumAddDialog.getImageLabel().setIcon(resizedIcon);
@@ -135,7 +132,6 @@ public class AlbumPhotoAddDialog extends JFrame {
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
-	        System.out.println(imageBytes);
 
 	        // 변환된 이미지를 updateUserScreen에 저장
 	        albumAddDialog.setImageBytes(imageBytes);

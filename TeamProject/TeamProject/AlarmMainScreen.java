@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class AlarmMainScreen extends JFrame {
@@ -27,7 +28,7 @@ public class AlarmMainScreen extends JFrame {
 	private String name;
 	TPMgr mgr = new TPMgr();
 	Vector<MsgBean> vlist;
-	
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd   HH:mm");
 
 	public AlarmMainScreen(JFrame preFrame) {
@@ -39,6 +40,7 @@ public class AlarmMainScreen extends JFrame {
 		vlist = mgr.showMsgList(StaticData.user_id);
 		flag = true;
 		StaticData.jf = preFrame;
+		UserBean bean = mgr.showUser(StaticData.user_id);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -68,23 +70,23 @@ public class AlarmMainScreen extends JFrame {
 					System.out.println("쪽지 보내기 버튼 클릭됨");
 					setEnabled(false);
 					new NoteSendScreen(preFrame, AlarmMainScreen.this);
-				} else if(source == menuLabel) {
+				} else if (source == menuLabel) {
 					System.out.println("메뉴 버튼 클릭됨");
-					if(sendMsgLabel.isVisible() && receiveMsgLabel.isVisible()) {
+					if (sendMsgLabel.isVisible() && receiveMsgLabel.isVisible()) {
 						sendMsgLabel.setVisible(false);
 						receiveMsgLabel.setVisible(false);
 					} else {
 						sendMsgLabel.setVisible(true);
-						receiveMsgLabel.setVisible(true);						
+						receiveMsgLabel.setVisible(true);
 					}
-				} else if(source == sendMsgLabel) {
+				} else if (source == sendMsgLabel) {
 					System.out.println("보낸 쪽지 출력");
 					vlist = mgr.showSendMsgList(StaticData.user_id);
 					sendMsgLabel.setVisible(false);
 					receiveMsgLabel.setVisible(false);
 					flag = false;
 					addAlarm();
-				} else if(source == receiveMsgLabel) {
+				} else if (source == receiveMsgLabel) {
 					System.out.println("받은 쪽지 출력");
 					vlist = mgr.showMsgList(StaticData.user_id);
 					sendMsgLabel.setVisible(false);
@@ -101,11 +103,24 @@ public class AlarmMainScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		// 🔹 상단 프로필 아이콘
-		profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-		profileLabel.setBounds(330, 120, 40, 40);
-		profileLabel.addMouseListener(commonMouseListener);
-		add(profileLabel);
+		// 상단 프로필 아이디
+		byte[] imgBytes = bean.getUser_image();
+		String imgNull = Arrays.toString(imgBytes);
+		if (imgNull == "[]") {
+			profileLabel = new JLabel();
+			profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			profileLabel.setBounds(330, 120, 40, 40);
+			profileLabel.addMouseListener(commonMouseListener);
+			add(profileLabel);
+		} else {
+			ImageIcon icon1 = new ImageIcon(imgBytes);
+			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			profileLabel = new JLabel();
+			profileLabel.setIcon(new ImageIcon(img1));
+			profileLabel.setBounds(330, 120, 40, 40);
+			profileLabel.addMouseListener(commonMouseListener);
+			add(profileLabel);
+		}
 
 		// 🔹 상단 뒤로가기 아이콘
 		backLabel = createScaledImageLabel("TeamProject/back_button.png", 40, 40);
@@ -120,20 +135,20 @@ public class AlarmMainScreen extends JFrame {
 		SendButton.setForeground(Color.WHITE);
 		SendButton.addMouseListener(commonMouseListener);
 		add(SendButton);
-		
+
 		// 🔹 메뉴 아이콘
 		menuLabel = createScaledImageLabel("TeamProject/menu.png", 40, 40);
 		menuLabel.setBounds(310, 795, 40, 40);
 		menuLabel.addMouseListener(commonMouseListener);
 		add(menuLabel);
-		
+
 		// 🔹 보낸 알림 아이콘
 		sendMsgLabel = createScaledImageLabel("TeamProject/send_msg.png", 40, 40);
 		sendMsgLabel.setBounds(310, 720, 40, 40);
 		sendMsgLabel.addMouseListener(commonMouseListener);
 		add(sendMsgLabel);
 		sendMsgLabel.setVisible(false);
-		
+
 		// 🔹 받은 알림 아이콘
 		receiveMsgLabel = createScaledImageLabel("TeamProject/receive_msg.png", 40, 40);
 		receiveMsgLabel.setBounds(310, 660, 40, 40);
@@ -163,9 +178,8 @@ public class AlarmMainScreen extends JFrame {
 		alarmPanel = new JPanel();
 		alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
 		alarmPanel.setBackground(Color.WHITE);
-	    // alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
-	    alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
-
+		// alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
+		alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		scrollPane = new JScrollPane(alarmPanel);
@@ -176,7 +190,7 @@ public class AlarmMainScreen extends JFrame {
 		panel.add(scrollPane);
 
 		addAlarm();
-		
+
 		// 🔹 닫기 버튼
 		JButton closeButton = new JButton("X");
 		closeButton.setBounds(370, 10, 20, 20);
@@ -200,100 +214,97 @@ public class AlarmMainScreen extends JFrame {
 	 * 알림 추가 메서드
 	 */
 	public void addAlarm() {
-	    alarmPanel.removeAll();
-	    for (MsgBean mb : vlist) {
-		    name = mgr.showOneUserName(mb.getSender_id());
-		    
-		    // 알람 항목 패널
-		    JPanel alarmItemPanel = new JPanel();
-		    alarmItemPanel.setPreferredSize(new Dimension(353, 120));
-		    alarmItemPanel.setMaximumSize(new Dimension(353, 120));
-		    alarmItemPanel.setBackground(Color.WHITE);
-		    alarmItemPanel.setBorder(new LineBorder(Color.black, 1));
-		    alarmItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함 레이아웃
-		    alarmItemPanel.addMouseListener(new MouseAdapter() {
-		    	@Override
-		    	public void mouseClicked(MouseEvent e) {
-		    		setEnabled(false);
-		    		if(flag) {//받은 쪽지이기 때문에 쪽지 확인 화면
-		    			setEnabled(false);
-		    			new NoteCheckScreen(AlarmMainScreen.this, mb);
-		    		}
-		    		else {
-		    			setEnabled(false);
-		    			new NoteModifyScreen(AlarmMainScreen.this, mb);
-		    		}
-		    	}
-		    });
+		alarmPanel.removeAll();
+		for (MsgBean mb : vlist) {
+			name = mgr.showOneUserName(mb.getSender_id());
 
-		    // 1) 상단 영역: USER_ID, 날짜
-		    JPanel topPanel = new JPanel(new BorderLayout());
-		    topPanel.setBackground(Color.WHITE);
-		    topPanel.setPreferredSize(new Dimension(353, 25)); // 상단 패널 높이 증가
+			// 알람 항목 패널
+			JPanel alarmItemPanel = new JPanel();
+			alarmItemPanel.setPreferredSize(new Dimension(353, 120));
+			alarmItemPanel.setMaximumSize(new Dimension(353, 120));
+			alarmItemPanel.setBackground(Color.WHITE);
+			alarmItemPanel.setBorder(new LineBorder(Color.black, 1));
+			alarmItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함 레이아웃
+			alarmItemPanel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					setEnabled(false);
+					if (flag) {// 받은 쪽지이기 때문에 쪽지 확인 화면
+						setEnabled(false);
+						new NoteCheckScreen(AlarmMainScreen.this, mb);
+					} else {
+						setEnabled(false);
+						new NoteModifyScreen(AlarmMainScreen.this, mb);
+					}
+				}
+			});
 
-	    	JLabel userIdLabel = new JLabel("from. " + name);
-	    	userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가		    	
-	    	if(!flag) {
-	    		name = mgr.showOneUserName(mb.getReceiver_id());
-		    	userIdLabel = new JLabel("to. " + name);
-		    	userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가	
-		    }
+			// 1) 상단 영역: USER_ID, 날짜
+			JPanel topPanel = new JPanel(new BorderLayout());
+			topPanel.setBackground(Color.WHITE);
+			topPanel.setPreferredSize(new Dimension(353, 25)); // 상단 패널 높이 증가
 
-		    JLabel dateLabel = new JLabel(sdf.format(mb.getMsg_date()), SwingConstants.RIGHT);
-		    dateLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
+			JLabel userIdLabel = new JLabel("from. " + name);
+			userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
+			if (!flag) {
+				name = mgr.showOneUserName(mb.getReceiver_id());
+				userIdLabel = new JLabel("to. " + name);
+				userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
+			}
 
-		    topPanel.add(userIdLabel, BorderLayout.WEST);
-		    topPanel.add(dateLabel, BorderLayout.EAST);
+			JLabel dateLabel = new JLabel(sdf.format(mb.getMsg_date()), SwingConstants.RIGHT);
+			dateLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
 
-		    // 구분선
-		    JSeparator separator = new JSeparator();
-		    separator.setForeground(Color.GRAY);
+			topPanel.add(userIdLabel, BorderLayout.WEST);
+			topPanel.add(dateLabel, BorderLayout.EAST);
 
-		    // 2) 본문 패널 (이미지 + 텍스트)
-		    JPanel contentPanel = new JPanel();
-		    contentPanel.setLayout(new BorderLayout()); // BorderLayout 사용하여 상단 정렬 가능
-		    contentPanel.setBackground(Color.WHITE);
-		    contentPanel.setPreferredSize(new Dimension(353, 70)); // 본문 영역 크기 설정
+			// 구분선
+			JSeparator separator = new JSeparator();
+			separator.setForeground(Color.GRAY);
 
-		 // 제목 & 내용
-		    JPanel textPanel = new JPanel();
-		    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // 세로 배치
-		    textPanel.setBackground(Color.WHITE);
-		    textPanel.setAlignmentY(Component.TOP_ALIGNMENT); // 상단 정렬 유지
-		    textPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0)); // 왼쪽 여백 추가
+			// 2) 본문 패널 (이미지 + 텍스트)
+			JPanel contentPanel = new JPanel();
+			contentPanel.setLayout(new BorderLayout()); // BorderLayout 사용하여 상단 정렬 가능
+			contentPanel.setBackground(Color.WHITE);
+			contentPanel.setPreferredSize(new Dimension(353, 70)); // 본문 영역 크기 설정
 
-		    // 제목
-		    JLabel titleLabel = new JLabel(mb.getMsg_title());
-		    titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // 왼쪽 정렬
+			// 제목 & 내용
+			JPanel textPanel = new JPanel();
+			textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // 세로 배치
+			textPanel.setBackground(Color.WHITE);
+			textPanel.setAlignmentY(Component.TOP_ALIGNMENT); // 상단 정렬 유지
+			textPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0)); // 왼쪽 여백 추가
 
-		    // 내용
-		    JLabel contentLabel = new JLabel(mb.getMsg_content());
-		    contentLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // 왼쪽 정렬
+			// 제목
+			JLabel titleLabel = new JLabel(mb.getMsg_title());
+			titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // 왼쪽 정렬
 
-		    // 제목과 내용 사이 간격 추가
-		    textPanel.add(titleLabel);
-		    textPanel.add(Box.createVerticalStrut(5)); // 제목과 내용 사이 여백
-		    textPanel.add(contentLabel);
+			// 내용
+			JLabel contentLabel = new JLabel(mb.getMsg_content());
+			contentLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // 왼쪽 정렬
 
-		    // textPanel을 contentPanel의 상단에 배치
-		    contentPanel.add(textPanel, BorderLayout.NORTH);
+			// 제목과 내용 사이 간격 추가
+			textPanel.add(titleLabel);
+			textPanel.add(Box.createVerticalStrut(5)); // 제목과 내용 사이 여백
+			textPanel.add(contentLabel);
 
+			// textPanel을 contentPanel의 상단에 배치
+			contentPanel.add(textPanel, BorderLayout.NORTH);
 
-		    // 알람 항목을 패널에 추가
-		    alarmItemPanel.add(topPanel, BorderLayout.NORTH);
-		    alarmItemPanel.add(separator, BorderLayout.CENTER);
-		    alarmItemPanel.add(contentPanel, BorderLayout.SOUTH);
+			// 알람 항목을 패널에 추가
+			alarmItemPanel.add(topPanel, BorderLayout.NORTH);
+			alarmItemPanel.add(separator, BorderLayout.CENTER);
+			alarmItemPanel.add(contentPanel, BorderLayout.SOUTH);
 
-		    // 알람 패널에 추가
-		    alarmPanel.add(alarmItemPanel);
-		    alarmPanel.add(Box.createVerticalStrut(5)); // 알람 항목 간 간격 추가
+			// 알람 패널에 추가
+			alarmPanel.add(alarmItemPanel);
+			alarmPanel.add(Box.createVerticalStrut(5)); // 알람 항목 간 간격 추가
 		}
-	    
-	    alarmPanel.revalidate();
-	    alarmPanel.repaint();
+
+		alarmPanel.revalidate();
+		alarmPanel.repaint();
 		scrollPane.revalidate();
 	}
-
 
 	/**
 	 * 이미지 크기를 조정하여 JLabel을 생성하는 메서드
