@@ -154,6 +154,33 @@ public class RegisterScreen extends JFrame {
 				pwWarningLabel1.setVisible(true);
 			}
 		});
+		// 첫 번째 텍스트 필드에 DocumentListener 추가
+		pw_textField.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				checkValues();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				checkValues();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				checkValues();
+			}
+			private void checkValues() {
+                if (pw_textField.getText().equals(pwChk_textField.getText())) {
+                	pwWarningLabel1.setText("비밀번호가 일치합니다");
+                	pwWarningLabel1.setForeground(Color.BLUE);
+                } else {
+                	pwWarningLabel1.setText("비밀번호가 일치하지 않습니다");
+                	pwWarningLabel1.setForeground(Color.RED);
+                }
+            }
+		});
 		
 		//비밀번호 확인
 		pwChkLabel = new JLabel("비밀번호 확인");
