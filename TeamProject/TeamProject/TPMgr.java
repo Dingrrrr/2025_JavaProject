@@ -282,6 +282,25 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//유저 삭제
+	public void delUser(String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "delete from user where user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
 	//반려동물 정보 추가(필수 사항)
 	public void addPet(String user_id, PetBean bean) {
 		Connection con = null;
