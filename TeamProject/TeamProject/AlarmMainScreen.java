@@ -67,7 +67,7 @@ public class AlarmMainScreen extends JFrame {
 				} else if (source == SendButton) {
 					System.out.println("쪽지 보내기 버튼 클릭됨");
 					setEnabled(false);
-					new NoteSendScreen(AlarmMainScreen.this);
+					new NoteSendScreen(preFrame, AlarmMainScreen.this);
 				} else if(source == menuLabel) {
 					System.out.println("메뉴 버튼 클릭됨");
 					if(sendMsgLabel.isVisible() && receiveMsgLabel.isVisible()) {
@@ -204,7 +204,14 @@ public class AlarmMainScreen extends JFrame {
 	    for (MsgBean mb : vlist) {
 		    name = mgr.showOneUserName(mb.getSender_id());
 		    
-		    alarmPanel.addMouseListener(new MouseAdapter() {
+		    // 알람 항목 패널
+		    JPanel alarmItemPanel = new JPanel();
+		    alarmItemPanel.setPreferredSize(new Dimension(353, 120));
+		    alarmItemPanel.setMaximumSize(new Dimension(353, 120));
+		    alarmItemPanel.setBackground(Color.WHITE);
+		    alarmItemPanel.setBorder(new LineBorder(Color.black, 1));
+		    alarmItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함 레이아웃
+		    alarmItemPanel.addMouseListener(new MouseAdapter() {
 		    	@Override
 		    	public void mouseClicked(MouseEvent e) {
 		    		setEnabled(false);
@@ -218,13 +225,6 @@ public class AlarmMainScreen extends JFrame {
 		    		}
 		    	}
 		    });
-		    // 알람 항목 패널
-		    JPanel alarmItemPanel = new JPanel();
-		    alarmItemPanel.setPreferredSize(new Dimension(353, 120));
-		    alarmItemPanel.setMaximumSize(new Dimension(353, 120));
-		    alarmItemPanel.setBackground(Color.WHITE);
-		    alarmItemPanel.setBorder(new LineBorder(Color.black, 1));
-		    alarmItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함 레이아웃
 
 		    // 1) 상단 영역: USER_ID, 날짜
 		    JPanel topPanel = new JPanel(new BorderLayout());

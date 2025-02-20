@@ -142,7 +142,7 @@ public class ReadenCommuScreen extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				setEnabled(false);
 				StaticData.msg_user_id = cb.getUser_id();
-				new NoteSendScreen(ReadenCommuScreen.this);
+				new NoteSendScreen(preFrame, ReadenCommuScreen.this);
 			}
 		});
 
