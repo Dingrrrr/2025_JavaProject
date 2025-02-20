@@ -63,7 +63,7 @@ public class VoteModifyScreen extends JFrame {
 					saveButton.setEnabled(true);
 					delButton.setEnabled(true);
 					flag = true;
-				} else if (source == delButton) {
+				} else if (source == delButton && delButton.isEnabled()) {
 					System.out.println("삭제 버튼 클릭됨");
 					System.out.println(vb.getVote_id());
 					if(mgr.delVote(vb.getVote_id())) {
@@ -71,7 +71,7 @@ public class VoteModifyScreen extends JFrame {
 						preFrame.dispose();
 						new VoteMainScreen();
 					}
-				} else if (source == saveButton) {
+				} else if (source == saveButton && saveButton.isEnabled()) {
 					System.out.println("저장 버튼 클릭됨");
 					if (flag) {
 						vb.setVote_image(imageBytes);
@@ -79,6 +79,8 @@ public class VoteModifyScreen extends JFrame {
 							addButtonLabel.setEnabled(false);
 							saveButton.setEnabled(false);
 							delButton.setEnabled(false);
+							preFrame.dispose();
+							new VoteMainScreen();
 						}
 					} /*
 						 * dispose(); preFrame.dispose(); new VoteMainScreen();
