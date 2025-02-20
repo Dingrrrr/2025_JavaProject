@@ -45,7 +45,7 @@ public class DiaryResultDialog extends JFrame {
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
-				} else if (source == SaveButton) {
+				} else if (source == SaveButton && SaveButton.isEnabled()) {
 					System.out.println("저장 버튼클릭됨");
 					title = DiaryTitleField.getText().trim();
 					content = DiaryWriteArea.getText().trim();
@@ -56,7 +56,7 @@ public class DiaryResultDialog extends JFrame {
 					dispose();
 					preFrame.dispose();
 					new DiaryMainScreen();
-				} else if (source == DelButton) {
+				} else if (source == DelButton && DelButton.isEnabled()) {
 					System.out.println("삭제 버튼 클릭됨");
 					mgr.delDiary(StaticData.diary_id);
 					dispose();
@@ -71,6 +71,8 @@ public class DiaryResultDialog extends JFrame {
 					System.out.println("수정 버튼 클릭됨");
 					DiaryTitleField.setEnabled(true);
 					DiaryWriteArea.setEnabled(true);
+					SaveButton.setEnabled(true);
+					DelButton.setEnabled(true);
 				}
 			}
 		};
@@ -131,6 +133,11 @@ public class DiaryResultDialog extends JFrame {
 		DelButton.setForeground(Color.WHITE);
 		DelButton.addMouseListener(commonMouseListener);
 		add(DelButton);
+		
+		DiaryTitleField.setEnabled(false);
+		DiaryWriteArea.setEnabled(false);
+		SaveButton.setEnabled(false);
+		DelButton.setEnabled(false);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {

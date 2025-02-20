@@ -79,11 +79,11 @@ public class PetModifyScreen extends JFrame {
 							ppm.setVisible(true);
 						}
 					}
-				} else if (source == petSpSearchButton && petAddProButton.isEnabled()) {
+				} else if (source == petSpSearchButton && petSpSearchButton.isEnabled()) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					setEnabled(false);
 					new PetSpeciesSearchDialogByModify(PetModifyScreen.this);
-				} else if (source == completionButton && petAddProButton.isEnabled()) {
+				} else if (source == completionButton && completionButton.isEnabled()) {
 					System.out.println("반려동물 정보수정 완료 버튼 클릭됨!");
 					name = petNameTField.getText().trim();
 					spec = petSpecTField.getText().trim();
@@ -110,7 +110,7 @@ public class PetModifyScreen extends JFrame {
 						dispose();
 						new PetHomeScreen(StaticData.pet_id);
 					}
-				} else if (source == petDeleteButton && petAddProButton.isEnabled()) {
+				} else if (source == petDeleteButton && petDeleteButton.isEnabled()) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
 					mgr.delPet(StaticData.pet_id);
 					dispose();
