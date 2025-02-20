@@ -25,7 +25,7 @@ public class VoteModifyScreen extends JFrame {
 
 	public VoteModifyScreen(VoteBean vb, VoteMainScreen preFrame) {
 		setTitle("프레임 설정");
-		setSize(364, 496);
+		setSize(364, 470);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -137,7 +137,7 @@ public class VoteModifyScreen extends JFrame {
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(364, 496, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(364, 470, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 			}
