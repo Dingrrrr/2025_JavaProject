@@ -24,8 +24,9 @@ public class UpdateUserScreen extends JFrame {
 	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, imageLabel;
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
-	private JButton updataButton, fisButton, addButton;
+	private JButton updataButton, fisButton, addButton, deleteButton;
 	private JFrame previousFrame; // 이전 프레임 저장
+	private UserDeleteDialog udd;
 	TPMgr mgr;
 	private UserPhotoModifyDialog upm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
@@ -120,9 +121,9 @@ public class UpdateUserScreen extends JFrame {
 								}
 							}
 						}
-
-					}
-
+					} 
+				} else if (source == deleteButton) {
+					new UserDeleteDialog(UpdateUserScreen.this, mgr);
 				}
 			}
 		};
@@ -261,6 +262,14 @@ public class UpdateUserScreen extends JFrame {
 			}
 		});
 		add(phoneField);
+		
+		// 회원 탈퇴 버튼
+		deleteButton = new RoundedButton("탈퇴");
+		deleteButton.setBounds(295, 125, 70, 30);
+		deleteButton.setBackground(new Color(91, 91, 91));
+		deleteButton.setForeground(Color.WHITE);
+		deleteButton.addMouseListener(commonMouseListener);
+		add(deleteButton);
 
 		// 수정 버튼
 		updataButton = new RoundedButton("수정");

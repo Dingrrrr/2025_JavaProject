@@ -289,11 +289,24 @@ public class TPMgr {
 		String sql = null;
 		try {
 			con = pool.getConnection();
+			con.setAutoCommit(false);
+			
+			// vote_mgr 테이블에서 해당 user_id 삭제
+			sql = "DELETE FROM vote_mgr WHERE vt_user_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			// user 테이블에서 회원 삭제
 			sql = "delete from user where user_id = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
 			pstmt.executeUpdate();
+			pstmt.close();
 
+			con.commit();
+			System.out.println("회원 삭제 완료");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

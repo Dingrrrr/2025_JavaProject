@@ -17,12 +17,13 @@ public class UserDeleteDialog extends JFrame {
 	private BufferedImage image;
 	private JButton yesButton, noButton;
 	private JLabel closeLabel;
+	TPMgr mgr;
 
-	public UserDeleteDialog() {
+	public UserDeleteDialog(UpdateUserScreen parent, TPMgr mgr) {
 		setTitle("프레임 설정");
 		setSize(358, 192);
 		setUndecorated(true);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		try {
@@ -38,6 +39,11 @@ public class UserDeleteDialog extends JFrame {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 				if (source == yesButton) {
 					System.out.println("회원 탈퇴 버튼 클릭됨");
+							mgr.delUser(StaticData.user_id);
+							JOptionPane.showMessageDialog(null, "회원 탈퇴가 완료되었습니다.");
+							dispose();
+							parent.dispose();
+							new LoginScreen();
 				} else if (source == noButton) {
 					System.out.println("회원 탈퇴 취소 클릭됨");
 					dispose();
@@ -108,8 +114,7 @@ public class UserDeleteDialog extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
-
 	public static void main(String[] args) {
-		new UserDeleteDialog();
+		new LoginScreen();
 	}
 }
