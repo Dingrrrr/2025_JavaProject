@@ -20,16 +20,14 @@ public class DiaryResultDialog extends JFrame {
 	private JScrollPane scrollPane;
 	private String title, content;
 	TPMgr mgr;
-	DiaryBean bean;
 
-	public DiaryResultDialog(JFrame preFrame) {
+	public DiaryResultDialog(DiaryBean db, JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 500);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
-		bean = mgr.showOneDiary(StaticData.diary_id);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -51,10 +49,10 @@ public class DiaryResultDialog extends JFrame {
 					System.out.println("저장 버튼클릭됨");
 					title = DiaryTitleField.getText().trim();
 					content = DiaryWriteArea.getText().trim();
-					DiaryBean db = new DiaryBean();
-					db.setDiary_name(title);
-					db.setDiary_content(content);
-					mgr.updDiary(StaticData.diary_id, db);
+					DiaryBean dbb = new DiaryBean();
+					dbb.setDiary_name(title);
+					dbb.setDiary_content(content);
+					mgr.updDiary(db.getDiary_id(), dbb);
 					dispose();
 					preFrame.dispose();
 					new DiaryMainScreen();
@@ -84,9 +82,8 @@ public class DiaryResultDialog extends JFrame {
 		add(DiaryTitleLabel);
 
 		// 일기 제목 텍스트 필드 추가
-		DiaryTitleField = new JTextField(bean.getDiary_name());
+		DiaryTitleField = new JTextField(db.getDiary_name());
 		DiaryTitleField.setBounds(15, 70, 318, 40);
-		DiaryTitleField.setText(bean.getDiary_name());
 		DiaryTitleField
 				.setBorder(BorderFactory.createCompoundBorder(
 						// 내부 여백 (위, 왼쪽, 아래, 오른쪽)
@@ -103,8 +100,8 @@ public class DiaryResultDialog extends JFrame {
 		add(DiaryWriteLabel);
 		
 		// 게시글 설명 텍스트 필드 추가
-		DiaryWriteArea = new JTextArea();
-		DiaryWriteArea.setText("");
+		DiaryWriteArea = new JTextArea(db.getDiary_content());
+		DiaryWriteArea.setEnabled(false);
 		DiaryWriteArea.setLineWrap(true);
 		DiaryWriteArea.setWrapStyleWord(true);
 		add(DiaryWriteArea);

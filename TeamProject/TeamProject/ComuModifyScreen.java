@@ -133,7 +133,7 @@ public class ComuModifyScreen extends JFrame {
 		add(contentLabel);
 
 		// 게시글 설명 텍스트 필드 추가
-		contentArea = new JTextArea();
+		contentArea = new JTextArea(cb.getComu_content());
 		contentArea.setText("");
 		contentArea.setLineWrap(true);
 		contentArea.setWrapStyleWord(true);
