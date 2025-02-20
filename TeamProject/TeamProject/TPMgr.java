@@ -469,6 +469,30 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//이미 해당 반려동물 있는지 출력
+	public boolean isThatPet(int id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from pet where pet_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				flag = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
 	//반려동물 한마리의 정보 출력
 	public PetBean showOnePet(int id) {
 		Connection con = null;
