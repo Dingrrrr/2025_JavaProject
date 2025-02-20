@@ -16,7 +16,7 @@ public class PetModifyScreen extends JFrame {
 	private JLabel backLabel, petProfileLabel, deleteLabel, imageLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
-	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton;
+	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton, completionButton ;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
 	private String name, spec, birth;
 	TPMgr mgr;
@@ -33,6 +33,7 @@ public class PetModifyScreen extends JFrame {
 		mgr = new TPMgr();
 		bean = mgr.showOnePet(StaticData.pet_id);
 		pb = new PetBean();
+		imageBytes = bean.getPet_image();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -52,7 +53,7 @@ public class PetModifyScreen extends JFrame {
 					preFrame.setEnabled(true);
 					dispose();
 					preFrame.setVisible(true);
-				} else if (source == petAddProButton) {
+				} else if (source == petAddProButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 					if (ppm == null) {
 						ppm = new PetPhotoModifyDialog(PetModifyScreen.this); // 'this'를 넘겨줍니다.
@@ -64,12 +65,12 @@ public class PetModifyScreen extends JFrame {
 							ppm.setVisible(true);
 						}
 					}
-				} else if (source == petSpSearchButton) {
+				} else if (source == petSpSearchButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					setEnabled(false);
 					new PetSpeciesSearchDialogByModify(PetModifyScreen.this);
-				} else if (source == petModifyButton) {
-					System.out.println("반려동물 정보 수정 버튼 클릭됨!");
+				} else if (source == completionButton && petAddProButton.isEnabled()) {
+					System.out.println("반려동물 정보수정 완료 버튼 클릭됨!");
 					name = petNameTField.getText().trim();
 					spec = petSpecTField.getText().trim();
 					birth = petBirthTField.getText().trim();
@@ -86,7 +87,7 @@ public class PetModifyScreen extends JFrame {
 					dispose();
 					new PetHomeScreen(StaticData.pet_id);
 
-				} else if (source == petDeleteButton) {
+				} else if (source == petDeleteButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
 					mgr.delPet(StaticData.pet_id);
 					dispose();
@@ -95,10 +96,55 @@ public class PetModifyScreen extends JFrame {
 					} else {
 						new UserHomeScreen();
 					}
+				} else if (source == petModifyButton) {
+					System.out.println("반려동물 정보 수정 버튼 클릭됨!");
+					petDeleteButton.setEnabled(true);
+					petAddProButton.setEnabled(true);
+					petSpSearchButton.setEnabled(true);
+					petNameTField.setEnabled(true);
+					petSpecTField.setEnabled(true);
+					petBirthTField.setEnabled(true);
+					petMaleRdButton.setEnabled(true);
+					petFemaleRdBotton.setEnabled(true);
+					completionButton.setEnabled(true);
+				} else if (source == completionButton) {
+					System.out.println("반려동물 정보수정 완료 버튼 클릭됨!");
+					String name = petNameTField.getText().trim();
+					String sp = petSpecTField.getText().trim();
+					String birth = petBirthTField.getText().trim();
+					if(name.isEmpty())
+						petNameTField.requestFocus();
+					else if(!name.isEmpty() && sp.isEmpty())
+						petSpecTField.requestFocus();
+					else if(!name.isEmpty() && !sp.isEmpty() && birth.isEmpty())
+						petBirthTField.requestFocus();
+					else if(!name.isEmpty() && !sp.isEmpty() && !birth.isEmpty()) {
+						if(birth.length()!=11 || !birth.substring(0, 3).equals("010")) {
+							petBirthTField.setForeground(Color.RED);
+						} else {
+							UserBean bb = new UserBean();
+							bb.setUsername(name);
+							bb.setPassword(sp);
+							bb.setEmail(birth);
+							bb.setUser_image(imageBytes);
+							if (mgr.userUpd(StaticData.user_id, bb)) {
+								petNameTField.setEnabled(false);
+								petSpecTField.setEnabled(false);
+								petBirthTField.setEnabled(false);
+								petDeleteButton.setEnabled(false);
+								petAddProButton.setEnabled(false);
+								petSpSearchButton.setEnabled(false);
+								completionButton.setEnabled(false);
+								dispose();
+								new PetHomeScreen(StaticData.pet_id);
+							}
+						}
+						
+					}
+					
 				}
 			}
 		};
-
 		// 🔹 상단 뒤로가기 아이콘
 		backLabel = createScaledImageLabel("TeamProject/back_button.png", 40, 40);
 		backLabel.setBounds(25, 120, 40, 40);
@@ -227,13 +273,32 @@ public class PetModifyScreen extends JFrame {
 		petModifyButton.addMouseListener(commonMouseListener);
 		add(petModifyButton);
 
-		// 반려동물 정보 삭제 버튼
+		// 반려동물 수정 완료 버튼
+		completionButton = new JButton("완료");
+		completionButton.setBounds(215, 760, 91, 43);
+		completionButton.setBackground(new Color(91, 91, 91));
+		completionButton.setForeground(Color.WHITE);
+		completionButton.addMouseListener(commonMouseListener);
+		add(completionButton);
+		
+		//반려동물 정보 삭제 버튼
 		petDeleteButton = new JButton("삭제");
-		petDeleteButton.setBounds(215, 760, 91, 43);
-		petDeleteButton.setBackground(new Color(91, 91, 91));
+		petDeleteButton.setBounds(285, 123, 80, 35);
+		petDeleteButton.setBackground(new Color(255, 102, 102));
 		petDeleteButton.setForeground(Color.WHITE);
 		petDeleteButton.addMouseListener(commonMouseListener);
 		add(petDeleteButton);
+		
+		
+		petDeleteButton.setEnabled(false);
+		petAddProButton.setEnabled(false);
+		petSpSearchButton.setEnabled(false);
+		petNameTField.setEnabled(false);
+		petSpecTField.setEnabled(false);
+		petBirthTField.setEnabled(false);
+		petMaleRdButton.setEnabled(false);
+		petFemaleRdBotton.setEnabled(false);
+		completionButton.setEnabled(false);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {

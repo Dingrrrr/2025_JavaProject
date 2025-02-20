@@ -212,7 +212,7 @@ public class VoteMainScreen extends JFrame {
 
 		// 🔹 votePanel 설정 수정
 		votePanel = new JPanel();
-		votePanel.setLayout(new GridLayout(0, 2, 2, 2)); // 2열 정렬
+		votePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // 2열 정렬
 		votePanel.setBackground(Color.WHITE);
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
@@ -352,6 +352,10 @@ public class VoteMainScreen extends JFrame {
 			votePanel.add(contentPanel);
 			
 		}
+		// 패널 크기 갱신 (투표 개수에 따라 스크롤 가능하도록 조정)
+		int rows = (votePanel.getComponentCount() + 1) / 2; // 2열 기준
+		votePanel.setPreferredSize(new Dimension(338, rows * 151)); // 세로 크기 유지
+
 		votePanel.revalidate();
 		votePanel.repaint();
 		scrollPane.revalidate();
