@@ -31,13 +31,13 @@ public class PetRecordAddScreen extends JFrame {
 	private JLabel petHeightLabel, petWeightabel, petMtLabel, petVsLabel, petChecksLabel, petMtTimeLabel, warningLabel;
 	private JTextField petHeightTField, petWeightTField, petMtTField, petVsTField, petChecksTField, petMtTimeTField;
 	private JButton petAddRcButton;
-	private JFrame previousFrame;  // 이전 프레임 저장
+	private JFrame previousFrame; // 이전 프레임 저장
 	int pet_id;
 	boolean flag = true;
 	TPMgr mgr;
 	HRBean bean;
 	java.util.Date date = new java.util.Date();
-	
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 	public PetRecordAddScreen(PetBean pb, JFrame previousFrame) {
@@ -60,27 +60,31 @@ public class PetRecordAddScreen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
-				
+
+
 				if (source == petAddRcButton) {
 					System.out.println("기입완료 버튼 클릭됨");
-					//값을 입력했는데 0으로 시작하거나 8자리를 다 입력하지 않았다면 실행
+					// 값을 입력했는데 0으로 시작하거나 8자리를 다 입력하지 않았다면 실행
 					String time = petMtTimeTField.getText().trim();
-                    if(!time.isEmpty()) {
-                    	if(time.substring(0, 1).equals("0") || time.length()!= 8)
-                    		warningLabel.setVisible(true);
-                    } else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length()==8)){
+					//System.out.println(!time.substring(0, 1).equals("0") && time.length() == 8);
+					System.out.println("*******"+ time.substring(0, 1).equals("0"));
+					System.out.println("*******"+ time.length());
+					if (!time.isEmpty() && (time.substring(0, 1).equals("0") || time.length() != 8)) {
+							warningLabel.setVisible(true);
+					} else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length() == 8)) {
+						System.out.println("abc");
 						BigDecimal height = new BigDecimal(0);
 						BigDecimal weight = new BigDecimal(0);
 						try {
-							if(!petHeightTField.getText().trim().isEmpty()){
+							if (!petHeightTField.getText().trim().isEmpty()) {
 								height = new BigDecimal(petHeightTField.getText());
 							}
-							if(!petWeightTField.getText().trim().isEmpty()) {
+							if (!petWeightTField.getText().trim().isEmpty()) {
 								weight = new BigDecimal(petWeightTField.getText());
 							}
 							bean.setHeight(height);
 							bean.setWeight(weight);
-						} catch (Exception e2) {	//텍스트 필드값이 숫자가 아닌 경우
+						} catch (Exception e2) { // 텍스트 필드값이 숫자가 아닌 경우
 							height = new BigDecimal(0);
 							weight = new BigDecimal(0);
 							bean.setHeight(height);
@@ -96,8 +100,8 @@ public class PetRecordAddScreen extends JFrame {
 						dispose();
 						new PetHomeScreen(pet_id);
 					}
-				} else if(source == backLabel) {
-					System.out.println("뒤로가기 버튼 클릭됨");	
+				} else if (source == backLabel) {
+					System.out.println("뒤로가기 버튼 클릭됨");
 					dispose();
 					previousFrame.setVisible(true);
 				}
@@ -126,9 +130,14 @@ public class PetRecordAddScreen extends JFrame {
 		petHeightTField = new JTextField();
 		petHeightTField.setBounds(43, 250, 318, 40);
 		petHeightTField.setText("");
-		petHeightTField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		petHeightTField
+				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+				));
 		add(petHeightTField);
 
 		// 반려동물 몸무게 라벨
@@ -141,9 +150,14 @@ public class PetRecordAddScreen extends JFrame {
 		petWeightTField = new JTextField();
 		petWeightTField.setBounds(43, 335, 318, 40);
 		petWeightTField.setText("");
-		petWeightTField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		petWeightTField
+				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+				));
 		add(petWeightTField);
 
 		// 반려동물 진료 기록 라벨
@@ -156,9 +170,13 @@ public class PetRecordAddScreen extends JFrame {
 		petMtTField = new JTextField();
 		petMtTField.setBounds(43, 420, 318, 40);
 		petMtTField.setText("");
-		petMtTField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		petMtTField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(petMtTField);
 
 		// 반려동물 예방접종 상태 라벨
@@ -171,9 +189,13 @@ public class PetRecordAddScreen extends JFrame {
 		petVsTField = new JTextField();
 		petVsTField.setBounds(43, 505, 318, 40);
 		petVsTField.setText("");
-		petVsTField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		petVsTField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(petVsTField);
 
 		// 반려동물 체크해야 할 정보 라벨
@@ -186,9 +208,14 @@ public class PetRecordAddScreen extends JFrame {
 		petChecksTField = new JTextField();
 		petChecksTField.setBounds(43, 590, 318, 40);
 		petChecksTField.setText("");
-		petChecksTField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		petChecksTField
+				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+				));
 		add(petChecksTField);
 
 		// 반려동물 진료 관련 시간 라벨
@@ -202,69 +229,75 @@ public class PetRecordAddScreen extends JFrame {
 		petMtTimeTField.setBounds(43, 675, 318, 40);
 		petMtTimeTField.setText(sdf.format(date));
 		petMtTField.setForeground(Color.GRAY);
-		petMtTimeTField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		petMtTimeTField
+				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+				));
 		add(petMtTimeTField);
-		
+
 		petMtTimeTField.addFocusListener(new FocusListener() {
-			
+
 			@Override
 			public void focusLost(FocusEvent e) {
-				if(petMtTimeTField.getText().isEmpty()) {
+				if (petMtTimeTField.getText().isEmpty()) {
 					petMtTimeTField.setText("ex) " + sdf.format(date));
 					petMtTimeTField.setForeground(Color.GRAY);
 					flag = true;
 				}
 			}
-			
+
 			@Override
 			public void focusGained(FocusEvent e) {
-				if(flag) {
+				if (flag) {
 					petMtTimeTField.setText("");
 					petMtTimeTField.setForeground(Color.BLACK);
 					flag = false;
 				}
 			}
 		});
-		
+
 		((AbstractDocument) petMtTimeTField.getDocument()).setDocumentFilter(new DocumentFilter() {
-		    @Override
-		    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-		        if (string != null) {
-		            // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-		            String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-		            String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
-		            if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크 
-		                super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
-		            }
-		        }
-		    }
+			@Override
+			public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+					throws BadLocationException {
+				if (string != null) {
+					// 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+					String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+					String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
+					if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크
+						super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
+					}
+				}
+			}
 
-		    @Override
-		    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-		        if (text != null) {
-		            // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-		            String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-		            String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
-		            if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크 
-		                super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
-		            }
-		        }
-		    }
+			@Override
+			public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+					throws BadLocationException {
+				if (text != null) {
+					// 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+					String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+					String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
+					if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크
+						super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
+					}
+				}
+			}
 
-		    @Override
-		    public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-		        super.remove(fb, offset, length);
-		    }
+			@Override
+			public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+				super.remove(fb, offset, length);
+			}
 		});
-        
-        warningLabel = new JLabel("올바른 진료 시간을 기입하시오");
-        warningLabel.setForeground(Color.RED);
-        warningLabel.setBounds(43, 705, 200, 40);
-        add(warningLabel);
-        warningLabel.setVisible(false);
-        
+
+		warningLabel = new JLabel("올바른 진료 시간을 기입하시오");
+		warningLabel.setForeground(Color.RED);
+		warningLabel.setBounds(43, 705, 200, 40);
+		add(warningLabel);
+		warningLabel.setVisible(false);
 
 		// 반려동물 정보 입력 완료 버튼
 		petAddRcButton = new RoundedButton("기입 완료");
