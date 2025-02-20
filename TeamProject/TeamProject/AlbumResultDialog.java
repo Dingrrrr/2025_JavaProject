@@ -167,11 +167,8 @@ public class AlbumResultDialog extends JFrame {
 		addButtonLabel.setEnabled(false);
 
 		// 앨범 이미지
-		System.out.println(ab.getAlbum_image());
 		byte[] imgBytes = ab.getAlbum_image();
 		imageBytes = ab.getAlbum_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);

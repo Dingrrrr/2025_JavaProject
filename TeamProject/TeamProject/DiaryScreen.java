@@ -83,7 +83,6 @@ public class DiaryScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		System.out.println(bean.getUser_image());
 		byte[] imgBytes = bean.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
 		// 상단 프로필 아이디

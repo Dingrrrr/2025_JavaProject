@@ -138,11 +138,7 @@ public class CommuAddScreen extends JFrame {
 		add(addButtonLabel);
 
 		// 회색 프레임
-		System.out.println(bean.getComu_image());
 		byte[] imgBytes = bean.getComu_image();
-		imageBytes = bean.getComu_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);

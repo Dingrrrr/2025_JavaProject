@@ -82,11 +82,8 @@ public class VoteScreenDialog extends JFrame {
 		add(heartLabel); // 🔹 패널에 추가
 
 		// 투표 이미지
-		System.out.println(vb.getVote_image());
 		byte[] imgBytes = vb.getVote_image();
 		imageBytes = vb.getVote_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);

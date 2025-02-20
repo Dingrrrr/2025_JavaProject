@@ -168,10 +168,7 @@ public class WritenCommuScreen extends JFrame {
 				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)));
 
 		// 커뮤 이미지
-		System.out.println(cb.getComu_image());
 		byte[] imgBytes1 = cb.getComu_image();
-		String imgNull = Arrays.toString(imgBytes1);
-		System.out.println(imgNull);
 		if (imgBytes1 == null || imgBytes1.length == 0) {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 300, 150);

@@ -190,7 +190,6 @@ public class AlbumMainScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 		
-		System.out.println(bean.getUser_image());
 		byte[] imgBytes = bean.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
 		// 상단 프로필 아이디
@@ -334,10 +333,7 @@ public class AlbumMainScreen extends JFrame {
 			StaticData.album_id = ab.getAlbum_id();
 			
 			// 앨범 레이블 생성
-			System.out.println(ab.getAlbum_image());
 			byte[] imgBytes = ab.getAlbum_image();
-			String imgNull = Arrays.toString(imgBytes);
-			System.out.println(imgNull);
 			JLabel albumLabel = new JLabel(); // JLabel을 먼저 생성
 			if (imgBytes == null || imgBytes.length == 0) {
 				albumLabel = createScaledImageLabel("TeamProject/photo_frame.png", 173, 100);
