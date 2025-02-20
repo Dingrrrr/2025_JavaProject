@@ -160,7 +160,6 @@ public class VotePhotoAddDialog extends JFrame {
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
-		System.out.println(imageBytes);
 		
 		// 변환된 이미지를 updateUserScreen에 저장
 		voteAddDialog.setImageBytes(imageBytes);
