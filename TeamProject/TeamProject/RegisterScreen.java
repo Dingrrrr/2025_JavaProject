@@ -348,6 +348,8 @@ public class RegisterScreen extends JFrame {
 				String pw_chk = pwChk_textField.getText().trim();
 				String name = name_textField.getText().trim();
 				String email = email_textField.getText().trim();
+				if(email.equals("(선택 사항)"))
+					email = " ";
 				String phone = phone_textField.getText().trim();
 				if(flag1) {	//아이디 중복 체크 성공
 					if(!pw.isEmpty() && !name.isEmpty() && !phone.isEmpty()) {	//모든 정보를 입력함

@@ -10,11 +10,14 @@ import javax.swing.text.DocumentFilter;
 import javax.swing.text.DocumentFilter.FilterBypass;
 
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 
 public class PetRecordModifyScreen extends JFrame {
     private BufferedImage image;
@@ -27,6 +30,10 @@ public class PetRecordModifyScreen extends JFrame {
     private HRBean bean;
     private String h, w, me, va, ch, da;
     private int recordId; // Record_id 추가
+	java.util.Date date = new java.util.Date();
+	boolean flag = true;
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
     public PetRecordModifyScreen(HRBean hr, JFrame preFrame, int recordId) { // Record_id를 파라미터로 받음
         setTitle("프레임 설정");
@@ -67,6 +74,8 @@ public class PetRecordModifyScreen extends JFrame {
                     petRcDeleteButton.setEnabled(true);
                 } else if (source == petRcModifyButton) {
                     String time = petMtTimeTField.getText().trim();
+                    if(time.equals("ex) " + sdf.format(date)))
+                    	time = "";
 					if (!time.isEmpty() && (time.substring(0, 1).equals("0") || time.length() != 8)) {
 						warningLabel.setVisible(true);
 					} else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length() == 8)) {
@@ -216,7 +225,32 @@ public class PetRecordModifyScreen extends JFrame {
         add(petMtTimeLabel);
 
         // 반려동물 진료 관련 시간 텍스트 필드 추가
-        petMtTimeTField = new JTextField(bean.getDate());
+        petMtTimeTField = new JTextField();
+        petMtTimeTField.setForeground(Color.GRAY);
+        if(bean.getDate().isEmpty()) {
+        	petMtTimeTField.setText("ex) " + sdf.format(date));
+        	petMtTimeTField.addFocusListener(new FocusListener() {
+				
+				@Override
+				public void focusLost(FocusEvent e) {
+					if(petMtTimeTField.getText().isEmpty()) {
+						petMtTimeTField.setText("ex) " + sdf.format(date));
+						petMtTimeTField.setForeground(Color.GRAY);
+						flag = true;
+					}
+				}
+				@Override
+				public void focusGained(FocusEvent e) {
+					if(flag) {
+						petMtTimeTField.setText("");
+						petMtTimeTField.setForeground(Color.BLACK);
+						flag = false;
+					}
+				}
+			});
+        }
+        else
+        	petMtTimeTField.setText(bean.getDate());
         petMtTimeTField.setBounds(43, 675, 318, 40);
         petMtTimeTField.setEnabled(false);
         petMtTimeTField.setBorder(BorderFactory.createCompoundBorder(

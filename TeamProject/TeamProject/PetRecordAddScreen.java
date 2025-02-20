@@ -65,6 +65,8 @@ public class PetRecordAddScreen extends JFrame {
 					System.out.println("기입완료 버튼 클릭됨");
 					// 값을 입력했는데 0으로 시작하거나 8자리를 다 입력하지 않았다면 실행
 					String time = petMtTimeTField.getText().trim();
+					if(time.equals("ex) " + sdf.format(date)))
+						time = "";
 					if (!time.isEmpty() && (time.substring(0, 1).equals("0") || time.length() != 8)) {
 							warningLabel.setVisible(true);
 					} else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length() == 8)) {
@@ -201,7 +203,7 @@ public class PetRecordAddScreen extends JFrame {
 		// 반려동물 진료 관련 시간 텍스트 필드 추가
 		petMtTimeTField = new JTextField();
 		petMtTimeTField.setBounds(43, 675, 318, 40);
-		petMtTimeTField.setText(sdf.format(date));
+		petMtTimeTField.setText("ex) " + sdf.format(date));
 		petMtTField.setForeground(Color.GRAY);
 		petMtTimeTField.setBorder(BorderFactory.createCompoundBorder(
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
