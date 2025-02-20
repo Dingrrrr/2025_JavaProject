@@ -21,7 +21,7 @@ public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
-			imageProfileLabel;
+			imageProfileLabel, petImageLabel;
 	private ImageIcon image2;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
@@ -32,7 +32,6 @@ public class PetAddMainScreen extends JFrame {
 	private JPanel petaddPanel;
 	private JScrollPane scrollPane; // 스크롤 패널
 	private byte[] imageBytes, imageBytes1;
-	private RoundedImageLabel petImageLabel;
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -123,13 +122,14 @@ public class PetAddMainScreen extends JFrame {
 			imageProfileLabel.addMouseListener(commonMouseListener);
 			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			RoundedImageLabel imageProfileLabel = new RoundedImageLabel(img1, 40, 40, 3); // 100은 둥근 정도
-			imageProfileLabel.setBounds(330, 120, 40, 40);
-			imageProfileLabel.addMouseListener(new MouseAdapter() {
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					System.out.println("👤 프로필 클릭됨!");
@@ -137,7 +137,7 @@ public class PetAddMainScreen extends JFrame {
 					new UpdateUserScreen(PetAddMainScreen.this);
 				}
 			});
-			add(imageProfileLabel);
+			add(roundedProfileImageLabel);
 		}
 
 		// 환영 문구
@@ -249,30 +249,30 @@ public class PetAddMainScreen extends JFrame {
 
 			// 왼쪽 - 이미지
 			byte[] imgBytes = pb.getPet_image();
+			String imgNull = Arrays.toString(imgBytes);
+			petImageLabel = new JLabel(); // JLabel을 먼저 생성
 			if (imgBytes == null || imgBytes.length == 0) {
-			    petImageLabel = createRoundedImageLabel("TeamProject/dog.png", 135, 135, 25); // 25는 모서리 둥글기 정도
-			    petImageLabel.addMouseListener(new MouseAdapter() {
-			        @Override
-			        public void mouseClicked(MouseEvent e) {
-			            dispose();
-			            new PetHomeScreen(pb.getPet_id());
-			        }
-			    });
+				petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);
+				petImageLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						dispose();
+						new PetHomeScreen(pb.getPet_id());
+					}
+				});
 			} else {
-			    ImageIcon icon1 = new ImageIcon(imgBytes);
-			    Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
-			    
-			    // RoundedImageLabel을 사용하여 둥근 이미지로 설정
-			    petImageLabel = new RoundedImageLabel(img1, 135, 135, 25); // 25는 모서리 둥글기 정도
-			    petImageLabel.addMouseListener(new MouseAdapter() {
-			        @Override
-			        public void mouseClicked(MouseEvent e) {
-			            dispose();
-			            new PetHomeScreen(pb.getPet_id());
-			        }
-			    });
+				ImageIcon icon1 = new ImageIcon(imgBytes);
+				Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+				petImageLabel.setIcon(new ImageIcon(img1));
+				petImageLabel.setVerticalAlignment(JLabel.TOP);
+				petImageLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						dispose();
+						new PetHomeScreen(pb.getPet_id());
+					}
+				});
 			}
-
 
 			// 4) 본문 패널 (이미지 + 텍스트)
 			JPanel contentPanel = new JPanel();
@@ -315,12 +315,6 @@ public class PetAddMainScreen extends JFrame {
 		ImageIcon icon = new ImageIcon(imagePath);
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
-	}
-	
-	private RoundedImageLabel createRoundedImageLabel(String imagePath, int width, int height, int cornerRadius) {
-	    ImageIcon icon = new ImageIcon(imagePath);
-	    Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-	    return new RoundedImageLabel(img, width, height, cornerRadius);
 	}
 
 	public static void main(String[] args) {

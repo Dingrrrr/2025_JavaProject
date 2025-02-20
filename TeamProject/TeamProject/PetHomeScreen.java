@@ -110,27 +110,36 @@ public class PetHomeScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
-		
+
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean1.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
-			profileLabel = new JLabel();
-			profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+		// 상단 프로필 아이디
+		if (imgBytes == null || imgBytes.length == 0) {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			profileLabel = new JLabel();
-			profileLabel.setIcon(new ImageIcon(img1));
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(PetHomeScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
-		// 메인 프로필 이미지
+		// 펫 프로필 이미지
 		byte[] imgBytes1 = bean.getPet_image();
 		if (imgBytes1 == null || imgBytes1.length == 0) {
 			imageLabel = new JLabel();
@@ -139,13 +148,22 @@ public class PetHomeScreen extends JFrame {
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon = new ImageIcon(imgBytes1);
 			Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-			imageLabel = new JLabel();
-			imageLabel.setIcon(new ImageIcon(img));
-			imageLabel.setBounds(40, 190, 150, 150);
-			imageLabel.addMouseListener(commonMouseListener);
-			add(imageLabel);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 150, 150, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(40, 190, 150, 150);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new PetModifyScreen(PetHomeScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
 		// 🔹 반려동물 이름 라벨

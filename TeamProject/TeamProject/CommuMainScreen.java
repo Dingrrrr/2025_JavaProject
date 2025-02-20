@@ -24,7 +24,8 @@ public class CommuMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private ImageIcon image2;
-	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel, comuImageLabel;
+	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel,imageProfileLabel,
+			comuImageLabel;
 	private JPanel commuPanel; // 커뮤니티 게시글 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	Vector<ComuBean> vlist;
@@ -93,21 +94,30 @@ public class CommuMainScreen extends JFrame {
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean1.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
-			profileLabel = new JLabel();
-			profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+		// 상단 프로필 아이디
+		if (imgBytes == null || imgBytes.length == 0) {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			profileLabel = new JLabel();
-			profileLabel.setIcon(new ImageIcon(img1));
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(CommuMainScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
 		// 🔹 앨범 & 일기 버튼
@@ -173,7 +183,6 @@ public class CommuMainScreen extends JFrame {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
 		panel.add(scrollPane);
 
-
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
 		addButtonLabel.setBounds(300, 700, 70, 70);
@@ -211,7 +220,7 @@ public class CommuMainScreen extends JFrame {
 	private void addCommu() {
 		// 🔹 기존 게시글 지우기 (중복 방지)
 		commuPanel.removeAll();
-		
+
 		for (ComuBean cb : vlist) {
 			// 1) 전체 항목을 감싸는 패널
 			JPanel commuItemPanel = new JPanel();
@@ -260,7 +269,7 @@ public class CommuMainScreen extends JFrame {
 			comuImageLabel = new JLabel(); // JLabel을 먼저 생성
 			comuImageLabel.setPreferredSize(new Dimension(70, 70));
 			if (imgBytes1 == null || imgBytes1.length == 0) {
-				comuImageLabel= createScaledImageLabel("TeamProject/photo_frame.png", 70, 70);
+				comuImageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 70, 70);
 			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes1);
 				Image img1 = icon1.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);

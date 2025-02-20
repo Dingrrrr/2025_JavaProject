@@ -129,21 +129,30 @@ public class DiaryMainScreen extends JFrame {
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
-			profileLabel = new JLabel();
-			profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+		// 상단 프로필 아이디
+		if (imgBytes == null || imgBytes.length == 0) {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			profileLabel = new JLabel();
-			profileLabel.setIcon(new ImageIcon(img1));
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(DiaryMainScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
 		// 🔹 앨범 & 일기 버튼
@@ -266,7 +275,6 @@ public class DiaryMainScreen extends JFrame {
 	public void addDiary() {
 		diaryPanel.removeAll();
 		for (DiaryBean db : vlist) {
-			StaticData.diary_id = db.getDiary_id();
 			// 날짜 라벨 생성
 			JLabel diaryDateLabel = new JLabel("날짜: " + sdf.format(db.getDiary_date()));
 			diaryDateLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -301,7 +309,7 @@ public class DiaryMainScreen extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					setEnabled(false);
-					new DiaryResultDialog(DiaryMainScreen.this);
+					new DiaryResultDialog(db, DiaryMainScreen.this);
 				}
 			});
 
