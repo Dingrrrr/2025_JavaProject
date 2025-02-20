@@ -53,7 +53,7 @@ public class PetModifyScreen extends JFrame {
 					preFrame.setEnabled(true);
 					dispose();
 					preFrame.setVisible(true);
-				} else if (source == petAddProButton) {
+				} else if (source == petAddProButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 					if (ppm == null) {
 						ppm = new PetPhotoModifyDialog(PetModifyScreen.this); // 'this'를 넘겨줍니다.
@@ -65,11 +65,11 @@ public class PetModifyScreen extends JFrame {
 							ppm.setVisible(true);
 						}
 					}
-				} else if (source == petSpSearchButton) {
+				} else if (source == petSpSearchButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					setEnabled(false);
 					new PetSpeciesSearchDialogByModify(PetModifyScreen.this);
-				} else if (source == completionButton) {
+				} else if (source == completionButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 정보수정 완료 버튼 클릭됨!");
 					name = petNameTField.getText().trim();
 					spec = petSpecTField.getText().trim();
@@ -87,7 +87,7 @@ public class PetModifyScreen extends JFrame {
 					dispose();
 					new PetHomeScreen(StaticData.pet_id);
 
-				} else if (source == petDeleteButton) {
+				} else if (source == petDeleteButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
 					mgr.delPet(StaticData.pet_id);
 					dispose();
@@ -122,24 +122,19 @@ public class PetModifyScreen extends JFrame {
 						if(birth.length()!=11 || !birth.substring(0, 3).equals("010")) {
 							petBirthTField.setForeground(Color.RED);
 						} else {
-							System.out.println("반려동물 정보 수정 버튼 클릭됨!");
-							name = petNameTField.getText().trim();
-							spec = petSpecTField.getText().trim();
-							birth = petBirthTField.getText().trim();
-							pb.setPet_name(name);
-							pb.setPet_species(spec);
-							pb.setPet_age(birth);
-							if (petMaleRdButton.isSelected()) {
-								pb.setPet_gender("수컷");
-							} else if (petFemaleRdBotton.isSelected()) {
-								pb.setPet_gender("암컷");
-							}
-							imageBytes = pb.getPet_image();
-							pb.setPet_image(imageBytes);
-							if (mgr.updPet(StaticData.pet_id, pb)) {
+							UserBean bb = new UserBean();
+							bb.setUsername(name);
+							bb.setPassword(sp);
+							bb.setEmail(birth);
+							bb.setUser_image(imageBytes);
+							if (mgr.userUpd(StaticData.user_id, bb)) {
 								petNameTField.setEnabled(false);
 								petSpecTField.setEnabled(false);
 								petBirthTField.setEnabled(false);
+								petDeleteButton.setEnabled(false);
+								petAddProButton.setEnabled(false);
+								petSpSearchButton.setEnabled(false);
+								completionButton.setEnabled(false);
 								dispose();
 								new PetHomeScreen(StaticData.pet_id);
 							}
@@ -165,7 +160,10 @@ public class PetModifyScreen extends JFrame {
 		add(petAddProButton);
 
 		// 메인 프로필 이미지
+		System.out.println(bean.getPet_image());
 		byte[] imgBytes = bean.getPet_image();
+		String imgNull = Arrays.toString(imgBytes);
+		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200);
