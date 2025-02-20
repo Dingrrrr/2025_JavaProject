@@ -2,19 +2,29 @@ package TeamProject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 public class PetModifyScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel backLabel, petProfileLabel, deleteLabel, imageLabel;
-	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel;
+	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel, warningLabel, warningLabel2;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
 	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton, completionButton ;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
@@ -23,6 +33,10 @@ public class PetModifyScreen extends JFrame {
 	PetBean bean, pb;
 	private PetPhotoModifyDialog ppm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
+	Date date = new Date();
+	boolean flag = true;
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -65,29 +79,38 @@ public class PetModifyScreen extends JFrame {
 							ppm.setVisible(true);
 						}
 					}
-				} else if (source == petSpSearchButton && petSpSearchButton.isEnabled()) {
+				} else if (source == petSpSearchButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					setEnabled(false);
 					new PetSpeciesSearchDialogByModify(PetModifyScreen.this);
-				} else if (source == completionButton && completionButton.isEnabled()) {
+				} else if (source == completionButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 정보수정 완료 버튼 클릭됨!");
 					name = petNameTField.getText().trim();
 					spec = petSpecTField.getText().trim();
 					birth = petBirthTField.getText().trim();
-					pb.setPet_name(name);
-					pb.setPet_species(spec);
-					pb.setPet_age(birth);
-					if (petMaleRdButton.isSelected()) {
-						pb.setPet_gender("수컷");
-					} else if (petFemaleRdBotton.isSelected()) {
-						pb.setPet_gender("암컷");
+					if(birth.equals("ex) " + sdf.format(date)))
+						birth = "";
+					if(name.isEmpty()) {	//이름이 비어있다면 경고
+						warningLabel.setVisible(true);
+						warningLabel2.setVisible(false);						
+					} else if(!birth.isEmpty() && (birth.length() != 8 || birth.substring(0, 1).equals("0"))) {
+						warningLabel.setVisible(false);
+						warningLabel2.setVisible(true);
+					} else if(birth.isEmpty() || (birth.length() == 8 && !birth.substring(0, 1).equals("0"))) {
+						pb.setPet_name(name);
+						pb.setPet_species(spec);
+						pb.setPet_age(birth);
+						if (petMaleRdButton.isSelected()) {
+							pb.setPet_gender("수컷");
+						} else if (petFemaleRdBotton.isSelected()) {
+							pb.setPet_gender("암컷");
+						}
+						pb.setPet_image(imageBytes);
+						mgr.updPet(StaticData.pet_id, pb);
+						dispose();
+						new PetHomeScreen(StaticData.pet_id);
 					}
-					pb.setPet_image(imageBytes);
-					mgr.updPet(StaticData.pet_id, pb);
-					dispose();
-					new PetHomeScreen(StaticData.pet_id);
-
-				} else if (source == petDeleteButton && petDeleteButton.isEnabled()) {
+				} else if (source == petDeleteButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
 					mgr.delPet(StaticData.pet_id);
 					dispose();
@@ -95,52 +118,16 @@ public class PetModifyScreen extends JFrame {
 						new PetAddMainScreen();
 					} else {
 						new UserHomeScreen();
-					}
-				} else if (source == petModifyButton) {
-					System.out.println("반려동물 정보 수정 버튼 클릭됨!");
+					}	
+				} else if(source == petModifyButton) {
 					petDeleteButton.setEnabled(true);
 					petAddProButton.setEnabled(true);
 					petSpSearchButton.setEnabled(true);
 					petNameTField.setEnabled(true);
-					petSpecTField.setEnabled(true);
 					petBirthTField.setEnabled(true);
 					petMaleRdButton.setEnabled(true);
 					petFemaleRdBotton.setEnabled(true);
 					completionButton.setEnabled(true);
-				} else if (source == completionButton) {
-					String name = petNameTField.getText().trim();
-					String sp = petSpecTField.getText().trim();
-					String birth = petBirthTField.getText().trim();
-					if(name.isEmpty())
-						petNameTField.requestFocus();
-					else if(!name.isEmpty() && sp.isEmpty())
-						petSpecTField.requestFocus();
-					else if(!name.isEmpty() && !sp.isEmpty() && birth.isEmpty())
-						petBirthTField.requestFocus();
-					else if(!name.isEmpty() && !sp.isEmpty() && !birth.isEmpty()) {
-						if(birth.length()!=11 || !birth.substring(0, 3).equals("010")) {
-							petBirthTField.setForeground(Color.RED);
-						} else {
-							UserBean bb = new UserBean();
-							bb.setUsername(name);
-							bb.setPassword(sp);
-							bb.setEmail(birth);
-							bb.setUser_image(imageBytes);
-							if (mgr.userUpd(StaticData.user_id, bb)) {
-								petNameTField.setEnabled(false);
-								petSpecTField.setEnabled(false);
-								petBirthTField.setEnabled(false);
-								petDeleteButton.setEnabled(false);
-								petAddProButton.setEnabled(false);
-								petSpSearchButton.setEnabled(false);
-								completionButton.setEnabled(false);
-								dispose();
-								new PetHomeScreen(StaticData.pet_id);
-							}
-						}
-						
-					}
-					
 				}
 			}
 		};
@@ -178,6 +165,19 @@ public class PetModifyScreen extends JFrame {
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		}
+		
+		// 경고문
+		warningLabel = new JLabel("이름을 입력하시오");
+		warningLabel.setForeground(Color.RED);
+		warningLabel.setBounds(43, 545, 250, 60);
+		add(warningLabel);
+		warningLabel.setVisible(false);
+		
+		warningLabel2 = new JLabel("올바른 생년월일을 기입하시오");
+		warningLabel2.setForeground(Color.RED);
+		warningLabel2.setBounds(43, 715, 250, 60);
+		add(warningLabel2);
+		warningLabel2.setVisible(false);
 
 		// 반려동물 이름 라벨
 		petNameLabel = new JLabel("이름");
@@ -216,9 +216,65 @@ public class PetModifyScreen extends JFrame {
 		add(petBirthLabel);
 
 		// 반려동물 종 생년월일 필드 추가
-		petBirthTField = new JTextField(bean.getPet_age());
+		petBirthTField = new JTextField();
+		petBirthTField.setForeground(Color.GRAY);
+		if(bean.getPet_age().isEmpty()) {
+			petBirthTField.setText("ex) " + sdf.format(date));
+			petBirthTField.addFocusListener(new FocusListener() {
+				
+				@Override
+				public void focusLost(FocusEvent e) {
+					if(petBirthTField.getText().isEmpty()) {
+						petBirthTField.setText("ex) " + sdf.format(date));
+						petBirthTField.setForeground(Color.GRAY);
+						flag = true;
+					}
+				}
+				@Override
+				public void focusGained(FocusEvent e) {
+					if(flag) {
+						petBirthTField.setText("");
+						petBirthTField.setForeground(Color.BLACK);
+						flag = false;
+					}
+				}
+			});
+		} else
+			petBirthTField.setText(bean.getPet_age());
+		
 		petBirthTField.setBounds(43, 696, 147, 40);
 		add(petBirthTField);
+		  // DocumentFilter를 사용하여 전화번호 형식 제한
+        ((AbstractDocument) petBirthTField.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string != null) {
+                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
+                    if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크
+                        super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
+                    }
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text != null) {
+                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
+                    if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크
+                        super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
+                    }
+                }
+            }
+
+            @Override
+            public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+                super.remove(fb, offset, length);
+            }
+        });
 
 		// 반려동물 성별 라벨
 		petGenderLabel = new JLabel("성별");
@@ -263,6 +319,10 @@ public class PetModifyScreen extends JFrame {
 			petMaleRdButton.setSelected(true);
 		else if (bean.getPet_gender().equals("암컷"))
 			petFemaleRdBotton.setSelected(true);
+		else if(bean.getPet_gender().isEmpty()) {
+			petMaleRdButton.setSelected(false);
+			petFemaleRdBotton.setSelected(false);
+		}
 
 		// 반려동물 정보 수정 버튼
 		petModifyButton = new JButton("수정");

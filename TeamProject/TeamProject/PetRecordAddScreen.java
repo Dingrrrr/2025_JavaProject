@@ -63,24 +63,25 @@ public class PetRecordAddScreen extends JFrame {
 				
 				if (source == petAddRcButton) {
 					System.out.println("기입완료 버튼 클릭됨");
-					//값을 입력했는데 0으로 시작하거나 8자리를 다 입력하지 않았다면 실행
+					// 값을 입력했는데 0으로 시작하거나 8자리를 다 입력하지 않았다면 실행
 					String time = petMtTimeTField.getText().trim();
-                    if(!time.isEmpty()) {
-                    	if(time.substring(0, 1).equals("0") || time.length()!= 8)
-                    		warningLabel.setVisible(true);
-                    } else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length()==8)){
+					if(time.equals("ex) " + sdf.format(date)))
+						time = "";
+					if (!time.isEmpty() && (time.substring(0, 1).equals("0") || time.length() != 8)) {
+							warningLabel.setVisible(true);
+					} else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length() == 8)) {
 						BigDecimal height = new BigDecimal(0);
 						BigDecimal weight = new BigDecimal(0);
 						try {
-							if(!petHeightTField.getText().trim().isEmpty()){
+							if (!petHeightTField.getText().trim().isEmpty()) {
 								height = new BigDecimal(petHeightTField.getText());
 							}
-							if(!petWeightTField.getText().trim().isEmpty()) {
+							if (!petWeightTField.getText().trim().isEmpty()) {
 								weight = new BigDecimal(petWeightTField.getText());
 							}
 							bean.setHeight(height);
 							bean.setWeight(weight);
-						} catch (Exception e2) {	//텍스트 필드값이 숫자가 아닌 경우
+						} catch (Exception e2) { // 텍스트 필드값이 숫자가 아닌 경우
 							height = new BigDecimal(0);
 							weight = new BigDecimal(0);
 							bean.setHeight(height);
@@ -90,14 +91,16 @@ public class PetRecordAddScreen extends JFrame {
 						bean.setVaccination_status(petVsTField.getText().trim());
 						bean.setCheckup_status(petChecksTField.getText().trim());
 						bean.setDate(petMtTimeTField.getText().trim());
-						mgr.addPet(StaticData.user_id, pb);
+						if(!mgr.isThatPet(StaticData.pet_id)) {
+							mgr.addPet(StaticData.user_id, pb);
+						}
 						pet_id = mgr.showPetId(StaticData.user_id, pb);
 						mgr.addHRPet(pet_id, bean);
 						dispose();
 						new PetHomeScreen(pet_id);
 					}
-				} else if(source == backLabel) {
-					System.out.println("뒤로가기 버튼 클릭됨");	
+				} else if (source == backLabel) {
+					System.out.println("뒤로가기 버튼 클릭됨");
 					dispose();
 					previousFrame.setVisible(true);
 				}
@@ -200,7 +203,7 @@ public class PetRecordAddScreen extends JFrame {
 		// 반려동물 진료 관련 시간 텍스트 필드 추가
 		petMtTimeTField = new JTextField();
 		petMtTimeTField.setBounds(43, 675, 318, 40);
-		petMtTimeTField.setText(sdf.format(date));
+		petMtTimeTField.setText("ex) " + sdf.format(date));
 		petMtTField.setForeground(Color.GRAY);
 		petMtTimeTField.setBorder(BorderFactory.createCompoundBorder(
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)

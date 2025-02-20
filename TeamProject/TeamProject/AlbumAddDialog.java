@@ -16,13 +16,14 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 public class AlbumAddDialog extends JFrame {
+	// 푸시해줘
+	
 	private BufferedImage image;
 	private JLabel closeLabel, addButtonLabel, grayFrameLabel;
 	private JLabel AlbumTagLabel, AlbumWritelabel;
-	private JTextField  AlbumTagTField;
+	private JTextField AlbumTagTField;
 	private JTextArea AlbumWriteTArea;
 	private JButton SaveButton;
-	private JScrollPane scrollPane;
 	private String tags, write;
 	TPMgr mgr;
 	AlbumBean bean;
@@ -35,10 +36,8 @@ public class AlbumAddDialog extends JFrame {
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		mgr = new TPMgr();
 		bean = new AlbumBean();
-
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -86,66 +85,68 @@ public class AlbumAddDialog extends JFrame {
 			}
 		};
 
-		
-				// 앨범	태그 라벨
-				AlbumTagLabel = new JLabel("태그");
-				AlbumTagLabel.setBounds(15, 315, 48, 60);
-				AlbumTagLabel.setForeground(Color.black);
-				add(AlbumTagLabel);
+		// 앨범 태그 라벨
+		AlbumTagLabel = new JLabel("태그");
+		AlbumTagLabel.setBounds(15, 315, 48, 60);
+		AlbumTagLabel.setForeground(Color.black);
+		add(AlbumTagLabel);
 
+		// 앨범 태그 텍스트 필드 추가
+		AlbumTagTField = new JTextField();
+		AlbumTagTField.setBounds(15, 355, 318, 40);
+		AlbumTagTField.setText("");
+		AlbumTagTField
+				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+				));
+		add(AlbumTagTField);
 
-				// 앨범 태그 텍스트 필드 추가
-				AlbumTagTField = new JTextField();
-				AlbumTagTField.setBounds(15, 355, 318, 40);
-				AlbumTagTField.setText("");
-				AlbumTagTField.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				    ));
-				add(AlbumTagTField);
+		// 앨범 설명 라벨
+		AlbumWritelabel = new JLabel("설명");
+		AlbumWritelabel.setBounds(15, 380, 48, 60);
+		AlbumWritelabel.setForeground(Color.black);
+		add(AlbumWritelabel);
 
+		// 앨범 설명 텍스트 필드 추가
+		AlbumWriteTArea = new JTextArea();
+		AlbumWriteTArea.setText("");
+		AlbumWriteTArea.setLineWrap(true);
+		AlbumWriteTArea.setWrapStyleWord(true);
+		add(AlbumWriteTArea);
 
-				// 앨범 설명 라벨
-				AlbumWritelabel = new JLabel("설명");
-				AlbumWritelabel.setBounds(15, 380, 48, 60);
-				AlbumWritelabel.setForeground(Color.black);
-				add(AlbumWritelabel);
+		JScrollPane scrollPane = new JScrollPane(AlbumWriteTArea);
+		scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 수직 스크롤바 숨김
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 수평 스크롤바 숨김
+		scrollPane.setBackground(Color.white);
+		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+		// 여백
+		// (위,
+		// 왼쪽,
+		// 아래,
+		// 오른쪽)
+		));
+		add(scrollPane); // JScrollPane을 프레임에 추가
+		scrollPane.setBounds(15, 420, 318, 135); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setBackground(Color.WHITE);
+		// 스크롤 바 안 보이게 설정
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위, 왼쪽, 아래, 오른쪽)
+				));
+		add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
 
-
-				// 앨범 설명 텍스트 필드 추가
-				AlbumWriteTArea = new JTextArea();
-				AlbumWriteTArea.setBounds(15, 420, 318, 130);
-				AlbumWriteTArea.setText("");
-				AlbumWriteTArea.setLineWrap(true);
-				AlbumWriteTArea.setWrapStyleWord(true);
-				AlbumWriteTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				    ));
-				add(AlbumWriteTArea);             
-				
-				scrollPane = new JScrollPane(AlbumWriteTArea);
-				scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
-				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
-				scrollPane.setBorder(BorderFactory.createCompoundBorder(
-							new RoundedBorder(20), new EmptyBorder(0, 0, 0, 0)
-						));
-				add(scrollPane);
-
-				
-				//JScrollPane scrollPane = new JScrollPane(AlbumWriteTArea);
-				//scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
-				//scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-				//add(scrollPane); // JScrollPane을 프레임에 추가
-				
-				// 저장 버튼
-				SaveButton = new RoundedButton("저장");
-				SaveButton.setBounds(115, 565, 100, 40);
-				SaveButton.setBackground(new Color(91, 91, 91));
-				SaveButton.setForeground(Color.WHITE);
-				SaveButton.addMouseListener(commonMouseListener);
-				add(SaveButton);
-
-
+		// 저장 버튼
+		SaveButton = new RoundedButton("저장");
+		SaveButton.setBounds(115, 565, 100, 40);
+		SaveButton.setBackground(new Color(91, 91, 91));
+		SaveButton.setForeground(Color.WHITE);
+		SaveButton.addMouseListener(commonMouseListener);
+		add(SaveButton);
 
 		// 🔹 추가 버튼
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 62, 62);

@@ -10,22 +10,25 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-public class NoteCheckScreen extends JFrame {
+public class adminSendScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel;
-	private JLabel SendedIdLabel,TitleLabel, DescriptionLabel;
-	private JTextField  SendedIdTField;
+	private JLabel SendIdLabel,TitleLabel, DescriptionLabel, modifyLabel;
+	private JTextField  SendIdTField;
 	private JTextArea TitleTArea, DescriptionTArea;
-	private JButton DeleteButton;
+	private JButton SendButton, allSendButton;
+	private String id, title, content;
 	TPMgr mgr;
+	MsgBean bean;
 
-	public NoteCheckScreen(JFrame preFrame, MsgBean mb) {
+	public adminSendScreen(JFrame prePreFrame, JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
+		bean = new MsgBean();
 	
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -43,31 +46,45 @@ public class NoteCheckScreen extends JFrame {
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
-				} else if (source == DeleteButton) {
-					System.out.println("삭제 버튼클릭됨");
-					mgr.delMsg(mb.getMsg_id());
+				} else if (source == SendButton) {
+					System.out.println("전송 버튼클릭됨");
+					id = SendIdTField.getText().trim();
+					title = TitleTArea.getText().trim();
+					content = DescriptionTArea.getText().trim();
+					bean.setReceiver_id(id);
+					bean.setMsg_title(title);
+					bean.setMsg_content(content);
+					mgr.sendMsg(StaticData.user_id, bean);
+					StaticData.msg_user_id = "";
 					dispose();
-					preFrame.setEnabled(true);
 					preFrame.dispose();
-					new AlarmMainScreen(StaticData.jf);
+					new AlarmMainScreen(prePreFrame);
+				} else if (source == allSendButton); {
+					System.out.println("전체 전송 버튼 클릭됨");
+					title = TitleTArea.getText().trim();
+					content = DescriptionTArea.getText().trim();
+					mgr.sendAllMsg(title, content);
+					JOptionPane.showMessageDialog(null, "전체 전송 완료!", "알림", JOptionPane.INFORMATION_MESSAGE);
+					dispose();
+					preFrame.dispose();
+					new AlarmMainScreen(prePreFrame);
 				}
 			}
 		};
 		
-				// 전송받은 아이디 라벨
-		SendedIdLabel = new JLabel("전송받은 아이디");
-		SendedIdLabel.setBounds(15, 20, 100, 60);
-		SendedIdLabel.setForeground(Color.black);
-				add(SendedIdLabel);
+				// 전송할 아이디 라벨
+		SendIdLabel = new JLabel("전송할 아이디");
+		SendIdLabel.setBounds(15, 20, 100, 60);
+		SendIdLabel.setForeground(Color.black);
+				add(SendIdLabel);
 
-				// 전송받은 아이디 필드 추가
-				SendedIdTField = new JTextField(mb.getSender_id());
-				SendedIdTField.setBounds(15, 60, 318, 40);
-				SendedIdTField.setBorder(BorderFactory.createCompoundBorder(
+				// 전송할 아이디 필드 추가
+				SendIdTField = new JTextField(StaticData.msg_user_id);
+				SendIdTField.setBounds(15, 60, 318, 40);
+				SendIdTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
-				add(SendedIdTField);
-				SendedIdTField.setEnabled(false);
+				add(SendIdTField);
 
 				// 제목 라벨
 				TitleLabel = new JLabel("제목");
@@ -76,13 +93,13 @@ public class NoteCheckScreen extends JFrame {
 				add(TitleLabel);
 
 				// 제목 필드 추가
-				TitleTArea = new JTextArea(mb.getMsg_title());
+				TitleTArea = new JTextArea();
 				TitleTArea.setBounds(15, 130, 318, 40);
+				TitleTArea.setText("");
 				TitleTArea.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
 				add(TitleTArea);
-				TitleTArea.setEnabled(false);
 				
 				//설명 라벨
 				DescriptionLabel = new JLabel("설명");
@@ -107,13 +124,21 @@ public class NoteCheckScreen extends JFrame {
 						));
 				add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
 				
-				// 삭제 버튼
-				DeleteButton = new RoundedButton("삭제");
-				DeleteButton.setBounds(115, 565, 100, 40);
-				DeleteButton.setBackground(new Color(91, 91, 91));
-				DeleteButton.setForeground(Color.WHITE);
-				DeleteButton.addMouseListener(commonMouseListener);
-				add(DeleteButton);
+				// 전송 버튼
+				SendButton = new RoundedButton("전송");
+				SendButton.setBounds(60, 535, 100, 40);
+				SendButton.setBackground(new Color(91, 91, 91));
+				SendButton.setForeground(Color.WHITE);
+				SendButton.addMouseListener(commonMouseListener);
+				add(SendButton);
+				
+				// 전체 전송 버튼
+				allSendButton = new RoundedButton("전체 전송");
+				allSendButton.setBounds(180, 535, 120, 40);
+				allSendButton.setBackground(new Color(91, 91, 91));
+				allSendButton.setForeground(Color.WHITE);
+				allSendButton.addMouseListener(commonMouseListener);
+				add(allSendButton);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
@@ -136,7 +161,7 @@ public class NoteCheckScreen extends JFrame {
 		closeLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
 		closeLabel.setBounds(315, 7, 28, 28);
 		closeLabel.addMouseListener(commonMouseListener);
-		panel.add(closeLabel); // 🔹 패널에 추가
+		panel.add(closeLabel); // 🔹 패널에 추가	
 
 		setVisible(true);
 	}
@@ -154,4 +179,3 @@ public class NoteCheckScreen extends JFrame {
 		new LoginScreen();
 	}
 }
-

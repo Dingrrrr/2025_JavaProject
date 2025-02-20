@@ -98,22 +98,22 @@ public class NoteSendScreen extends JFrame {
 				DescriptionLabel.setForeground(Color.black);
 				add(DescriptionLabel);
 				
-				//설명 필드 추가
+				// 게시글 설명 텍스트 필드 추가
 				DescriptionTArea = new JTextArea();
-				DescriptionTArea.setBounds(15, 200, 318, 350);
 				DescriptionTArea.setText("");
 				DescriptionTArea.setLineWrap(true);
 				DescriptionTArea.setWrapStyleWord(true);
-				DescriptionTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				    ));
 				add(DescriptionTArea);
-				
-				//설명 필드 스크롤
+
 				JScrollPane scrollPane = new JScrollPane(DescriptionTArea);
-				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
-				scrollPane.setBounds(15, 200, 318, 350); // 텍스트 영역 크기와 위치 설정
-				add(scrollPane); // JScrollPane을 프레임에 추가
+				scrollPane.setBounds(15, 210, 318, 275); // 텍스트 영역 크기와 위치 설정
+				scrollPane.setBackground(Color.WHITE);
+				// 스크롤 바 안 보이게 설정
+				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위, 왼쪽, 아래, 오른쪽)
+						));
+				add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
 				
 				// 저장 버튼
 				SendButton = new RoundedButton("전송");

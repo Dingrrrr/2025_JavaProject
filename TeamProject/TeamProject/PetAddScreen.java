@@ -3,22 +3,31 @@ package TeamProject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Stack;
 
 public class PetAddScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel backLabel, petProfileLabel, deleteLabel, imageLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel,
-			warningLabel;
+			warningLabel, warningLabel2;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
 	private JButton petAddProButton, petSpSearchButton, nextButton;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
@@ -27,6 +36,10 @@ public class PetAddScreen extends JFrame {
 	private PetSpeciesSearchDialog pssd;
 	private PetPhotoAddDialog ppm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
+	boolean flag = true;
+	Date date = new Date();
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 	public PetAddScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -36,6 +49,8 @@ public class PetAddScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		bean = new PetBean();
+		StaticData.pet_id = 0;
+		bean.setPet_gender("");
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -75,12 +90,19 @@ public class PetAddScreen extends JFrame {
 					setEnabled(false);
 				} else if (source == nextButton) {
 					System.out.println("다음 단계 버튼 클릭됨!");
+					String birth = petBirthTField.getText().trim();
+					if(petBirthTField.getText().trim().equals("ex) " + sdf.format(date)))
+						birth = "";
 					if (petNameTField.getText().trim().isEmpty()) {
 						warningLabel.setVisible(true);
-					} else {
+						warningLabel2.setVisible(false);
+					} else if(!birth.isEmpty() && (birth.length() != 8 || birth.substring(0, 1).equals("0"))) {
+						warningLabel.setVisible(false);
+						warningLabel2.setVisible(true);
+					} else if(birth.isEmpty() || (birth.length() == 8 && !birth.substring(0, 1).equals("0"))) {
 						bean.setPet_name(petNameTField.getText().trim());
 						bean.setPet_species(petSpecTField.getText().trim());
-						bean.setPet_age(petBirthTField.getText().trim());
+						bean.setPet_age(birth);
 						dispose();
 						new PetRecordAddScreen(bean, PetAddScreen.this);
 					}
@@ -143,6 +165,12 @@ public class PetAddScreen extends JFrame {
 		warningLabel.setBounds(43, 545, 250, 60);
 		add(warningLabel);
 		warningLabel.setVisible(false);
+		
+		warningLabel2 = new JLabel("올바른 생년월일을 기입하시오");
+		warningLabel2.setForeground(Color.RED);
+		warningLabel2.setBounds(43, 715, 250, 60);
+		add(warningLabel2);
+		warningLabel2.setVisible(false);
 
 		// 반려동물 종 라벨
 		petSpecLabel = new JLabel("종");
@@ -182,7 +210,28 @@ public class PetAddScreen extends JFrame {
 		// 반려동물 종 생년월일 필드 추가
 		petBirthTField = new JTextField();
 		petBirthTField.setBounds(43, 696, 147, 40);
-		petBirthTField.setText("");
+		petBirthTField.setText("ex) " + sdf.format(date));
+		petBirthTField.setForeground(Color.GRAY);
+		petBirthTField.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(petBirthTField.getText().isEmpty()) {
+					petBirthTField.setText("ex) " + sdf.format(date));
+					petBirthTField.setForeground(Color.GRAY);
+					flag = true;
+				}
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(flag) {
+					petBirthTField.setText("");
+					petBirthTField.setForeground(Color.BLACK);
+					flag = false;
+				}
+			}
+		});
 		petBirthTField
 				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
 																														// 여백
@@ -192,6 +241,37 @@ public class PetAddScreen extends JFrame {
 																														// 오른쪽)
 				));
 		add(petBirthTField);
+		  // DocumentFilter를 사용하여 전화번호 형식 제한
+        ((AbstractDocument) petBirthTField.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string != null) {
+                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
+                    if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크
+                        super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
+                    }
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text != null) {
+                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
+                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
+                    if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크
+                        super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
+                    }
+                }
+            }
+
+            @Override
+            public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+                super.remove(fb, offset, length);
+            }
+        });
 
 		// 반려동물 성별 라벨
 		petGenderLabel = new JLabel("성별");
