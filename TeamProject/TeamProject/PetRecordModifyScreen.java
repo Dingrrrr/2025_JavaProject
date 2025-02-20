@@ -67,10 +67,9 @@ public class PetRecordModifyScreen extends JFrame {
                     petRcDeleteButton.setEnabled(true);
                 } else if (source == petRcModifyButton) {
                     String time = petMtTimeTField.getText().trim();
-                    if(!time.isEmpty()) {
-                    	if(time.substring(0, 1).equals("0") || time.length()!= 8)
-                    		warningLabel.setVisible(true);
-                    } else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length()==8)){
+					if (!time.isEmpty() && (time.substring(0, 1).equals("0") || time.length() != 8)) {
+						warningLabel.setVisible(true);
+					} else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length() == 8)) {
                     	System.out.println("수정 완료 버튼 클릭됨");
                     	h = petHeightTField.getText().trim();
                         w = petWeightTField.getText().trim();

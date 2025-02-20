@@ -36,6 +36,7 @@ public class PetAddScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		bean = new PetBean();
+		StaticData.pet_id = 0;
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
