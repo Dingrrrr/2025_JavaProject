@@ -33,6 +33,7 @@ public class PetModifyScreen extends JFrame {
 		mgr = new TPMgr();
 		bean = mgr.showOnePet(StaticData.pet_id);
 		pb = new PetBean();
+		imageBytes = bean.getPet_image();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기

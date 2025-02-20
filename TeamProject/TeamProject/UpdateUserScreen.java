@@ -39,6 +39,7 @@ public class UpdateUserScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		UserBean bean = mgr.showUser(StaticData.user_id);
+		imageBytes = bean.getUser_image();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png"));
