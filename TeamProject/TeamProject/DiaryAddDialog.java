@@ -84,23 +84,20 @@ public class DiaryAddDialog extends JFrame {
 
 				// 일기 내용 텍스트 필드 추가
 				DiaryWriteTArea = new JTextArea();
-				DiaryWriteTArea.setBounds(15, 160, 318, 250);
 				DiaryWriteTArea.setText("");
 				DiaryWriteTArea.setLineWrap(true);
 				DiaryWriteTArea.setWrapStyleWord(true);
-				DiaryWriteTArea.setBorder(BorderFactory.createCompoundBorder(
-				        new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-				    ));
-				
-				scrollPane = new JScrollPane(DiaryWriteTArea);
-				scrollPane.setBounds(15, 160, 318, 250); // 텍스트 영역 크기와 위치 설정
+				add(DiaryWriteTArea);
+
+				JScrollPane scrollPane = new JScrollPane(DiaryWriteTArea);
+				scrollPane.setBounds(15, 160, 318, 194); // 텍스트 영역 크기와 위치 설정
+				scrollPane.setBackground(Color.WHITE);
+				// 스크롤 바 안 보이게 설정
 				scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-				scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
-				scrollPane.setBorder(BorderFactory.createCompoundBorder(
-							new RoundedBorder(0), new EmptyBorder(0, 0, 0, 0)
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위, 왼쪽, 아래, 오른쪽)
 						));
-				add(scrollPane); // JScrollPane을 프레임에 추가
+				add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
 				
 				// 저장 버튼
 				SaveButton = new RoundedButton("저장");
