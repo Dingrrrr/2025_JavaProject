@@ -52,7 +52,7 @@ public class PetModifyScreen extends JFrame {
 					preFrame.setEnabled(true);
 					dispose();
 					preFrame.setVisible(true);
-				} else if (source == petAddProButton) {
+				} else if (source == petAddProButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 					if (ppm == null) {
 						ppm = new PetPhotoModifyDialog(PetModifyScreen.this); // 'this'를 넘겨줍니다.
@@ -64,11 +64,11 @@ public class PetModifyScreen extends JFrame {
 							ppm.setVisible(true);
 						}
 					}
-				} else if (source == petSpSearchButton) {
+				} else if (source == petSpSearchButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					setEnabled(false);
 					new PetSpeciesSearchDialogByModify(PetModifyScreen.this);
-				} else if (source == completionButton) {
+				} else if (source == completionButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 정보수정 완료 버튼 클릭됨!");
 					name = petNameTField.getText().trim();
 					spec = petSpecTField.getText().trim();
@@ -86,7 +86,7 @@ public class PetModifyScreen extends JFrame {
 					dispose();
 					new PetHomeScreen(StaticData.pet_id);
 
-				} else if (source == petDeleteButton) {
+				} else if (source == petDeleteButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
 					mgr.delPet(StaticData.pet_id);
 					dispose();
