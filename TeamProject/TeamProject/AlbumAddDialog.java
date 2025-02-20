@@ -115,18 +115,20 @@ public class AlbumAddDialog extends JFrame {
 		AlbumWriteTArea.setText("");
 		AlbumWriteTArea.setLineWrap(true);
 		AlbumWriteTArea.setWrapStyleWord(true);
-		AlbumWriteTArea
-				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
-																														// 여백
-																														// (위,
-																														// 왼쪽,
-																														// 아래,
-																														// 오른쪽)
-				));
 		add(AlbumWriteTArea);
 
 		JScrollPane scrollPane = new JScrollPane(AlbumWriteTArea);
 		scrollPane.setBounds(15, 420, 318, 130); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 수직 스크롤바 숨김
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 수평 스크롤바 숨김
+		scrollPane.setBackground(Color.white);
+		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+		// 여백
+		// (위,
+		// 왼쪽,
+		// 아래,
+		// 오른쪽)
+		));
 		add(scrollPane); // JScrollPane을 프레임에 추가
 
 		// 저장 버튼
