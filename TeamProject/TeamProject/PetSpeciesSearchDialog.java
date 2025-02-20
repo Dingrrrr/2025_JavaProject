@@ -119,11 +119,19 @@ public class PetSpeciesSearchDialog extends JFrame {
 		scrollPane = new JScrollPane(searchResultList);
 
 		// 스크롤 및 테두리 설정
-		scrollPane.setBounds(15, 95, 318, 330);
-		scrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));  // 테두리 설정
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // 수직 스크롤 바 숨김
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // 수평 스크롤 바 숨김
-
+				JScrollPane scrollPane = new JScrollPane(searchResultList);
+				scrollPane.setBounds(15, 95, 318, 340);
+				scrollPane.setBorder(BorderFactory.createLineBorder(Color.white));  // 테두리 설정
+				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // 수직 스크롤 바 숨김
+				scrollPane.setBackground(Color.white);
+				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // 수평 스크롤 바 숨김
+				scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위,
+						// 왼쪽,
+						// 아래,
+						// 오른쪽)
+		));
+		add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
+		
 		// JList 크기 고정 (스크롤 방지)
 		searchResultList.setFixedCellHeight(30);  // 각 항목 높이 고정
 		searchResultList.setFixedCellWidth(303);  // 너비 고정
@@ -150,9 +158,9 @@ public class PetSpeciesSearchDialog extends JFrame {
 		});
 
 		// 리스트 스타일 설정
-		searchResultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		searchResultList.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(10), new EmptyBorder(10, 5, 10, 5))); // 둥근 테두리 설정
-		searchResultList.setBackground(Color.WHITE); // 배경색 설정 (선택적)
+				searchResultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				//searchResultList.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 5, 10, 5))); // 둥근 테두리 설정
+				searchResultList.setBackground(Color.WHITE); // 배경색 설정 (선택적)
 
 		// 리스트 추가
 		add(scrollPane);
