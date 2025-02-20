@@ -68,8 +68,15 @@ public class AlarmMainScreen extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == SendButton) {
 					System.out.println("쪽지 보내기 버튼 클릭됨");
-					setEnabled(false);
-					new NoteSendScreen(preFrame, AlarmMainScreen.this);
+					
+					if (StaticData.user_id.equals("admin")) {
+						System.out.println("관리자 확인");
+						setEnabled(false);
+						new adminSendScreen(preFrame, AlarmMainScreen.this);
+					}else {
+						setEnabled(false);
+						new NoteSendScreen(preFrame, AlarmMainScreen.this);
+					}
 				} else if (source == menuLabel) {
 					System.out.println("메뉴 버튼 클릭됨");
 					if (sendMsgLabel.isVisible() && receiveMsgLabel.isVisible()) {
