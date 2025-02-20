@@ -109,7 +109,6 @@ public class VoteMainScreen extends JFrame {
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
 
-		System.out.println(bean.getUser_image());
 		byte[] imgBytes = bean.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
 		// 상단 프로필 아이디
@@ -276,10 +275,7 @@ public class VoteMainScreen extends JFrame {
 			});
 			
 			// 투표 레이블 생성
-			System.out.println(vb.getVote_image());
 			byte[] imgBytes = vb.getVote_image();
-			String imgNull = Arrays.toString(imgBytes);
-			System.out.println(imgNull);
 			JLabel imageLabel = new JLabel(); // JLabel을 먼저 생성
 			if (imgBytes == null || imgBytes.length == 0) {
 				imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 176, 150);

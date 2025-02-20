@@ -144,10 +144,7 @@ public class AlbumAddDialog extends JFrame {
 		add(addButtonLabel);
 
 		// 🔹 회색프레임
-		System.out.println(bean.getAlbum_image());
 		byte[] imgBytes = bean.getAlbum_image();
-		String imgNull = Arrays.toString(imgBytes);
-		System.out.println(imgNull);
 		if (imgBytes == null || imgBytes.length == 0) {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);

@@ -92,7 +92,6 @@ public class CommuMainScreen extends JFrame {
 		add(alarmLabel);
 
 		// 상단 프로필 아이디
-		System.out.println(bean1.getUser_image());
 		byte[] imgBytes = bean1.getUser_image();
 		String imgNull = Arrays.toString(imgBytes);
 		if (imgNull == "[]") {
@@ -257,10 +256,7 @@ public class CommuMainScreen extends JFrame {
 			contentPanel.setBackground(Color.WHITE);
 
 			// 왼쪽 - 이미지
-			System.out.println(cb.getComu_image());
 			byte[] imgBytes1 = cb.getComu_image();
-			String imgNull = Arrays.toString(imgBytes1);
-			System.out.println(imgNull);
 			comuImageLabel = new JLabel(); // JLabel을 먼저 생성
 			comuImageLabel.setPreferredSize(new Dimension(70, 70));
 			if (imgBytes1 == null || imgBytes1.length == 0) {

@@ -79,8 +79,6 @@ public class PetRecordModifyScreen extends JFrame {
                     bean.setVaccination_status(va);
                     bean.setCheckup_status(ch);
                     bean.setDate(da);
-                    
-                    System.out.println(recordId);
                     mgr.updHRPet(recordId, bean); // Record_id 사용하여 수정
 
                     petHeightTField.setEnabled(false);
@@ -94,7 +92,6 @@ public class PetRecordModifyScreen extends JFrame {
                     new PetHomeScreen(StaticData.pet_id);
                 } else if (source == petRcDeleteButton) {
                     System.out.println("삭제 버튼 클릭됨");
-                    System.out.println(recordId);
                     mgr.delHRPet(recordId);  // Record_id 사용하여 삭제
                     dispose();
                     preFrame.dispose();
