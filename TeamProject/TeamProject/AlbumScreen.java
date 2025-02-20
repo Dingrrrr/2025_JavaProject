@@ -14,7 +14,8 @@ import java.util.Vector;
 
 public class AlbumScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel;
+	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel,
+			imageProfileLabel;
 	private JLabel additionLabel, welcomeLabel1, welcomeLabel2, welcomeLabel3;
 	private AlbumAddDialog pc;
 	TPMgr mgr = new TPMgr();
@@ -84,22 +85,30 @@ public class AlbumScreen extends JFrame {
 		add(alarmLabel);
 
 		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
 		// 상단 프로필 아이디
-		if (imgNull == "[]") {
+		if (imgBytes == null || imgBytes.length == 0) {
 			imageProfileLabel = new JLabel();
 			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
 			imageProfileLabel.setBounds(330, 120, 40, 40);
 			imageProfileLabel.addMouseListener(commonMouseListener);
 			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			imageProfileLabel = new JLabel();
-			imageProfileLabel.setIcon(new ImageIcon(img1));
-			imageProfileLabel.setBounds(330, 120, 40, 40);
-			imageProfileLabel.addMouseListener(commonMouseListener);
-			add(imageProfileLabel);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(AlbumScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
 		// 🔹 추가 버튼
