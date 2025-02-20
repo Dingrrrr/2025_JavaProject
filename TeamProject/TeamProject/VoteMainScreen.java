@@ -212,7 +212,7 @@ public class VoteMainScreen extends JFrame {
 
 		// 🔹 votePanel 설정 수정
 		votePanel = new JPanel();
-		votePanel.setLayout(new GridLayout(0, 2, 2, 2)); // 2열 정렬
+		votePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // 2열 정렬
 		votePanel.setBackground(Color.WHITE);
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
@@ -258,7 +258,7 @@ public class VoteMainScreen extends JFrame {
 			
 			// 1️ 개별 투표 아이템을 담을 패널 생성
 			JPanel contentPanel = new JPanel(null); // 직접 위치 설정을 위해 null 레이아웃 사용
-			contentPanel.setPreferredSize(new Dimension(176, 150)); // 크기 설정
+			contentPanel.setPreferredSize(new Dimension(178, 150)); // 크기 설정
 			contentPanel.setBackground(Color.WHITE);
 			
 			contentPanel.addMouseListener(new MouseAdapter() {
@@ -278,19 +278,19 @@ public class VoteMainScreen extends JFrame {
 			byte[] imgBytes = vb.getVote_image();
 			JLabel imageLabel = new JLabel(); // JLabel을 먼저 생성
 			if (imgBytes == null || imgBytes.length == 0) {
-				imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 176, 150);
-				imageLabel.setPreferredSize(new Dimension(176, 150));
-				imageLabel.setMaximumSize(new Dimension(176, 150));
+				imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 178, 150);
+				imageLabel.setPreferredSize(new Dimension(178, 150));
+				imageLabel.setMaximumSize(new Dimension(178, 150));
 				imageLabel.setOpaque(false);
 			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes);
-				Image img1 = icon1.getImage().getScaledInstance(176, 150, Image.SCALE_SMOOTH);
+				Image img1 = icon1.getImage().getScaledInstance(178, 150, Image.SCALE_SMOOTH);
 				imageLabel.setIcon(new ImageIcon(img1));
-				imageLabel.setPreferredSize(new Dimension(176, 150));
-				imageLabel.setMaximumSize(new Dimension(176, 150));
+				imageLabel.setPreferredSize(new Dimension(178, 150));
+				imageLabel.setMaximumSize(new Dimension(178, 150));
 				imageLabel.setOpaque(false);
 			}
-			imageLabel.setBounds(0, 0, 176, 150);
+			imageLabel.setBounds(0, 0, 178, 150);
 
 			// contentPanel의 아랫부분에만 검정색 테두리 추가
 			Border blackBottomBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
@@ -299,7 +299,7 @@ public class VoteMainScreen extends JFrame {
 			// 🔹 `JLayeredPane`을 사용해 이미지 위에 하트 버튼을 배치
 			JLayeredPane layeredPane = new JLayeredPane();
 			layeredPane.setLayout(null);
-			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
+			layeredPane.setBounds(0, 0, 178, 150); // 전체 크기 맞춤
 			// 🔹 이미지 추가 (기본 레이어)
 			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
 			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
@@ -352,6 +352,10 @@ public class VoteMainScreen extends JFrame {
 			votePanel.add(contentPanel);
 			
 		}
+		// 패널 크기 갱신 (투표 개수에 따라 스크롤 가능하도록 조정)
+		int rows = (votePanel.getComponentCount() + 1) / 2; // 2열 기준
+		votePanel.setPreferredSize(new Dimension(338, rows * 151)); // 세로 크기 유지
+
 		votePanel.revalidate();
 		votePanel.repaint();
 		scrollPane.revalidate();
