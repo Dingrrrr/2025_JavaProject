@@ -132,25 +132,22 @@ public class ComuModifyScreen extends JFrame {
 		contentLabel.setForeground(Color.BLACK);
 		add(contentLabel);
 
-		contentArea = new JTextArea(cb.getComu_content());
-		contentArea.setBounds(35, 400, 280, 116);
+		// 게시글 설명 텍스트 필드 추가
+		contentArea = new JTextArea();
+		contentArea.setText("");
 		contentArea.setLineWrap(true);
 		contentArea.setWrapStyleWord(true);
-		contentArea.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(0), new EmptyBorder(10, 15, 10, 15) // 내부
-																														// 여백
-																														// (위,
-																														// 왼쪽,
-																														// 아래,
-																														// 오른쪽)
-		));
+		add(contentArea);
 
 		JScrollPane scrollPane = new JScrollPane(contentArea);
-		scrollPane.setBounds(35, 400, 280, 116); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setBounds(15, 420, 318, 135); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setBackground(Color.WHITE);
+		// 스크롤 바 안 보이게 설정
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // 가로 스크롤
-		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(0), new EmptyBorder(0, 0, 0, 0)));
-		add(scrollPane); // JScrollPane을 프레임에 추가
+		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위, 왼쪽, 아래, 오른쪽)
+				));
+		add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
 
 		// 저장 버튼
 		saveButton = new RoundedButton("저장");
