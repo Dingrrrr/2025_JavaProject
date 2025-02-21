@@ -48,15 +48,16 @@ public class VoteModifyScreen extends JFrame {
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
-				} else if (source == addButtonLabel) {
+				} else if (source == addButtonLabel && addButtonLabel.isEnabled()) {
 					System.out.println("➕ 추가 버튼 클릭됨!");
 					if (vmd == null) {
-						vmd = new VotePhotoModifyDialog(VoteModifyScreen.this);
+						vmd = new VotePhotoModifyDialog(preFrame, VoteModifyScreen.this);
 						vmd.setLocation(getX() + 3, getY() + 335);
 					} else {
 						vmd.setLocation(getX() + 3, getY() + 335);
 						vmd.setVisible(true);
 					}
+					setEnabled(false);
 				} else if (source == modifyLabel) {
 					System.out.println("수정 버튼 클릭됨");
 					addButtonLabel.setEnabled(true);
@@ -80,6 +81,7 @@ public class VoteModifyScreen extends JFrame {
 							saveButton.setEnabled(false);
 							delButton.setEnabled(false);
 							preFrame.dispose();
+							dispose();
 							new VoteMainScreen();
 						}
 					} /*
