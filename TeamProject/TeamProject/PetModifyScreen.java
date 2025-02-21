@@ -26,9 +26,9 @@ public class PetModifyScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel backLabel, petProfileLabel, deleteLabel, calLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel,
-			warningLabel;
+			warningLabel, petDeleteLabel;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
-	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton, completionButton;
+	private JButton petAddProButton, petSpSearchButton, petModifyButton, completionButton;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
 	private String name, spec, birth;
 	TPMgr mgr;
@@ -105,20 +105,14 @@ public class PetModifyScreen extends JFrame {
 						dispose();
 						new PetHomeScreen(StaticData.pet_id);
 					}
-				} else if (source == petDeleteButton && petDeleteButton.isEnabled()) {
+				} else if (source == petDeleteLabel && petDeleteLabel.isEnabled()) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
-					mgr.delPet(StaticData.pet_id);
-					dispose();
-					if (mgr.isPet(StaticData.user_id)) {
-						new PetAddMainScreen();
-					} else {
-						new UserHomeScreen();
-					}
+					new PetDeleteDialog(PetModifyScreen.this);
 				} else if (source == calLabel && calLabel.isEnabled()) {
 					setEnabled(false);
 					new CalendarDialog(PetModifyScreen.this, petBirthTField);
 				} else if (source == petModifyButton) {
-					petDeleteButton.setEnabled(true);
+					petDeleteLabel.setEnabled(true);
 					petAddProButton.setEnabled(true);
 					petSpSearchButton.setEnabled(true);
 					petNameTField.setEnabled(true);
@@ -292,14 +286,14 @@ public class PetModifyScreen extends JFrame {
 		add(completionButton);
 
 		// 반려동물 정보 삭제 버튼
-		petDeleteButton = new JButton("삭제");
-		petDeleteButton.setBounds(285, 123, 80, 35);
-		petDeleteButton.setBackground(new Color(255, 102, 102));
-		petDeleteButton.setForeground(Color.WHITE);
-		petDeleteButton.addMouseListener(commonMouseListener);
-		add(petDeleteButton);
+		petDeleteLabel = createScaledImageLabel("TeamProject/pet_delete.png", 40, 40);
+		petDeleteLabel.setBounds(320, 123, 40, 40);
+		petDeleteLabel.setBackground(new Color(255, 102, 102));
+		petDeleteLabel.setForeground(Color.WHITE);
+		petDeleteLabel.addMouseListener(commonMouseListener);
+		add(petDeleteLabel);
 
-		petDeleteButton.setEnabled(false);
+		petDeleteLabel.setEnabled(false);
 		petAddProButton.setEnabled(false);
 		petSpSearchButton.setEnabled(false);
 		petNameTField.setEnabled(false);

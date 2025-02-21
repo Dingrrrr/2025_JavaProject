@@ -17,8 +17,7 @@ import java.util.Arrays;
 
 public class UserHomeScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
-	private JButton logoutButton;
+	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel, logoutLabel;
 	private JLabel welcomeLabel, additionLabel;
 	private PetChooseDialog pc;
 	TPMgr mgr = new TPMgr();
@@ -67,6 +66,10 @@ public class UserHomeScreen extends JFrame {
 						pc.setVisible(true);
 					}
 					setEnabled(false);
+				} else if (source == logoutLabel) {
+					dispose();
+					mgr.userOut(StaticData.user_id);
+					new LoginScreen();
 				}
 			}
 		};
@@ -150,19 +153,10 @@ public class UserHomeScreen extends JFrame {
 		add(additionLabel);
 
 		// 로그아웃 버튼
-		logoutButton = new RoundedButton("로그아웃");
-		logoutButton.setBounds(30, 122, 85, 36);
-		logoutButton.setBackground(new Color(91, 91, 91));
-		logoutButton.setForeground(Color.WHITE);
-		logoutButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				mgr.userOut(StaticData.user_id);
-				new LoginScreen();
-			}
-		});
-		add(logoutButton);
+		logoutLabel = createScaledImageLabel("TeamProject/logout_icon.png", 40, 40);
+		logoutLabel.setBounds(30, 122, 40, 40);
+		logoutLabel.addMouseListener(commonMouseListener);
+		add(logoutLabel);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
