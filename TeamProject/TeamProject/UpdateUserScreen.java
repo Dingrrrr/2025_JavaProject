@@ -21,10 +21,10 @@ import java.io.*;
 public class UpdateUserScreen extends JFrame {
 
 	private BufferedImage image;
-	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel;
+	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, deleteLabel;
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
-	private JButton updataButton, fisButton, addButton, deleteButton;
+	private JButton updataButton, fisButton, addButton;
 	private JFrame previousFrame; // 이전 프레임 저장
 	private UserDeleteDialog udd;
 	TPMgr mgr;
@@ -78,7 +78,7 @@ public class UpdateUserScreen extends JFrame {
 					phoneField.setEnabled(true);
 					addButton.setEnabled(true);
 					fisButton.setEnabled(true);
-					deleteButton.setEnabled(true);
+					deleteLabel.setEnabled(true);
 				} else if (source == fisButton && fisButton.isEnabled()) {
 					System.out.println("유저 정보 완료 버튼 클릭됨!");
 					String name = nameField.getText().trim();
@@ -125,7 +125,7 @@ public class UpdateUserScreen extends JFrame {
 							}
 						}
 					}
-				} else if (source == deleteButton && deleteButton.isEnabled()) {
+				} else if (source == deleteLabel && deleteLabel.isEnabled()) {
 					new UserDeleteDialog(UpdateUserScreen.this);
 				}
 			}
@@ -272,12 +272,10 @@ public class UpdateUserScreen extends JFrame {
 		add(phoneField);
 
 		// 회원 탈퇴 버튼
-		deleteButton = new RoundedButton("탈퇴");
-		deleteButton.setBounds(295, 125, 70, 30);
-		deleteButton.setBackground(new Color(91, 91, 91));
-		deleteButton.setForeground(Color.WHITE);
-		deleteButton.addMouseListener(commonMouseListener);
-		add(deleteButton);
+		deleteLabel = createScaledImageLabel("TeamProject/user_delete.png", 40, 40);
+		deleteLabel.setBounds(320, 125, 40, 40);
+		deleteLabel.addMouseListener(commonMouseListener);
+		add(deleteLabel);
 
 		// 수정 버튼
 		updataButton = new RoundedButton("수정");
@@ -300,7 +298,7 @@ public class UpdateUserScreen extends JFrame {
 		emailField.setEnabled(false);
 		phoneField.setEnabled(false);
 		fisButton.setEnabled(false);
-		deleteButton.setEnabled(false);
+		deleteLabel.setEnabled(false);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
