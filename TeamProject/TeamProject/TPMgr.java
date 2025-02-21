@@ -427,7 +427,7 @@ public class TPMgr {
 		int pet_id = -1;
 		try {
 			con = pool.getConnection();
-			sql = "select pet_id from pet where user_id = 'qwer' order by pet_id desc";
+			sql = "select pet_id from pet where user_id = ? order by pet_id desc";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
