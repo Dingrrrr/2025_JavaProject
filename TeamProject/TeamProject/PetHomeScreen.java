@@ -206,7 +206,7 @@ public class PetHomeScreen extends JFrame {
 		add(photoLabel);
 
 		// 🔹 홈 버튼
-		homeLabel = createScaledImageLabel("TeamProject/home.png", 58, 58);
+		homeLabel = createScaledImageLabel("TeamProject/home_click.png", 58, 58);
 		homeLabel.setBounds(125, 787, 58, 58);
 		homeLabel.addMouseListener(commonMouseListener);
 		add(homeLabel);
