@@ -134,13 +134,13 @@ public class ComuModifyScreen extends JFrame {
 
 		// 게시글 설명 텍스트 필드 추가
 		contentArea = new JTextArea(cb.getComu_content());
-		contentArea.setText("");
+		contentArea.setText(cb.getComu_content());
 		contentArea.setLineWrap(true);
 		contentArea.setWrapStyleWord(true);
 		add(contentArea);
 
 		JScrollPane scrollPane = new JScrollPane(contentArea);
-		scrollPane.setBounds(15, 420, 318, 135); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setBounds(35, 400, 280, 135); // 텍스트 영역 크기와 위치 설정
 		scrollPane.setBackground(Color.WHITE);
 		// 스크롤 바 안 보이게 설정
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -151,7 +151,7 @@ public class ComuModifyScreen extends JFrame {
 
 		// 저장 버튼
 		saveButton = new RoundedButton("저장");
-		saveButton.setBounds(65, 535, 100, 40);
+		saveButton.setBounds(65, 555, 100, 40);
 		saveButton.setBackground(new Color(91, 91, 91));
 		saveButton.setForeground(Color.WHITE);
 		saveButton.addMouseListener(commonMouseListener);
@@ -159,7 +159,7 @@ public class ComuModifyScreen extends JFrame {
 
 		// 삭제 버튼
 		delButton = new RoundedButton("삭제");
-		delButton.setBounds(190, 535, 100, 40);
+		delButton.setBounds(190, 555, 100, 40);
 		delButton.setBackground(new Color(91, 91, 91));
 		delButton.setForeground(Color.WHITE);
 		delButton.addMouseListener(commonMouseListener);

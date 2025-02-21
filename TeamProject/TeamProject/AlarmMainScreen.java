@@ -20,7 +20,7 @@ import java.util.Vector;
 
 public class AlarmMainScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, sendMsgLabel, receiveMsgLabel;
+	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, sendMsgLabel, receiveMsgLabel, imageProfileLabel;
 	private JPanel alarmPanel; // 알람 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private JButton SendButton;
@@ -68,12 +68,12 @@ public class AlarmMainScreen extends JFrame {
 					preFrame.setVisible(true);
 				} else if (source == SendButton) {
 					System.out.println("쪽지 보내기 버튼 클릭됨");
-					
+
 					if (StaticData.user_id.equals("admin")) {
 						System.out.println("관리자 확인");
 						setEnabled(false);
 						new adminSendScreen(preFrame, AlarmMainScreen.this);
-					}else {
+					} else {
 						setEnabled(false);
 						new NoteSendScreen(preFrame, AlarmMainScreen.this);
 					}
@@ -112,21 +112,30 @@ public class AlarmMainScreen extends JFrame {
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
-		if (imgNull == "[]") {
-			profileLabel = new JLabel();
-			profileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+		// 상단 프로필 아이디
+		if (imgBytes == null || imgBytes.length == 0) {
+			imageProfileLabel = new JLabel();
+			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			profileLabel = new JLabel();
-			profileLabel.setIcon(new ImageIcon(img1));
-			profileLabel.setBounds(330, 120, 40, 40);
-			profileLabel.addMouseListener(commonMouseListener);
-			add(profileLabel);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(AlarmMainScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
 		// 🔹 상단 뒤로가기 아이콘

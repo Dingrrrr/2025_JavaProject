@@ -37,7 +37,7 @@ public class UserDeleteDialog extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
-				if (source == yesButton) {
+				if (source == yesButton && yesButton.isEnabled()) {
 					System.out.println("회원 탈퇴 버튼 클릭됨");
 							mgr.delUser(StaticData.user_id);
 							JOptionPane.showMessageDialog(null, "회원 탈퇴가 완료되었습니다.");

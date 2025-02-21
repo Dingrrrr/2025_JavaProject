@@ -79,6 +79,8 @@ public class VoteModifyScreen extends JFrame {
 							addButtonLabel.setEnabled(false);
 							saveButton.setEnabled(false);
 							delButton.setEnabled(false);
+							preFrame.dispose();
+							new VoteMainScreen();
 						}
 					} /*
 						 * dispose(); preFrame.dispose(); new VoteMainScreen();

@@ -77,6 +77,8 @@ public class UpdateUserScreen extends JFrame {
 					phoneField.setEnabled(true);
 					addButton.setEnabled(true);
 					fisButton.setEnabled(true);
+
+					deleteButton.setEnabled(true);
 				} else if (source == fisButton && fisButton.isEnabled()) {
 					System.out.println("유저 정보 완료 버튼 클릭됨!");
 					String name = nameField.getText().trim();
@@ -122,8 +124,8 @@ public class UpdateUserScreen extends JFrame {
 								}
 							}
 						}
-					} 
-				} else if (source == deleteButton) {
+					}
+				} else if (source == deleteButton && deleteButton.isEnabled()) {
 					new UserDeleteDialog(UpdateUserScreen.this, mgr);
 				}
 			}
@@ -146,21 +148,25 @@ public class UpdateUserScreen extends JFrame {
 
 		// 메인 프로필 이미지
 		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
-
-		if (imgNull == "[]") {
+		if (imgBytes == null || imgBytes.length == 0) {
+			// 기본 프로필 이미지 사용
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
 			imageLabel.setBounds(70, 189, 270, 270);
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon = new ImageIcon(imgBytes);
 			Image img = icon.getImage().getScaledInstance(270, 270, Image.SCALE_SMOOTH);
-			imageLabel = new JLabel();
-			imageLabel.setIcon(new ImageIcon(img));
-			imageLabel.setBounds(70, 189, 270, 270);
-			add(imageLabel);
+			
+			 imageLabel = new JLabel();
+			    imageLabel.setBounds(70, 189, 270, 270);
+			    add(imageLabel);
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedImageLabel = new RoundedImageLabel(img, 270, 270, 3); // 100은 둥근 정도
+			roundedImageLabel.setBounds(70, 189, 270, 270);
+			add(roundedImageLabel);
 		}
 
 		// 이름
@@ -263,7 +269,7 @@ public class UpdateUserScreen extends JFrame {
 			}
 		});
 		add(phoneField);
-		
+
 		// 회원 탈퇴 버튼
 		deleteButton = new RoundedButton("탈퇴");
 		deleteButton.setBounds(295, 125, 70, 30);
@@ -293,6 +299,7 @@ public class UpdateUserScreen extends JFrame {
 		emailField.setEnabled(false);
 		phoneField.setEnabled(false);
 		fisButton.setEnabled(false);
+		deleteButton.setEnabled(false);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
