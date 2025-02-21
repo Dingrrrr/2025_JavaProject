@@ -35,7 +35,7 @@ public class PetModifyScreen extends JFrame {
 	private PetPhotoModifyDialog ppm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 	boolean flag = true;
-
+	
 	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(402, 874);
@@ -132,6 +132,12 @@ public class PetModifyScreen extends JFrame {
 		backLabel.setBounds(25, 120, 40, 40);
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
+		
+		// 🔹 캘린더 아이콘
+		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);
+		calLabel.setBounds(155, 700, 30, 30);
+		calLabel.addMouseListener(commonMouseListener);
+		add(calLabel);
 
 		// 🔹 캘린더 아이콘
 		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);
@@ -214,7 +220,7 @@ public class PetModifyScreen extends JFrame {
 		petBirthTField.setForeground(Color.GRAY);
 		petBirthTField.setBounds(43, 696, 100, 40);
 		add(petBirthTField);
-
+		
 		// 반려동물 성별 라벨
 		petGenderLabel = new JLabel("성별");
 		petGenderLabel.setBounds(220, 655, 32, 60);

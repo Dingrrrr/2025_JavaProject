@@ -10,6 +10,8 @@ import javax.swing.text.DocumentFilter;
 import javax.swing.text.DocumentFilter.FilterBypass;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
@@ -21,7 +23,7 @@ import java.text.SimpleDateFormat;
 
 public class PetRecordModifyScreen extends JFrame {
     private BufferedImage image;
-    private JLabel backLabel, modifyLabel;
+    private JLabel backLabel, modifyLabel, calLabel;
     private JLabel petRecordLabel;
     private JLabel petHeightLabel, petWeightLabel, petMtLabel, petVsLabel, petChecksLabel, petMtTimeLabel, warningLabel;
     private JTextField petHeightTField, petWeightTField, petMtTField, petVsTField, petChecksTField, petMtTimeTField;
@@ -69,56 +71,51 @@ public class PetRecordModifyScreen extends JFrame {
                     petMtTField.setEnabled(true);
                     petVsTField.setEnabled(true);
                     petChecksTField.setEnabled(true);
-                    petMtTimeTField.setEnabled(true);
                     petRcModifyButton.setEnabled(true);
                     petRcDeleteButton.setEnabled(true);
-                } else if (source == petRcModifyButton) {
-                    String time = petMtTimeTField.getText().trim();
-                    if(time.equals("ex) " + sdf.format(date)))
-                    	time = "";
-					if (!time.isEmpty() && (time.substring(0, 1).equals("0") || time.length() != 8)) {
-						warningLabel.setVisible(true);
-					} else if (time.isEmpty() || (!time.substring(0, 1).equals("0") && time.length() == 8)) {
-                    	System.out.println("수정 완료 버튼 클릭됨");
-                    	h = petHeightTField.getText().trim();
-                        w = petWeightTField.getText().trim();
-                        me = petMtTField.getText().trim();
-                        va = petVsTField.getText().trim();
-                        ch = petChecksTField.getText().trim();
-                        da = petMtTimeTField.getText().trim();
-                        BigDecimal he = new BigDecimal(0);
-                        BigDecimal we = new BigDecimal(0);
-                        try {
-                            he = new BigDecimal(h);
-                            we = new BigDecimal(w);
-                            bean.setHeight(he);
-                            bean.setWeight(we);
-                        } catch (Exception e2) {
-                        	he = new BigDecimal(0);
-							we = new BigDecimal(0);
-							bean.setHeight(he);
-							bean.setWeight(we);
-                        }
-                        bean.setMedical_history(me);
-                        bean.setVaccination_status(va);
-                        bean.setCheckup_status(ch);
-                        bean.setDate(da);
-                        
-                        System.out.println(recordId);
-                        mgr.updHRPet(recordId, bean); // Record_id 사용하여 수정
-
-                        dispose();
-                        preFrame.dispose();
-                        new PetHomeScreen(StaticData.pet_id);
+                    calLabel.setEnabled(true);
+                } else if (source == petRcModifyButton && petRcModifyButton.isEnabled()) {
+                	System.out.println("수정 완료 버튼 클릭됨");
+                	h = petHeightTField.getText().trim();
+                    w = petWeightTField.getText().trim();
+                    me = petMtTField.getText().trim();
+                    va = petVsTField.getText().trim();
+                    ch = petChecksTField.getText().trim();
+                    da = petMtTimeTField.getText().trim();
+                    BigDecimal he = new BigDecimal(0);
+                    BigDecimal we = new BigDecimal(0);
+                    try {
+                        he = new BigDecimal(h);
+                        we = new BigDecimal(w);
+                        bean.setHeight(he);
+                        bean.setWeight(we);
+                    } catch (Exception e2) {
+                    	he = new BigDecimal(0);
+						we = new BigDecimal(0);
+						bean.setHeight(he);
+						bean.setWeight(we);
                     }
+                    bean.setMedical_history(me);
+                    bean.setVaccination_status(va);
+                    bean.setCheckup_status(ch);
+                    bean.setDate(da);
                     
-                } else if (source == petRcDeleteButton) {
+                    System.out.println(recordId);
+                    mgr.updHRPet(recordId, bean); // Record_id 사용하여 수정
+
+                    dispose();
+                    preFrame.dispose();
+                    new PetHomeScreen(StaticData.pet_id);
+                } else if (source == petRcDeleteButton && petRcDeleteButton.isEnabled()) {
                     System.out.println("삭제 버튼 클릭됨");
                     System.out.println(recordId);
                     mgr.delHRPet(recordId);  // Record_id 사용하여 삭제
                     dispose();
                     preFrame.dispose();
                     new PetHomeScreen(StaticData.pet_id);
+                } else if(source == calLabel && calLabel.isEnabled()) {
+                	setEnabled(false);
+					new CalendarDialog(PetRecordModifyScreen.this, petMtTimeTField);
                 }
             }
         };
@@ -128,6 +125,13 @@ public class PetRecordModifyScreen extends JFrame {
         backLabel.setBounds(25, 120, 40, 40);
         backLabel.addMouseListener(commonMouseListener);
         add(backLabel);
+        
+		// 🔹 캘린더 아이콘
+		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);
+		calLabel.setBounds(330, 680, 30, 30);
+		calLabel.addMouseListener(commonMouseListener);
+		calLabel.setEnabled(false);
+		add(calLabel);
 
         // 🔹 수정 아이콘
         modifyLabel = createScaledImageLabel("TeamProject/modify_icon.png", 35, 35);
@@ -227,73 +231,14 @@ public class PetRecordModifyScreen extends JFrame {
         // 반려동물 진료 관련 시간 텍스트 필드 추가
         petMtTimeTField = new JTextField();
         petMtTimeTField.setForeground(Color.GRAY);
-        if(bean.getDate().isEmpty()) {
-        	petMtTimeTField.setText("ex) " + sdf.format(date));
-        	petMtTimeTField.addFocusListener(new FocusListener() {
-				
-				@Override
-				public void focusLost(FocusEvent e) {
-					if(petMtTimeTField.getText().isEmpty()) {
-						petMtTimeTField.setText("ex) " + sdf.format(date));
-						petMtTimeTField.setForeground(Color.GRAY);
-						flag = true;
-					}
-				}
-				@Override
-				public void focusGained(FocusEvent e) {
-					if(flag) {
-						petMtTimeTField.setText("");
-						petMtTimeTField.setForeground(Color.BLACK);
-						flag = false;
-					}
-				}
-			});
-        }
-        else
-        	petMtTimeTField.setText(bean.getDate());
-        petMtTimeTField.setBounds(43, 675, 318, 40);
+        petMtTimeTField.setBounds(43, 675, 280, 40);
         petMtTimeTField.setEnabled(false);
         petMtTimeTField.setBorder(BorderFactory.createCompoundBorder(
 		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 		    ));
         add(petMtTimeTField);
         
-        ((AbstractDocument) petMtTimeTField.getDocument()).setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                if (string != null) {
-                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                    String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
-                    if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크 
-                        super.insertString(fb, offset, string.replaceAll("[^0-9]", ""), attr);
-                    }
-                }
-            }
 
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                if (text != null) {
-                    // 기존 내용과 새로 입력할 내용을 합친 길이를 확인
-                    String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                    String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
-                    if (newText.matches("\\d{0,8}")) { // 8자리 숫자 체크 
-                        super.replace(fb, offset, length, text.replaceAll("[^0-9]", ""), attrs);
-                    }
-                }
-            }
-
-            @Override
-            public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-                super.remove(fb, offset, length);
-            }
-        });
-        
-        warningLabel = new JLabel("올바른 진료 시간을 기입하시오");
-        warningLabel.setForeground(Color.RED);
-        warningLabel.setBounds(43, 705, 200, 40);
-        add(warningLabel);
-        warningLabel.setVisible(false);
 
         // 반려동물 정보 수정 버튼
         petRcModifyButton = new JButton("완료");
@@ -327,6 +272,22 @@ public class PetRecordModifyScreen extends JFrame {
         panel.setBounds(0, 0, 402, 874);
         panel.setLayout(null);
         add(panel);
+        
+     // 닫기 버튼
+     		JButton closeButton = new JButton("X");
+     		closeButton.setBounds(370, 10, 20, 20);
+     		closeButton.setBackground(Color.RED);
+     		closeButton.setForeground(Color.WHITE);
+     		closeButton.setBorder(BorderFactory.createEmptyBorder());
+     		closeButton.setFocusPainted(false);
+     		closeButton.addActionListener(new ActionListener() {
+     			@Override
+     			public void actionPerformed(ActionEvent e) {
+     				mgr.userOut(StaticData.user_id);
+     				System.exit(0);
+     			}
+     		});
+     		panel.add(closeButton);
 
         setVisible(true);
     }

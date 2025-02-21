@@ -117,7 +117,7 @@ public class DiaryScreen extends JFrame {
 		add(addButtonLabel);
 
 		// 🔹 앨범 & 일기 버튼
-		photoLabel = createScaledImageLabel("TeamProject/photo.png", 60, 60);
+		photoLabel = createScaledImageLabel("TeamProject/photo_click.png", 60, 60);
 		photoLabel.setBounds(37, 785, 60, 60);
 		photoLabel.addMouseListener(commonMouseListener);
 		add(photoLabel);
