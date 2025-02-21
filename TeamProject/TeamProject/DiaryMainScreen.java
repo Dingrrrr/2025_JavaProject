@@ -241,7 +241,7 @@ public class DiaryMainScreen extends JFrame {
 
 		// 🔹 추가 버튼 (화면에 고정)
 		menuLabel = createScaledImageLabel("TeamProject/menu.png", 30, 30);
-		menuLabel.setBounds(300, 700, 30, 30);
+		menuLabel.setBounds(315, 710, 30, 30);
 		menuLabel.addMouseListener(commonMouseListener);
 		menuLabel.setOpaque(true);
 		menuLabel.setBackground(new Color(255, 255, 255, 0));
