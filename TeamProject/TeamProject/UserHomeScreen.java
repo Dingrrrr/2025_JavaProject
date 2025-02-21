@@ -79,39 +79,56 @@ public class UserHomeScreen extends JFrame {
 
 		// 메인 프로필 이미지
 		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
-
-		if (imgNull == "[]") {
+		if (imgBytes == null || imgBytes.length == 0) {
+			// 기본 프로필 이미지 사용
 			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
 			imageLabel.setBounds(101, 178, 200, 200);
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon = new ImageIcon(imgBytes);
 			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-			imageLabel = new JLabel();
-			imageLabel.setIcon(new ImageIcon(img));
-			imageLabel.setBounds(101, 178, 200, 200);
-			imageLabel.addMouseListener(commonMouseListener);
-			add(imageLabel);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedImageLabel = new RoundedImageLabel(img, 200, 200, 3); // 100은 둥근 정도
+			roundedImageLabel.setBounds(101, 185, 200, 200);
+			roundedImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(UserHomeScreen.this);
+				}
+			});
+			add(roundedImageLabel);
 		}
 
-		// 상단 프로필 이미지
-		if (imgNull == "[]") {
+		// 상단 프로필 아이디
+		if (imgBytes == null || imgBytes.length == 0) {
 			imageProfileLabel = new JLabel();
 			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
 			imageProfileLabel.setBounds(330, 120, 40, 40);
 			imageProfileLabel.addMouseListener(commonMouseListener);
 			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			imageProfileLabel = new JLabel();
-			imageProfileLabel.setIcon(new ImageIcon(img1));
-			imageProfileLabel.setBounds(330, 120, 40, 40);
-			imageProfileLabel.addMouseListener(commonMouseListener);
-			add(imageProfileLabel);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(UserHomeScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
 		// 🔹 추가 버튼

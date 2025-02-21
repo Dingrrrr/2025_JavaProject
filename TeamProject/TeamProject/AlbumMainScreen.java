@@ -25,7 +25,8 @@ public class AlbumMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JTextField tagField;
-	private JLabel alarmLabel, profileLabel, menuLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel, addAlbumLabel, newLineUpLabel, oldLineUpLabel;
+	private JLabel alarmLabel, profileLabel, menuLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel,
+			addAlbumLabel, newLineUpLabel, oldLineUpLabel;
 	private JPanel albumPanel; // 앨범 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private AlbumAddDialog pc;
@@ -81,7 +82,7 @@ public class AlbumMainScreen extends JFrame {
 					new VoteMainScreen();
 				} else if (source == menuLabel) {
 					System.out.println("메뉴 버튼 클릭됨!");
-					if(addAlbumLabel.isVisible()) {
+					if (addAlbumLabel.isVisible()) {
 						addAlbumLabel.setVisible(false);
 						newLineUpLabel.setVisible(false);
 						oldLineUpLabel.setVisible(false);
@@ -91,25 +92,25 @@ public class AlbumMainScreen extends JFrame {
 						oldLineUpLabel.setVisible(true);
 					}
 
-				} else if(source == addAlbumLabel) {
+				} else if (source == addAlbumLabel) {
 					System.out.println("앨범 추가 버튼 클릭됨");
 					if (pc == null) {
-					pc = new AlbumAddDialog(AlbumMainScreen.this);
-					// ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
-					pc.setLocation(getX() + 25, getY() + 150);
+						pc = new AlbumAddDialog(AlbumMainScreen.this);
+						// ZipcodeFrame의 창의 위치를 MemberAWT 옆에 지정
+						pc.setLocation(getX() + 25, getY() + 150);
 					} else {
-					pc.setLocation(getX() + 25, getY() + 150);
-					pc.setVisible(true);
+						pc.setLocation(getX() + 25, getY() + 150);
+						pc.setVisible(true);
 					}
 					setEnabled(false);
-				} else if(source == newLineUpLabel) {
+				} else if (source == newLineUpLabel) {
 					System.out.println("최신순 정렬 클릭됨");
 					vlist = mgr.showAlbum(StaticData.pet_id);
 					addAlbum();
 					addAlbumLabel.setVisible(false);
 					newLineUpLabel.setVisible(false);
 					oldLineUpLabel.setVisible(false);
-				}else if(source == oldLineUpLabel) {
+				} else if (source == oldLineUpLabel) {
 					System.out.println("오래된순 정렬 클릭됨");
 					vlist = mgr.showOldAlbum(StaticData.pet_id);
 					addAlbum();
@@ -123,90 +124,102 @@ public class AlbumMainScreen extends JFrame {
 		// 🔹 검색 텍스트 필드
 		tagField = new JTextField();
 		tagField.setOpaque(false);
-		tagField.setBorder(BorderFactory.createCompoundBorder(
-		        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
-		    ));
+		tagField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+																														// 여백
+																														// (위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		tagField.setBounds(37, 120, 220, 40); // (x, y, 너비, 높이)
 		tagField.setText("찾고 싶은 태그를 입력하세요");
 		tagField.setForeground(Color.GRAY);
 		tagField.addFocusListener(new FocusListener() {
-			
+
 			@Override
 			public void focusLost(FocusEvent e) {
-				 if (tagField.getText().isEmpty()) {
-					 	tagField.setForeground(Color.GRAY);
-	                    tagField.setText("찾고 싶은 태그를 입력하세요");
-	                    flag = true;
-	                }
+				if (tagField.getText().isEmpty()) {
+					tagField.setForeground(Color.GRAY);
+					tagField.setText("찾고 싶은 태그를 입력하세요");
+					flag = true;
+				}
 			}
-			
+
 			@Override
 			public void focusGained(FocusEvent e) {
-				if(tagField.getText().isEmpty() || flag) {
+				if (tagField.getText().isEmpty() || flag) {
 					tagField.setForeground(Color.GRAY);
 					tagField.setText("찾고 싶은 태그를 입력하세요");
 					flag = true;
 				}
 			}
 		});
-		
+
 		tagField.addKeyListener(new KeyAdapter() {
-			 @Override
-	            public void keyTyped(KeyEvent e) {
-	                if (flag) {
-	                	tagField.setText("");
-	                    setForeground(Color.BLACK);
-	                    flag = false;
-	                }
-	            }
-			 
-			 @Override
-	            public void keyReleased(KeyEvent e) {
-	                if (tagField.getText().isEmpty()) {
-	                	tagField.setForeground(Color.GRAY);
-	                	tagField.setText("찾고 싶은 태그를 입력하세요");
-	                    flag = true;
-	                }
-	            }
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (flag) {
+					tagField.setText("");
+					setForeground(Color.BLACK);
+					flag = false;
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (tagField.getText().isEmpty()) {
+					tagField.setForeground(Color.GRAY);
+					tagField.setText("찾고 싶은 태그를 입력하세요");
+					flag = true;
+				}
+			}
 		});
-		tagField.addActionListener(new ActionListener() {		//태그 필드에 앤터키를 누르면 실행
-			
+		tagField.addActionListener(new ActionListener() { // 태그 필드에 앤터키를 누르면 실행
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(flag) {
+				if (flag) {
 					vlist = mgr.showAlbum(StaticData.pet_id);
 					addAlbum();
-				}else {
+				} else {
 					vlist = mgr.showAlbumByTags(StaticData.pet_id, tagField.getText().trim());
 					addAlbum();
 				}
 			}
 		});
 		add(tagField);
-		
+
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
-		
+
 		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
 		// 상단 프로필 아이디
-		if (imgNull == "[]") {
+		if (imgBytes == null || imgBytes.length == 0) {
 			imageProfileLabel = new JLabel();
 			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
 			imageProfileLabel.setBounds(330, 120, 40, 40);
 			imageProfileLabel.addMouseListener(commonMouseListener);
 			add(imageProfileLabel);
 		} else {
+			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img1 = icon1.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-			imageProfileLabel = new JLabel();
-			imageProfileLabel.setIcon(new ImageIcon(img1));
-			imageProfileLabel.setBounds(330, 120, 40, 40);
-			imageProfileLabel.addMouseListener(commonMouseListener);
-			add(imageProfileLabel);
+			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
+			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
+			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("👤 프로필 클릭됨!");
+					dispose();
+					new UpdateUserScreen(AlbumMainScreen.this);
+				}
+			});
+			add(roundedProfileImageLabel);
 		}
 
 		// 🔹 앨범 & 일기 버튼
@@ -232,28 +245,27 @@ public class AlbumMainScreen extends JFrame {
 		voteLabel.setBounds(305, 789, 55, 55);
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
-		
+
 		// 🔹 일기 추가 버튼
 		addAlbumLabel = createScaledImageLabel("TeamProject/add_album.png", 40, 40);
 		addAlbumLabel.setBounds(313, 650, 40, 40);
 		addAlbumLabel.addMouseListener(commonMouseListener);
 		add(addAlbumLabel);
 		addAlbumLabel.setVisible(false);
-		
+
 		// 🔹 최신순 정렬
 		newLineUpLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
 		newLineUpLabel.setBounds(313, 590, 40, 40);
 		newLineUpLabel.addMouseListener(commonMouseListener);
 		add(newLineUpLabel);
 		newLineUpLabel.setVisible(false);
-		
+
 		// 🔹 오래된순 정렬
 		oldLineUpLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
 		oldLineUpLabel.setBounds(313, 530, 40, 40);
 		oldLineUpLabel.addMouseListener(commonMouseListener);
 		add(oldLineUpLabel);
 		oldLineUpLabel.setVisible(false);
-		
 
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
@@ -331,7 +343,7 @@ public class AlbumMainScreen extends JFrame {
 			 * 앨범 추가
 			 */
 			StaticData.album_id = ab.getAlbum_id();
-			
+
 			// 앨범 레이블 생성
 			byte[] imgBytes = ab.getAlbum_image();
 			JLabel albumLabel = new JLabel(); // JLabel을 먼저 생성
@@ -339,14 +351,14 @@ public class AlbumMainScreen extends JFrame {
 				albumLabel = createScaledImageLabel("TeamProject/photo_frame.png", 173, 100);
 				albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
 				albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
-				} else {
+			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes);
 				Image img1 = icon1.getImage().getScaledInstance(173, 100, Image.SCALE_SMOOTH);
 				albumLabel.setIcon(new ImageIcon(img1));
 				albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
 				albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
 			}
-			
+
 			/*
 			 * // 앨범 레이블 생성 JLabel albumLabel = new JLabel("📸 앨범 " +
 			 * (albumPanel.getComponentCount() + 1));
@@ -355,7 +367,7 @@ public class AlbumMainScreen extends JFrame {
 			 * albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
 			 * albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
 			 */
-			
+
 			// 검정색 외각선 추가
 			Border blackBorder = BorderFactory.createLineBorder(Color.BLACK);
 			albumLabel.setBorder(blackBorder);
@@ -414,8 +426,8 @@ public class AlbumMainScreen extends JFrame {
 			// 🔹 스크롤 패널의 크기를 동적으로 맞추기
 			scrollPane.revalidate();
 		}
-	    albumPanel.revalidate();
-	    albumPanel.repaint();
+		albumPanel.revalidate();
+		albumPanel.repaint();
 		scrollPane.revalidate();
 	}
 
