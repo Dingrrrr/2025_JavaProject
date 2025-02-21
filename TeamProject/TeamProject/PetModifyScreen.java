@@ -22,12 +22,13 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class PetModifyScreen extends JFrame {
+	
 	private BufferedImage image;
-	private JLabel backLabel, petProfileLabel, deleteLabel, imageLabel, calLabel;
-	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel, petDeleteLabel,
+	private JLabel backLabel, petProfileLabel, deleteLabel, calLabel;
+	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel,
 			warningLabel;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
-	private JButton petAddProButton, petSpSearchButton, petModifyButton, completionButton;
+	private JButton petAddProButton, petSpSearchButton, petModifyButton, petDeleteButton, completionButton;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
 	private String name, spec, birth;
 	TPMgr mgr;
@@ -35,6 +36,7 @@ public class PetModifyScreen extends JFrame {
 	private PetPhotoModifyDialog ppm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 	boolean flag = true;
+	private RoundedImageLabel imageLabel;
 	
 	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -103,10 +105,8 @@ public class PetModifyScreen extends JFrame {
 						dispose();
 						new PetHomeScreen(StaticData.pet_id);
 					}
-				} else if (source == petDeleteLabel && petDeleteLabel.isEnabled()) {
+				} else if (source == petDeleteButton && petDeleteButton.isEnabled()) {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
-					new PetDeleteDialog(PetModifyScreen.this);
-				}else if(source == calLabel && calLabel.isEnabled()) {
 					mgr.delPet(StaticData.pet_id);
 					dispose();
 					if (mgr.isPet(StaticData.user_id)) {
@@ -118,7 +118,7 @@ public class PetModifyScreen extends JFrame {
 					setEnabled(false);
 					new CalendarDialog(PetModifyScreen.this, petBirthTField);
 				} else if (source == petModifyButton) {
-					petDeleteLabel.setEnabled(true);
+					petDeleteButton.setEnabled(true);
 					petAddProButton.setEnabled(true);
 					petSpSearchButton.setEnabled(true);
 					petNameTField.setEnabled(true);
@@ -158,20 +158,24 @@ public class PetModifyScreen extends JFrame {
 		// 메인 프로필 이미지
 		byte[] imgBytes = bean.getPet_image();
 		if (imgBytes == null || imgBytes.length == 0) {
-			imageLabel = new JLabel();
-			imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200);
+			// 기본 프로필 이미지 사용
+			ImageIcon icon = new ImageIcon("TeamProject/profile.png");
+			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			// RoundedImageLabel 사용
+			imageLabel = new RoundedImageLabel(img, 200, 200, 3); // 270은 크기, 3은 둥근 정도
 			imageLabel.setBounds(101, 230, 200, 200);
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
 		} else {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon = new ImageIcon(imgBytes);
-			Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 200, 200, 3); // 100은 둥근 정도
-			roundedProfileImageLabel.setBounds(101, 230, 200, 200);
-			add(roundedProfileImageLabel);
+			imageLabel = new RoundedImageLabel(img, 200, 200, 3); // 270은 크기, 3은 둥근 정도
+			imageLabel.setBounds(101, 230, 200, 200);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
 		}
 
 		// 경고문
@@ -218,7 +222,7 @@ public class PetModifyScreen extends JFrame {
 		add(petBirthLabel);
 
 		// 반려동물 종 생년월일 필드 추가
-		petBirthTField = new JTextField(bean.getPet_age());
+		petBirthTField = new JTextField();
 		petBirthTField.setForeground(Color.GRAY);
 		petBirthTField.setBounds(43, 696, 100, 40);
 		add(petBirthTField);
@@ -288,13 +292,14 @@ public class PetModifyScreen extends JFrame {
 		add(completionButton);
 
 		// 반려동물 정보 삭제 버튼
-		petDeleteLabel = createScaledImageLabel("TeamProject/pet_delete.png", 40, 40);
-		petDeleteLabel.setBounds(320, 123, 40, 40);
-		petDeleteLabel.setForeground(Color.RED);
-		petDeleteLabel.addMouseListener(commonMouseListener);
-		add(petDeleteLabel);
+		petDeleteButton = new JButton("삭제");
+		petDeleteButton.setBounds(285, 123, 80, 35);
+		petDeleteButton.setBackground(new Color(255, 102, 102));
+		petDeleteButton.setForeground(Color.WHITE);
+		petDeleteButton.addMouseListener(commonMouseListener);
+		add(petDeleteButton);
 
-		petDeleteLabel.setEnabled(false);
+		petDeleteButton.setEnabled(false);
 		petAddProButton.setEnabled(false);
 		petSpSearchButton.setEnabled(false);
 		petNameTField.setEnabled(false);
@@ -358,8 +363,9 @@ public class PetModifyScreen extends JFrame {
 		return new JLabel(new ImageIcon(scaledImage));
 	}
 
-	public JLabel getImageLabel() {
-		return imageLabel;
+	// 이미지 레이블 반환 타입을 RoundedImageLabel로 수정
+		public RoundedImageLabel getImageLabel() {
+		    return imageLabel;
 	}
 
 	// 이미지 바이트 배열을 설정하는 setter
