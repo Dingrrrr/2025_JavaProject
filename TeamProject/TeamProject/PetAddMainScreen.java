@@ -229,6 +229,8 @@ public class PetAddMainScreen extends JFrame {
 	}
 
 	private void petAddMain() {
+		petaddPanel.removeAll();
+		
 		for (PetBean pb : vlist) {
 			JPanel petAddMainPanel = new JPanel();
 			petAddMainPanel.setPreferredSize(new Dimension(353, 160)); // 크기 지정
@@ -255,7 +257,7 @@ public class PetAddMainScreen extends JFrame {
 				petImageLabel = new RoundedImageLabel(img, 135, 135, 3);
 			}
 			// petImageLabel 크기 지정
-			petImageLabel.setPreferredSize(new Dimension(135, 135));  // 이미지 크기 지정
+			petImageLabel.setPreferredSize(new Dimension(135, 135)); // 이미지 크기 지정
 
 			petImageLabel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -326,7 +328,13 @@ public class PetAddMainScreen extends JFrame {
 					mgr.petBirth(pb.getPet_id(), birth);
 				}
 			}
+			petaddPanel.revalidate();
+			petaddPanel.repaint();
+			
+			scrollPane.revalidate();
 		}
+		petaddPanel.revalidate();
+		petaddPanel.repaint();
 	}
 
 	private JLabel createScaledImageLabel(String imagePath, int width, int height) {
