@@ -218,7 +218,7 @@ public class PetModifyScreen extends JFrame {
 		add(petBirthLabel);
 
 		// 반려동물 종 생년월일 필드 추가
-		petBirthTField = new JTextField();
+		petBirthTField = new JTextField(bean.getPet_age());
 		petBirthTField.setForeground(Color.GRAY);
 		petBirthTField.setBounds(43, 696, 100, 40);
 		add(petBirthTField);
