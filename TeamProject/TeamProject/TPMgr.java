@@ -1724,6 +1724,51 @@ public class TPMgr {
 		}
 		return date;
 	}
+	
+	//반려동물 검진일 알림
+	public void petMedic(int id, String date, String content) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "insert last_medic_date values(?, ?, ?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.setString(2, date);
+			pstmt.setString(3, content);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
+	//반려동물 검진 알림 유무
+	public String isPetMedic(int id, String content) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String date = "";
+		try {
+			con = pool.getConnection();
+			sql = "select * from last_medic_date where pet_id = ? and content = ? order by date desc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.setString(2, content);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				date = rs.getString("date");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return date;
+	}
 
 	//쪽지 보내기
 	public boolean sendMsg(String user_id, MsgBean bean) {
