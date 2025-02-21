@@ -23,8 +23,7 @@ import javax.swing.border.MatteBorder;
 public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
-			imageProfileLabel, petImageLabel;
+	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
 	private ImageIcon image2;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
@@ -35,6 +34,7 @@ public class PetAddMainScreen extends JFrame {
 	private JPanel petaddPanel;
 	private JScrollPane scrollPane; // 스크롤 패널
 	private byte[] imageBytes, imageBytes1;
+	private RoundedImageLabel petImageLabel;
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -119,6 +119,7 @@ public class PetAddMainScreen extends JFrame {
 
 		// 상단 프로필 아이디
 		if (imgBytes == null || imgBytes.length == 0) {
+			// 기본 프로필 이미지 사
 			imageProfileLabel = new JLabel();
 			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
 			imageProfileLabel.setBounds(330, 120, 40, 40);
@@ -234,7 +235,6 @@ public class PetAddMainScreen extends JFrame {
 	}
 
 	private void petAddMain() {
-
 		for (PetBean pb : vlist) {
 			JPanel petAddMainPanel = new JPanel();
 			petAddMainPanel.setPreferredSize(new Dimension(353, 160)); // 크기 지정
@@ -243,45 +243,41 @@ public class PetAddMainScreen extends JFrame {
 			petAddMainPanel.setBorder(new LineBorder(Color.black, 0));
 			petAddMainPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
 
-			// 2) 상단 패널 (USER_ID + 날짜)
-			JPanel topPanel = new JPanel(new BorderLayout());
-
 			// 3) 구분선
 			JSeparator separator = new JSeparator();
 			separator.setForeground(Color.BLACK);
 
 			// 왼쪽 - 이미지
 			byte[] imgBytes = pb.getPet_image();
-			String imgNull = Arrays.toString(imgBytes);
-			petImageLabel = new JLabel(); // JLabel을 먼저 생성
 			if (imgBytes == null || imgBytes.length == 0) {
-				petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);
-				petImageLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						dispose();
-						new PetHomeScreen(pb.getPet_id());
-					}
-				});
+				ImageIcon icon = new ImageIcon("TeamProject/dog.png");
+				Image img = icon.getImage().getScaledInstance(135, 135, image.SCALE_SMOOTH);
+
+				petImageLabel = new RoundedImageLabel(img, 135, 135, 3);
 			} else {
-				ImageIcon icon1 = new ImageIcon(imgBytes);
-				Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
-				petImageLabel.setIcon(new ImageIcon(img1));
-				petImageLabel.setVerticalAlignment(JLabel.TOP);
-				petImageLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						dispose();
-						new PetHomeScreen(pb.getPet_id());
-					}
-				});
+				ImageIcon icon = new ImageIcon(imgBytes);
+				Image img = icon.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+
+				petImageLabel = new RoundedImageLabel(img, 135, 135, 3);
 			}
+			// petImageLabel 크기 지정
+			petImageLabel.setPreferredSize(new Dimension(135, 135));  // 이미지 크기 지정
+
+			petImageLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					dispose();
+					new PetHomeScreen(pb.getPet_id());
+				}
+			});
 
 			// 4) 본문 패널 (이미지 + 텍스트)
 			JPanel contentPanel = new JPanel();
 			contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5)); // 왼쪽 정렬 FlowLayout으로 변경
 			contentPanel.setBackground(Color.WHITE);
 			contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // 위, 왼쪽, 아래, 오른쪽 순서
+
+			// 왼쪽 - 이미지를 contentPanel에 한 번만 추가
 			contentPanel.add(petImageLabel);
 
 			// 오른쪽 - 이름, 종, 나이, 성별
@@ -300,7 +296,9 @@ public class PetAddMainScreen extends JFrame {
 			textPanel.add(genderLabel);
 			textPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
+			// 오른쪽 텍스트를 contentPanel에 추가
 			contentPanel.add(textPanel, BorderLayout.CENTER);
+
 			// 5) 전체 구성
 			petAddMainPanel.add(contentPanel, BorderLayout.CENTER);
 			petAddMainPanel.add(separator, BorderLayout.SOUTH);
@@ -310,35 +308,31 @@ public class PetAddMainScreen extends JFrame {
 
 			// 각 애완동물 항목 간에 간격을 둔다
 			petaddPanel.add(Box.createVerticalStrut(0)); // 0px 간격
-			
-			
-			//반려동물 생일 알림
+
+			// 반려동물 생일 알림
 			Calendar calendar = Calendar.getInstance();
-	        int month1 = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1
-	        int day1 = calendar.get(Calendar.DAY_OF_MONTH);
-	        String today = String.format("%02d%02d", month1, day1); // 형식: MM월 DD일
-	        String birth = pb.getPet_age();
-	        if(mgr.isPetBirth(pb.getPet_id()).equals(birth)) {	//마지막으로 알림 보낸 날짜가 오늘이랑 같을 경우
-	        	//반응 안함
-	        } else {	//마지막으로 알림 보낸 날짜가 오늘이 아닌경우
+			int month1 = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1
+			int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+			String today = String.format("%02d%02d", month1, day1); // 형식: MM월 DD일
+			String birth = pb.getPet_age();
+			if (mgr.isPetBirth(pb.getPet_id()).equals(birth)) { // 마지막으로 알림 보낸 날짜가 오늘이랑 같을 경우
+				// 반응 안함
+			} else { // 마지막으로 알림 보낸 날짜가 오늘이 아닌경우
 				String[] date = birth.split("\\.");
 				String month = date[1];
 				String day = date[2];
-				if(today.equals(month+day)) {		//오늘이 생일인 경우
+				if (today.equals(month + day)) { // 오늘이 생일인 경우
 					MsgBean mb = new MsgBean();
 					mb.setMsg_title(pb.getPet_name() + "의 특별한 날! 생일 축하해요!");
-					mb.setMsg_content("안녕하세요! 좋은 소식을 전해 드립니다! \n"
-							+ "오늘은 바로" + pb.getPet_name() + "의 생일이에요!\n"
-							+ "이 특별한 날을 축하해 주세요! \n맛있는 간식과 함께 행복한 시간을 보내길 바래요. \n"
-							+ pb.getPet_name() + "도 여러분의 사랑을 기다리고 있을 거예요! \n"
-							+ "즐거운 하루 되세요!");
+					mb.setMsg_content("안녕하세요! 좋은 소식을 전해 드립니다! \n" + "오늘은 바로" + pb.getPet_name() + "의 생일이에요!\n"
+							+ "이 특별한 날을 축하해 주세요! \n맛있는 간식과 함께 행복한 시간을 보내길 바래요. \n" + pb.getPet_name()
+							+ "도 여러분의 사랑을 기다리고 있을 거예요! \n" + "즐거운 하루 되세요!");
 					mb.setReceiver_id(StaticData.user_id);
 					mgr.sendMsg("admin", mb);
 					mgr.petBirth(pb.getPet_id(), birth);
 				}
-	        }
+			}
 		}
-
 	}
 
 	private JLabel createScaledImageLabel(String imagePath, int width, int height) {
