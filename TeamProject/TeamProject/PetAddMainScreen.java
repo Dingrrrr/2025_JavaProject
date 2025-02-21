@@ -27,8 +27,9 @@ public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
-			imageProfileLabel, petImageLabel, logoutLabel;
+			imageProfileLabel;
 	private ImageIcon image2;
+	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
 	PetBean bean;
@@ -37,6 +38,7 @@ public class PetAddMainScreen extends JFrame {
 	private JPanel petaddPanel;
 	private JScrollPane scrollPane; // 스크롤 패널
 	private byte[] imageBytes, imageBytes1;
+	private RoundedImageLabel petImageLabel;
 
 	public PetAddMainScreen() {
 		setTitle("프레임 설정");
@@ -81,10 +83,6 @@ public class PetAddMainScreen extends JFrame {
 						pc.setVisible(true);
 					}
 					setEnabled(false);
-				} else if (source == logoutLabel) {
-					dispose();
-					mgr.userOut(StaticData.user_id);
-					new LoginScreen();
 				}
 			}
 		};
@@ -156,10 +154,19 @@ public class PetAddMainScreen extends JFrame {
 		add(welcomeLabel);
 
 		// 로그아웃 버튼
-		logoutLabel = createScaledImageLabel("TeamProject/logout_icon.png", 40, 40);
-		logoutLabel.setBounds(30, 122, 40, 40);
-		logoutLabel.addMouseListener(commonMouseListener);
-		add(logoutLabel);
+		logoutButton = new RoundedButton("로그아웃");
+		logoutButton.setBounds(30, 122, 85, 36);
+		logoutButton.setBackground(new Color(91, 91, 91));
+		logoutButton.setForeground(Color.WHITE);
+		logoutButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				mgr.userOut(StaticData.user_id);
+				new LoginScreen();
+			}
+		});
+		add(logoutButton);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
@@ -231,7 +238,6 @@ public class PetAddMainScreen extends JFrame {
 	}
 
 	private void petAddMain() {
-		
 		petaddPanel.removeAll();
 		
 		for (PetBean pb : vlist) {
@@ -251,29 +257,16 @@ public class PetAddMainScreen extends JFrame {
 
 			// 왼쪽 - 이미지
 			byte[] imgBytes = pb.getPet_image();
-			String imgNull = Arrays.toString(imgBytes);
-			petImageLabel = new JLabel(); // JLabel을 먼저 생성
 			if (imgBytes == null || imgBytes.length == 0) {
-				petImageLabel = createScaledImageLabel("TeamProject/dog.png", 135, 135);
-				petImageLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						dispose();
-						new PetHomeScreen(pb.getPet_id());
-					}
-				});
+				ImageIcon icon = new ImageIcon("TeamProject/dog.png");
+				Image img = icon.getImage().getScaledInstance(135, 135, image.SCALE_SMOOTH);
+
+				petImageLabel = new RoundedImageLabel(img, 135, 135, 3);
 			} else {
-				ImageIcon icon1 = new ImageIcon(imgBytes);
-				Image img1 = icon1.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
-				petImageLabel.setIcon(new ImageIcon(img1));
-				petImageLabel.setVerticalAlignment(JLabel.TOP);
-				petImageLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						dispose();
-						new PetHomeScreen(pb.getPet_id());
-					}
-				});
+				ImageIcon icon = new ImageIcon(imgBytes);
+				Image img = icon.getImage().getScaledInstance(135, 135, Image.SCALE_SMOOTH);
+
+				petImageLabel = new RoundedImageLabel(img, 135, 135, 3);
 			}
 			// petImageLabel 크기 지정
 			petImageLabel.setPreferredSize(new Dimension(135, 135)); // 이미지 크기 지정
@@ -285,6 +278,7 @@ public class PetAddMainScreen extends JFrame {
 					new PetHomeScreen(pb.getPet_id());
 				}
 			});
+
 			// 4) 본문 패널 (이미지 + 텍스트)
 			JPanel contentPanel = new JPanel();
 			contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5)); // 왼쪽 정렬 FlowLayout으로 변경
@@ -318,359 +312,340 @@ public class PetAddMainScreen extends JFrame {
 
 			// 각 애완동물 항목 간에 간격을 둔다
 			petaddPanel.add(Box.createVerticalStrut(0)); // 0px 간격
-			
-			
+
 			String birth = pb.getPet_age();
-			//반려동물 생일 알림
-			Calendar calendar = Calendar.getInstance();
-	        int month1 = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1
-	        int day1 = calendar.get(Calendar.DAY_OF_MONTH);
-	        String today = String.format("%02d%02d", month1, day1); // 형식: MM월 DD일
-	        if(mgr.isPetBirth(pb.getPet_id()).equals(birth)) {	//마지막으로 알림 보낸 날짜가 오늘이랑 같을 경우
-	        	//반응 안함
-	        } else {	//마지막으로 알림 보낸 날짜가 오늘이 아닌경우
-				String[] date = birth.split("\\.");
-				String month = date[1];
-				String day = date[2];
-				if(today.equals(month+day)) {		//오늘이 생일인 경우
-					MsgBean mb = new MsgBean();
-					mb.setMsg_title(pb.getPet_name() + "의 특별한 날! 생일 축하해요!");
-					mb.setMsg_content("안녕하세요! 좋은 소식을 전해 드립니다! \r\n"
-							+ "오늘은 바로" + pb.getPet_name() + "의 생일이에요! "
-							+ "이 특별한 날을 축하해 주세요! 맛있는 간식과 함께 행복한 시간을 보내길 바래요. \r\n"
-							+ pb.getPet_name() + "도 여러분의 사랑을 기다리고 있을 거예요! \r\n"
-							+ "즐거운 하루 되세요!");
-					mb.setReceiver_id(StaticData.user_id);
-					mgr.sendMsg("admin", mb);
-					mgr.petBirth(pb.getPet_id(), birth);
+			if (!birth.isEmpty()) { // 생일이 기입했을 경우
+				// 반려동물 생일 알림
+				Calendar calendar = Calendar.getInstance();
+				int month1 = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1
+				int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+				String today = String.format("%02d%02d", month1, day1); // 형식: MM월 DD일
+				if (mgr.isPetBirth(pb.getPet_id()).equals(birth)) { // 마지막으로 알림 보낸 날짜가 오늘이랑 같을 경우
+					// 반응 안함
+				} else { // 마지막으로 알림 보낸 날짜가 오늘이 아닌경우
+					String[] date = birth.split("\\.");
+					String month = date[1];
+					String day = date[2];
+					if (today.equals(month + day)) { // 오늘이 생일인 경우
+						MsgBean mb = new MsgBean();
+						mb.setMsg_title(pb.getPet_name() + "의 특별한 날! 생일 축하해요!");
+						mb.setMsg_content("안녕하세요! 좋은 소식을 전해 드립니다! \r\n" + "오늘은 바로" + pb.getPet_name() + "의 생일이에요! "
+								+ "이 특별한 날을 축하해 주세요! 맛있는 간식과 함께 행복한 시간을 보내길 바래요. \r\n" + pb.getPet_name()
+								+ "도 여러분의 사랑을 기다리고 있을 거예요! \r\n" + "즐거운 하루 되세요!");
+						mb.setReceiver_id(StaticData.user_id);
+						mgr.sendMsg("admin", mb);
+						mgr.petBirth(pb.getPet_id(), birth);
+					}
 				}
-	        }
-	        
-	        
-	        //건강 검진일 알림
-	        
-	        //혼합 백신(생후 6주부터 2주간격으로 계속 알림, 15주부터 매년 알림)
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-	        
-	        //생일을 LocalDate로 변환
-	        LocalDate birthday = LocalDate.parse(birth, formatter);
-	        LocalDate currentDay = LocalDate.now();
-	        
-	        //6주 후부터 2주 간격으로 5번 알림
-	        int weeksAfter = 6;
-	        int interval = 2;
-	        int reminderCount = 5;
-	       
-	        
-	        for (int i = 0; i < reminderCount; i++) {
-				LocalDate reminderDate = birthday.plusWeeks(weeksAfter + (i*interval));
-				if(reminderDate.equals(currentDay)) {	//검진일이 오늘이라면
-			        MsgBean mgb = new MsgBean();
-			        mgb.setMsg_title("반려동물 혼합 백신 검진일 안내");
-			        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-			        		+ "소중한 반려동물의 건강을 위해 혼합 백신 검진일이 다가왔음을 알려드립니다.\r\n"
-			        		+ "\r\n"
-			        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-			        		+ "예정일: [" + reminderDate.format(formatter) + "]\r\n"
-			        		+ "\r\n"
-			        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-			        mgb.setReceiver_id(StaticData.user_id);
-			        if(mgr.isPetMedic(pb.getPet_id(), "혼합 백신").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-			        	//반응 안함
-			        } else {
-						mgr.sendMsg("admin", mgb);
-						mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "혼합 백신");
-			        }
-				}
-			}
-	        
-	        // 15주 후부터 1년 간격으로 알림
-	        LocalDate yearlyStart = birthday.plusWeeks(15);
-	        if (!currentDay.isBefore(yearlyStart)) {
-	            for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
-	                LocalDate yearlyReminder = yearlyStart.plusYears(i);
-	                if (yearlyReminder.equals(currentDay)) {
-	                	MsgBean mgb = new MsgBean();
-				        mgb.setMsg_title("반려동물 혼합 백신 검진일 안내");
-				        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-				        		+ "소중한 반려동물의 건강을 위해 혼합 백신 검진일이 다가왔음을 알려드립니다.\r\n"
-				        		+ "\r\n"
-				        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-				        		+ "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
-				        		+ "\r\n"
-				        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-				        mgb.setReceiver_id(StaticData.user_id);
-				        if(mgr.isPetMedic(pb.getPet_id(), "혼합 백신").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-				        	//반응 안함
-				        } else {
+
+				// 건강 검진일 알림
+
+				// 혼합 백신(생후 6주부터 2주간격으로 계속 알림, 15주부터 매년 알림)
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+				// 생일을 LocalDate로 변환
+				LocalDate birthday = LocalDate.parse(birth, formatter);
+				LocalDate currentDay = LocalDate.now();
+
+				// 6주 후부터 2주 간격으로 5번 알림
+				int weeksAfter = 6;
+				int interval = 2;
+				int reminderCount = 5;
+
+				for (int i = 0; i < reminderCount; i++) {
+					LocalDate reminderDate = birthday.plusWeeks(weeksAfter + (i * interval));
+					if (reminderDate.equals(currentDay)) { // 검진일이 오늘이라면
+						MsgBean mgb = new MsgBean();
+						mgb.setMsg_title("반려동물 혼합 백신 검진일 안내");
+						mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+								+ "소중한 반려동물의 건강을 위해 혼합 백신 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: ["
+								+ pb.getPet_name() + "]\r\n" + "예정일: [" + reminderDate.format(formatter) + "]\r\n"
+								+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+						mgb.setReceiver_id(StaticData.user_id);
+						if (mgr.isPetMedic(pb.getPet_id(), "혼합 백신").equals(currentDay.format(formatter))) { // 혼합 백신 알림을
+																											// 보낸게 오늘일
+																											// 경우
+							// 반응 안함
+						} else {
 							mgr.sendMsg("admin", mgb);
 							mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "혼합 백신");
-				        }
-	                }
-	            }
-	        }
-	        
-	        
-	        
-	        //코로나
-	        
-	        //6주 후부터 2주 간격으로 2번 알림
-	        weeksAfter = 6;
-	        interval = 2;
-	        reminderCount = 2;
-	       
-	        for (int i = 0; i < reminderCount; i++) {
-				LocalDate reminderDate = birthday.plusWeeks(weeksAfter + (i*interval));
-				if(reminderDate.equals(currentDay)) {	//검진일이 오늘이라면
-			        MsgBean mgb = new MsgBean();
-			        mgb.setMsg_title("반려동물 코로나 검진일 안내");
-			        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-			        		+ "소중한 반려동물의 건강을 위해 코로나 검진일이 다가왔음을 알려드립니다.\r\n"
-			        		+ "\r\n"
-			        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-			        		+ "예정일: [" + reminderDate.format(formatter) + "]\r\n"
-			        		+ "\r\n"
-			        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-			        mgb.setReceiver_id(StaticData.user_id);
-			        if(mgr.isPetMedic(pb.getPet_id(), "코로나").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-			        	//반응 안함
-			        } else {
-						mgr.sendMsg("admin", mgb);
-						mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "코로나");
-			        }
+						}
+					}
 				}
-			}
-	        
-	        // 15주 후부터 1년 간격으로 알림
-	        yearlyStart = birthday.plusWeeks(15);
-	        if (!currentDay.isBefore(yearlyStart)) {
-	            for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
-	                LocalDate yearlyReminder = yearlyStart.plusYears(i);
-	                if (yearlyReminder.equals(currentDay)) {
-	                	MsgBean mgb = new MsgBean();
-				        mgb.setMsg_title("반려동물 코로나 검진일 안내");
-				        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-				        		+ "소중한 반려동물의 건강을 위해 코로나 검진일이 다가왔음을 알려드립니다.\r\n"
-				        		+ "\r\n"
-				        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-				        		+ "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
-				        		+ "\r\n"
-				        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-				        mgb.setReceiver_id(StaticData.user_id);
-				        if(mgr.isPetMedic(pb.getPet_id(), "코로나").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-				        	//반응 안함
-				        } else {
+
+				// 15주 후부터 1년 간격으로 알림
+				LocalDate yearlyStart = birthday.plusWeeks(15);
+				if (!currentDay.isBefore(yearlyStart)) {
+					for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
+						LocalDate yearlyReminder = yearlyStart.plusYears(i);
+						if (yearlyReminder.equals(currentDay)) {
+							MsgBean mgb = new MsgBean();
+							mgb.setMsg_title("반려동물 혼합 백신 검진일 안내");
+							mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+									+ "소중한 반려동물의 건강을 위해 혼합 백신 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: ["
+									+ pb.getPet_name() + "]\r\n" + "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
+									+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+							mgb.setReceiver_id(StaticData.user_id);
+							if (mgr.isPetMedic(pb.getPet_id(), "혼합 백신").equals(currentDay.format(formatter))) { // 혼합 백신
+																												// 알림을
+																												// 보낸게
+																												// 오늘일
+																												// 경우
+								// 반응 안함
+							} else {
+								mgr.sendMsg("admin", mgb);
+								mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "혼합 백신");
+							}
+						}
+					}
+				}
+
+				// 코로나
+
+				// 6주 후부터 2주 간격으로 2번 알림
+				weeksAfter = 6;
+				interval = 2;
+				reminderCount = 2;
+
+				for (int i = 0; i < reminderCount; i++) {
+					LocalDate reminderDate = birthday.plusWeeks(weeksAfter + (i * interval));
+					if (reminderDate.equals(currentDay)) { // 검진일이 오늘이라면
+						MsgBean mgb = new MsgBean();
+						mgb.setMsg_title("반려동물 코로나 검진일 안내");
+						mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+								+ "소중한 반려동물의 건강을 위해 코로나 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: [" + pb.getPet_name()
+								+ "]\r\n" + "예정일: [" + reminderDate.format(formatter) + "]\r\n" + "\r\n"
+								+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+						mgb.setReceiver_id(StaticData.user_id);
+						if (mgr.isPetMedic(pb.getPet_id(), "코로나").equals(currentDay.format(formatter))) { // 혼합 백신 알림을
+																											// 보낸게 오늘일
+																											// 경우
+							// 반응 안함
+						} else {
 							mgr.sendMsg("admin", mgb);
 							mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "코로나");
-				        }
-	                }
-	            }
-	        }
-	        
-	        
-	        
-	        //켄넬코프
-	        
-	        //10주 후부터 2주 간격으로 2번 알림
-	        weeksAfter = 10;
-	        interval = 2;
-	        reminderCount = 2;
-	       
-	        for (int i = 0; i < reminderCount; i++) {
-				LocalDate reminderDate = birthday.plusWeeks(weeksAfter + (i*interval));
-				if(reminderDate.equals(currentDay)) {	//검진일이 오늘이라면
-			        MsgBean mgb = new MsgBean();
-			        mgb.setMsg_title("반려동물 켄넬코프 검진일 안내");
-			        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-			        		+ "소중한 반려동물의 건강을 위해 켄넬코프 검진일이 다가왔음을 알려드립니다.\r\n"
-			        		+ "\r\n"
-			        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-			        		+ "예정일: [" + reminderDate.format(formatter) + "]\r\n"
-			        		+ "\r\n"
-			        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-			        mgb.setReceiver_id(StaticData.user_id);
-			        if(mgr.isPetMedic(pb.getPet_id(), "켄넬코프").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-			        	//반응 안함
-			        } else {
-						mgr.sendMsg("admin", mgb);
-						mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "켄넬코프");
-			        }
+						}
+					}
 				}
-			}
-	        
-	        // 15주 후부터 1년 간격으로 알림
-	        yearlyStart = birthday.plusWeeks(15);
-	        if (!currentDay.isBefore(yearlyStart)) {
-	            for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
-	                LocalDate yearlyReminder = yearlyStart.plusYears(i);
-	                if (yearlyReminder.equals(currentDay)) {
-	                	MsgBean mgb = new MsgBean();
-				        mgb.setMsg_title("반려동물 켄넬코프 검진일 안내");
-				        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-				        		+ "소중한 반려동물의 건강을 위해 켄넬코프 검진일이 다가왔음을 알려드립니다.\r\n"
-				        		+ "\r\n"
-				        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-				        		+ "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
-				        		+ "\r\n"
-				        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-				        mgb.setReceiver_id(StaticData.user_id);
-				        if(mgr.isPetMedic(pb.getPet_id(), "켄넬코프").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-				        	//반응 안함
-				        } else {
+
+				// 15주 후부터 1년 간격으로 알림
+				yearlyStart = birthday.plusWeeks(15);
+				if (!currentDay.isBefore(yearlyStart)) {
+					for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
+						LocalDate yearlyReminder = yearlyStart.plusYears(i);
+						if (yearlyReminder.equals(currentDay)) {
+							MsgBean mgb = new MsgBean();
+							mgb.setMsg_title("반려동물 코로나 검진일 안내");
+							mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+									+ "소중한 반려동물의 건강을 위해 코로나 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: ["
+									+ pb.getPet_name() + "]\r\n" + "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
+									+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+							mgb.setReceiver_id(StaticData.user_id);
+							if (mgr.isPetMedic(pb.getPet_id(), "코로나").equals(currentDay.format(formatter))) { // 혼합 백신
+																												// 알림을
+																												// 보낸게
+																												// 오늘일
+																												// 경우
+								// 반응 안함
+							} else {
+								mgr.sendMsg("admin", mgb);
+								mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "코로나");
+							}
+						}
+					}
+				}
+
+				// 켄넬코프
+
+				// 10주 후부터 2주 간격으로 2번 알림
+				weeksAfter = 10;
+				interval = 2;
+				reminderCount = 2;
+
+				for (int i = 0; i < reminderCount; i++) {
+					LocalDate reminderDate = birthday.plusWeeks(weeksAfter + (i * interval));
+					if (reminderDate.equals(currentDay)) { // 검진일이 오늘이라면
+						MsgBean mgb = new MsgBean();
+						mgb.setMsg_title("반려동물 켄넬코프 검진일 안내");
+						mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+								+ "소중한 반려동물의 건강을 위해 켄넬코프 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: ["
+								+ pb.getPet_name() + "]\r\n" + "예정일: [" + reminderDate.format(formatter) + "]\r\n"
+								+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+						mgb.setReceiver_id(StaticData.user_id);
+						if (mgr.isPetMedic(pb.getPet_id(), "켄넬코프").equals(currentDay.format(formatter))) { // 혼합 백신 알림을
+																											// 보낸게 오늘일
+																											// 경우
+							// 반응 안함
+						} else {
 							mgr.sendMsg("admin", mgb);
 							mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "켄넬코프");
-				        }
-	                }
-	            }
-	        }
-	        
-	        
-	        
-	        //광견병
-	        
-	        //14주에 1번 알림
-			LocalDate reminderDate = birthday.plusWeeks(14);
-			if(reminderDate.equals(currentDay)) {	//검진일이 오늘이라면
-		        MsgBean mgb = new MsgBean();
-		        mgb.setMsg_title("반려동물 광견병 검진일 안내");
-		        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-		        		+ "소중한 반려동물의 건강을 위해 광견병 검진일이 다가왔음을 알려드립니다.\r\n"
-		        		+ "\r\n"
-		        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-		        		+ "예정일: [" + reminderDate.format(formatter) + "]\r\n"
-		        		+ "\r\n"
-		        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-		        mgb.setReceiver_id(StaticData.user_id);
-		        if(mgr.isPetMedic(pb.getPet_id(), "광견병").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-		        	//반응 안함
-		        } else {
-					mgr.sendMsg("admin", mgb);
-					mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "광견병");
-		        }
-			}
-	        
-	        // 15주 후부터 1년 간격으로 알림
-	        yearlyStart = birthday.plusWeeks(15);
-	        if (!currentDay.isBefore(yearlyStart)) {
-	            for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
-	                LocalDate yearlyReminder = yearlyStart.plusYears(i);
-	                if (yearlyReminder.equals(currentDay)) {
-	                	MsgBean mgb = new MsgBean();
-				        mgb.setMsg_title("반려동물 광견병 검진일 안내");
-				        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-				        		+ "소중한 반려동물의 건강을 위해 광견병 검진일이 다가왔음을 알려드립니다.\r\n"
-				        		+ "\r\n"
-				        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-				        		+ "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
-				        		+ "\r\n"
-				        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-				        mgb.setReceiver_id(StaticData.user_id);
-				        if(mgr.isPetMedic(pb.getPet_id(), "광견병").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-				        	//반응 안함
-				        } else {
+						}
+					}
+				}
+
+				// 15주 후부터 1년 간격으로 알림
+				yearlyStart = birthday.plusWeeks(15);
+				if (!currentDay.isBefore(yearlyStart)) {
+					for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
+						LocalDate yearlyReminder = yearlyStart.plusYears(i);
+						if (yearlyReminder.equals(currentDay)) {
+							MsgBean mgb = new MsgBean();
+							mgb.setMsg_title("반려동물 켄넬코프 검진일 안내");
+							mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+									+ "소중한 반려동물의 건강을 위해 켄넬코프 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: ["
+									+ pb.getPet_name() + "]\r\n" + "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
+									+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+							mgb.setReceiver_id(StaticData.user_id);
+							if (mgr.isPetMedic(pb.getPet_id(), "켄넬코프").equals(currentDay.format(formatter))) { // 혼합 백신
+																												// 알림을
+																												// 보낸게
+																												// 오늘일
+																												// 경우
+								// 반응 안함
+							} else {
+								mgr.sendMsg("admin", mgb);
+								mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "켄넬코프");
+							}
+						}
+					}
+				}
+
+				// 광견병
+
+				// 14주에 1번 알림
+				LocalDate reminderDate = birthday.plusWeeks(14);
+				if (reminderDate.equals(currentDay)) { // 검진일이 오늘이라면
+					MsgBean mgb = new MsgBean();
+					mgb.setMsg_title("반려동물 광견병 검진일 안내");
+					mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+							+ "소중한 반려동물의 건강을 위해 광견병 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: [" + pb.getPet_name()
+							+ "]\r\n" + "예정일: [" + reminderDate.format(formatter) + "]\r\n" + "\r\n"
+							+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+					mgb.setReceiver_id(StaticData.user_id);
+					if (mgr.isPetMedic(pb.getPet_id(), "광견병").equals(currentDay.format(formatter))) { // 혼합 백신 알림을 보낸게
+																										// 오늘일 경우
+						// 반응 안함
+					} else {
+						mgr.sendMsg("admin", mgb);
+						mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "광견병");
+					}
+				}
+
+				// 15주 후부터 1년 간격으로 알림
+				yearlyStart = birthday.plusWeeks(15);
+				if (!currentDay.isBefore(yearlyStart)) {
+					for (int i = 0; i <= 50; i++) { // 최대 50년 동안 알림 (조정 가능)
+						LocalDate yearlyReminder = yearlyStart.plusYears(i);
+						if (yearlyReminder.equals(currentDay)) {
+							MsgBean mgb = new MsgBean();
+							mgb.setMsg_title("반려동물 광견병 검진일 안내");
+							mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+									+ "소중한 반려동물의 건강을 위해 광견병 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: ["
+									+ pb.getPet_name() + "]\r\n" + "예정일: [" + yearlyReminder.format(formatter) + "]\r\n"
+									+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+							mgb.setReceiver_id(StaticData.user_id);
+							if (mgr.isPetMedic(pb.getPet_id(), "광견병").equals(currentDay.format(formatter))) { // 혼합 백신
+																												// 알림을
+																												// 보낸게
+																												// 오늘일
+																												// 경우
+								// 반응 안함
+							} else {
+								mgr.sendMsg("admin", mgb);
+								mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "광견병");
+							}
+						}
+					}
+				}
+
+				// 신종플루
+
+				// 14주 후부터 2주 간격으로 2번 알림
+				weeksAfter = 14;
+				interval = 2;
+				reminderCount = 2;
+
+				for (int i = 0; i < reminderCount; i++) {
+					reminderDate = birthday.plusWeeks(weeksAfter + (i * interval));
+					if (reminderDate.equals(currentDay)) { // 검진일이 오늘이라면
+						MsgBean mgb = new MsgBean();
+						mgb.setMsg_title("반려동물 신종플루 검진일 안내");
+						mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+								+ "소중한 반려동물의 건강을 위해 신종플루 검진일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "검진 대상: ["
+								+ pb.getPet_name() + "]\r\n" + "예정일: [" + reminderDate.format(formatter) + "]\r\n"
+								+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+						mgb.setReceiver_id(StaticData.user_id);
+						if (mgr.isPetMedic(pb.getPet_id(), "신종플루").equals(currentDay.format(formatter))) { // 혼합 백신 알림을
+																											// 보낸게 오늘일
+																											// 경우
+							// 반응 안함
+						} else {
 							mgr.sendMsg("admin", mgb);
-							mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "광견병");
-				        }
-	                }
-	            }
-	        }
-	        
-	        
-	        
-	        //신종플루
-	        
-	        //14주 후부터 2주 간격으로 2번 알림
-	        weeksAfter = 14;
-	        interval = 2;
-	        reminderCount = 2;
-	       
-	        for (int i = 0; i < reminderCount; i++) {
-				reminderDate = birthday.plusWeeks(weeksAfter + (i*interval));
-				if(reminderDate.equals(currentDay)) {	//검진일이 오늘이라면
-			        MsgBean mgb = new MsgBean();
-			        mgb.setMsg_title("반려동물 신종플루 검진일 안내");
-			        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-			        		+ "소중한 반려동물의 건강을 위해 신종플루 검진일이 다가왔음을 알려드립니다.\r\n"
-			        		+ "\r\n"
-			        		+ "검진 대상: [" + pb.getPet_name() + "]\r\n"
-			        		+ "예정일: [" + reminderDate.format(formatter) + "]\r\n"
-			        		+ "\r\n"
-			        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-			        mgb.setReceiver_id(StaticData.user_id);
-			        if(mgr.isPetMedic(pb.getPet_id(), "신종플루").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-			        	//반응 안함
-			        } else {
-						mgr.sendMsg("admin", mgb);
-						mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "신종플루");
-			        }
+							mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "신종플루");
+						}
+					}
+				}
+
+				// 구충제
+
+				// 4주 후부터 2달 간격으로 2번 알림
+				int startWeeks = 4;
+				int monthInterval = 2;
+
+				for (int i = 0; i < 50; i++) {
+					LocalDate extraReminderDate = birthday.plusWeeks(startWeeks).plusMonths(i * monthInterval);
+					if (extraReminderDate.equals(currentDay)) { // 검진일이 오늘이라면
+						MsgBean mgb = new MsgBean();
+						mgb.setMsg_title("반려동물 구충제 투약 안내");
+						mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+								+ "소중한 반려동물의 건강을 위해 구충제 투약이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "투약 대상: [" + pb.getPet_name()
+								+ "]\r\n" + "예정일: [" + extraReminderDate.format(formatter) + "]\r\n" + "\r\n"
+								+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+						mgb.setReceiver_id(StaticData.user_id);
+						if (mgr.isPetMedic(pb.getPet_id(), "구충제").equals(currentDay.format(formatter))) { // 혼합 백신 알림을
+																											// 보낸게 오늘일
+																											// 경우
+							// 반응 안함
+						} else {
+							mgr.sendMsg("admin", mgb);
+							mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "구충제");
+						}
+					}
+				}
+
+				// 심장사상충
+
+				// 4주 후부터 1달 간격으로 알림
+				startWeeks = 4;
+				monthInterval = 1;
+
+				for (int i = 0; i < 50; i++) {
+					LocalDate extraReminderDate = birthday.plusWeeks(startWeeks).plusMonths(i * monthInterval);
+					if (extraReminderDate.equals(currentDay)) { // 검진일이 오늘이라면
+						MsgBean mgb = new MsgBean();
+						mgb.setMsg_title("반려동물 심장사상충 치료 안내");
+						mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
+								+ "소중한 반려동물의 건강을 위해 심장사상충 치료일이 다가왔음을 알려드립니다.\r\n" + "\r\n" + "치료 대상: ["
+								+ pb.getPet_name() + "]\r\n" + "예정일: [" + extraReminderDate.format(formatter) + "]\r\n"
+								+ "\r\n" + "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
+						mgb.setReceiver_id(StaticData.user_id);
+						if (mgr.isPetMedic(pb.getPet_id(), "심장사상충").equals(currentDay.format(formatter))) { // 혼합 백신 알림을
+																											// 보낸게 오늘일
+																											// 경우
+							// 반응 안함
+						} else {
+							mgr.sendMsg("admin", mgb);
+							mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "심장사상충");
+						}
+					}
 				}
 			}
-	        
-	        
-	        
-	        //구충제
-	        
-	        // 4주 후부터 2달 간격으로 2번 알림
-	        int startWeeks = 4;
-	        int monthInterval = 2;
-	       
-	        for (int i = 0; i < 50; i++) {
-	        	LocalDate extraReminderDate = birthday.plusWeeks(startWeeks).plusMonths(i * monthInterval);
-				if(extraReminderDate.equals(currentDay)) {	//검진일이 오늘이라면
-			        MsgBean mgb = new MsgBean();
-			        mgb.setMsg_title("반려동물 구충제 투약 안내");
-			        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-			        		+ "소중한 반려동물의 건강을 위해 구충제 투약이 다가왔음을 알려드립니다.\r\n"
-			        		+ "\r\n"
-			        		+ "투약 대상: [" + pb.getPet_name() + "]\r\n"
-			        		+ "예정일: [" + extraReminderDate.format(formatter) + "]\r\n"
-			        		+ "\r\n"
-			        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-			        mgb.setReceiver_id(StaticData.user_id);
-			        if(mgr.isPetMedic(pb.getPet_id(), "구충제").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-			        	//반응 안함
-			        } else {
-						mgr.sendMsg("admin", mgb);
-						mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "구충제");
-			        }
-				}
-			}
-	        
-	        
-	        
-	        //심장사상충
-	        
-	        // 4주 후부터 1달 간격으로 알림
-	        startWeeks = 4;
-	        monthInterval = 1;
-	       
-	        for (int i = 0; i < 50; i++) {
-	        	LocalDate extraReminderDate = birthday.plusWeeks(startWeeks).plusMonths(i * monthInterval);
-				if(extraReminderDate.equals(currentDay)) {	//검진일이 오늘이라면
-			        MsgBean mgb = new MsgBean();
-			        mgb.setMsg_title("반려동물 심장사상충 치료 안내");
-			        mgb.setMsg_content("안녕하세요, " + mgr.showOneUserName(StaticData.user_id) + "님!\r\n"
-			        		+ "소중한 반려동물의 건강을 위해 심장사상충 치료일이 다가왔음을 알려드립니다.\r\n"
-			        		+ "\r\n"
-			        		+ "치료 대상: [" + pb.getPet_name() + "]\r\n"
-			        		+ "예정일: [" + extraReminderDate.format(formatter) + "]\r\n"
-			        		+ "\r\n"
-			        		+ "정기적인 백신 접종은 우리 아이의 건강을 지키는 가장 좋은 방법입니다. 잊지 말고 가까운 동물병원을 방문해 주세요! ");
-			        mgb.setReceiver_id(StaticData.user_id);
-			        if(mgr.isPetMedic(pb.getPet_id(), "심장사상충").equals(currentDay.format(formatter))) {	//혼합 백신 알림을 보낸게 오늘일 경우
-			        	//반응 안함
-			        } else {
-						mgr.sendMsg("admin", mgb);
-						mgr.petMedic(pb.getPet_id(), currentDay.format(formatter), "심장사상충");
-			        }
-				}
-			}
-			petaddPanel.revalidate();
-			petaddPanel.repaint();
-			
+
 		}
+		
 		petaddPanel.revalidate();
 		petaddPanel.repaint();
+
 	}
 
 	private JLabel createScaledImageLabel(String imagePath, int width, int height) {
