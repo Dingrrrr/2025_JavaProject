@@ -23,8 +23,7 @@ public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
-			imageProfileLabel, petImageLabel, logoutLabel;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
+			imageProfileLabel, logoutLabel;
 	private ImageIcon image2;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
 	TPMgr mgr = new TPMgr();
