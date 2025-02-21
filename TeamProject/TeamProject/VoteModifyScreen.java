@@ -25,7 +25,7 @@ public class VoteModifyScreen extends JFrame {
 
 	public VoteModifyScreen(VoteBean vb, VoteMainScreen preFrame) {
 		setTitle("프레임 설정");
-		setSize(364, 470);
+		setSize(350, 470);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -141,7 +141,7 @@ public class VoteModifyScreen extends JFrame {
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(364, 470, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(350, 470, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 			}
@@ -153,13 +153,13 @@ public class VoteModifyScreen extends JFrame {
 
 		// 🔹 닫기 버튼 이미지 추가
 		closeLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
-		closeLabel.setBounds(330, 7, 28, 28);
+		closeLabel.setBounds(315, 7, 28, 28);
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
 
 		// 🔹 수정 버튼 이미지 추가
 		modifyLabel = createScaledImageLabel("Teamproject/modify_icon.png", 28, 28);
-		modifyLabel.setBounds(290, 7, 28, 28);
+		modifyLabel.setBounds(275, 7, 28, 28);
 		modifyLabel.addMouseListener(commonMouseListener);
 		panel.add(modifyLabel);
 
