@@ -21,7 +21,7 @@ public class VotePhotoAddDialog extends JFrame {
 	private JFrame frame;
 	private File selectedFile;
 
-	public VotePhotoAddDialog(VoteAddDialog voteAddDialog) {
+	public VotePhotoAddDialog(JFrame preFrame, VoteAddDialog voteAddDialog) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
@@ -43,12 +43,20 @@ public class VotePhotoAddDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
+					dispose();
+					voteAddDialog.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
+					dispose();
+					voteAddDialog.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					voteAddDialog.setEnabled(true);
+					preFrame.setVisible(true);
 				}
 
 			}

@@ -21,7 +21,7 @@ public class VotePhotoModifyDialog extends JFrame {
 	private JFrame frame;
 	private File selectedFile;
 
-	public VotePhotoModifyDialog(VoteModifyScreen voteModifyScreen) {
+	public VotePhotoModifyDialog(JFrame preFrame, VoteModifyScreen voteModifyScreen) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
@@ -43,12 +43,23 @@ public class VotePhotoModifyDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
+					dispose();
+					voteModifyScreen.setEnabled(true);
+					preFrame.setVisible(true);
+					voteModifyScreen.setVisible(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
+					dispose();
+					voteModifyScreen.setEnabled(true);
+					preFrame.setVisible(true);
+					voteModifyScreen.setVisible(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					voteModifyScreen.setEnabled(true);
+					preFrame.setVisible(true);
+					voteModifyScreen.setVisible(true);
 				}
 
 			}

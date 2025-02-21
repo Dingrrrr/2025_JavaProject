@@ -48,12 +48,13 @@ public class VoteAddDialog extends JFrame {
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
 					if (vad == null) {
-						vad = new VotePhotoAddDialog(VoteAddDialog.this);
+						vad = new VotePhotoAddDialog(preFrame, VoteAddDialog.this);
 						vad.setLocation(getX() + 1, getY() + 340);
 					} else {
 						vad.setLocation(getX() + 1, getY() + 340);
 						vad.setVisible(true);
 					}
+					setEnabled(false);
 				} else if (source == addButton) {
 					System.out.println("올리기 버튼 클릭됨");
 					bean.setVote_image(imageBytes);
