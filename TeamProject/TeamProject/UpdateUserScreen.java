@@ -126,7 +126,7 @@ public class UpdateUserScreen extends JFrame {
 						}
 					}
 				} else if (source == deleteButton && deleteButton.isEnabled()) {
-					new UserDeleteDialog(UpdateUserScreen.this, mgr);
+					new UserDeleteDialog(UpdateUserScreen.this);
 				}
 			}
 		};
