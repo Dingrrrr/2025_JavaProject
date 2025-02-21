@@ -184,8 +184,8 @@ public class CommuMainScreen extends JFrame {
 		panel.add(scrollPane);
 
 		// 🔹 추가 버튼 (화면에 고정)
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-		addButtonLabel.setBounds(300, 700, 70, 70);
+		addButtonLabel = createScaledImageLabel("TeamProject/comu_menu.png", 100, 100);
+		addButtonLabel.setBounds(280, 690, 100, 100);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		addButtonLabel.setOpaque(true);
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
