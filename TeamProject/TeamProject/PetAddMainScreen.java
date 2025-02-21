@@ -1,6 +1,7 @@
 package TeamProject;
 
 import java.awt.*;
+import java.util.Calendar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -9,7 +10,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -307,6 +310,33 @@ public class PetAddMainScreen extends JFrame {
 
 			// 각 애완동물 항목 간에 간격을 둔다
 			petaddPanel.add(Box.createVerticalStrut(0)); // 0px 간격
+			
+			
+			//반려동물 생일 알림
+			Calendar calendar = Calendar.getInstance();
+	        int month1 = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1
+	        int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+	        String today = String.format("%02d%02d", month1, day1); // 형식: MM월 DD일
+	        String birth = pb.getPet_age();
+	        if(mgr.isPetBirth(pb.getPet_id()).equals(birth)) {	//마지막으로 알림 보낸 날짜가 오늘이랑 같을 경우
+	        	//반응 안함
+	        } else {	//마지막으로 알림 보낸 날짜가 오늘이 아닌경우
+				String[] date = birth.split("\\.");
+				String month = date[1];
+				String day = date[2];
+				if(today.equals(month+day)) {		//오늘이 생일인 경우
+					MsgBean mb = new MsgBean();
+					mb.setMsg_title(pb.getPet_name() + "의 특별한 날! 생일 축하해요!");
+					mb.setMsg_content("안녕하세요! 좋은 소식을 전해 드립니다! \n"
+							+ "오늘은 바로" + pb.getPet_name() + "의 생일이에요!\n"
+							+ "이 특별한 날을 축하해 주세요! \n맛있는 간식과 함께 행복한 시간을 보내길 바래요. \n"
+							+ pb.getPet_name() + "도 여러분의 사랑을 기다리고 있을 거예요! \n"
+							+ "즐거운 하루 되세요!");
+					mb.setReceiver_id(StaticData.user_id);
+					mgr.sendMsg("admin", mb);
+					mgr.petBirth(pb.getPet_id(), birth);
+				}
+	        }
 		}
 
 	}

@@ -89,14 +89,13 @@ public class PetAddScreen extends JFrame {
 					setEnabled(false);
 				} else if (source == nextButton) {
 					System.out.println("다음 단계 버튼 클릭됨!");
-					String birth = petBirthTField.getText().trim();
 					if (petNameTField.getText().trim().isEmpty()) {
 						warningLabel.setVisible(true);
 					} else {
 						warningLabel.setVisible(false);
 						bean.setPet_name(petNameTField.getText().trim());
 						bean.setPet_species(petSpecTField.getText().trim());
-						bean.setPet_age(birth);
+						bean.setPet_age(petBirthTField.getText().trim());
 						dispose();
 						new PetRecordAddScreen(bean, PetAddScreen.this);
 					}
