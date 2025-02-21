@@ -419,7 +419,7 @@ public class TPMgr {
 	}
 	
 	//반려동물 아이디 출력
-	public int showPetId(String id, PetBean bean) {
+	public int showPetId(String id) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -427,12 +427,9 @@ public class TPMgr {
 		int pet_id = -1;
 		try {
 			con = pool.getConnection();
-			sql = "select pet_id from pet where user_id = ? and pet_name = ? and pet_species = ? and pet_age = ?";
+			sql = "select pet_id from pet where user_id = 'qwer' order by pet_id desc";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
-			pstmt.setString(2, bean.getPet_name());
-			pstmt.setString(3, bean.getPet_species());
-			pstmt.setString(4, bean.getPet_age());
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				pet_id = rs.getInt("pet_id");
@@ -507,6 +504,8 @@ public class TPMgr {
 			pstmt.setInt(1, id);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
+				bean.setPet_id(rs.getInt("pet_id"));
+				bean.setUser_id(rs.getString("user_id"));
 				bean.setPet_name(rs.getString("pet_name"));
 				bean.setPet_species(rs.getString("pet_species"));
 				bean.setPet_age(rs.getString("pet_age"));

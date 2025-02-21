@@ -48,6 +48,7 @@ public class PetRecordAddScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		bean = new HRBean();
+		pet_id = pb.getPet_id();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/phone_frame.png")); // 투명 PNG 불러오기
@@ -86,8 +87,8 @@ public class PetRecordAddScreen extends JFrame {
 					bean.setDate(petMtTimeTField.getText().trim());
 					if(!mgr.isThatPet(StaticData.pet_id)) {
 						mgr.addPet(StaticData.user_id, pb);
+						pet_id = mgr.showPetId(StaticData.user_id);
 					}
-					pet_id = mgr.showPetId(StaticData.user_id, pb);
 					mgr.addHRPet(pet_id, bean);
 					dispose();
 					new PetHomeScreen(pet_id);
