@@ -1681,6 +1681,49 @@ public class TPMgr {
 		}
 		return flag;
 	}
+	
+	//반려동물 생일 알림
+	public void petBirth(int id, String date) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "insert last_birth_date values(?, ?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.setString(2, date);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
+	//반려동물 생일 알림 유무(가장 최근에 알림한 날짜 출력)
+	public String isPetBirth(int id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String date = "";
+		try {
+			con = pool.getConnection();
+			sql = "select * from last_birth_date where pet_id = ? order by date desc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				date = rs.getString("date");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return date;
+	}
 
 	//쪽지 보내기
 	public boolean sendMsg(String user_id, MsgBean bean) {
