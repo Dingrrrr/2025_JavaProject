@@ -21,7 +21,7 @@ import java.io.*;
 public class UpdateUserScreen extends JFrame {
 
 	private BufferedImage image;
-	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, imageLabel;
+	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel;
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton, deleteButton;
@@ -30,6 +30,7 @@ public class UpdateUserScreen extends JFrame {
 	TPMgr mgr;
 	private UserPhotoModifyDialog upm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
+	private RoundedImageLabel imageLabel;
 
 	public UpdateUserScreen(JFrame previousFrame) {
 		setTitle("회원정보 수정");
@@ -149,8 +150,11 @@ public class UpdateUserScreen extends JFrame {
 		byte[] imgBytes = bean.getUser_image();
 		if (imgBytes == null || imgBytes.length == 0) {
 			// 기본 프로필 이미지 사용
-			imageLabel = new JLabel();
-			imageLabel = createScaledImageLabel("TeamProject/profile.png", 270, 270);
+			ImageIcon icon = new ImageIcon("TeamProject/profile.png");
+			Image img = icon.getImage().getScaledInstance(270, 270, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			imageLabel = new RoundedImageLabel(img, 270, 270, 3); // 270은 크기, 3은 둥근 정도
 			imageLabel.setBounds(70, 189, 270, 270);
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
@@ -160,9 +164,10 @@ public class UpdateUserScreen extends JFrame {
 			Image img = icon.getImage().getScaledInstance(270, 270, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			RoundedImageLabel roundedImageLabel = new RoundedImageLabel(img, 270, 270, 3); // 100은 둥근 정도
-			roundedImageLabel.setBounds(70, 189, 270, 270);
-			add(roundedImageLabel);
+			imageLabel = new RoundedImageLabel(img, 270, 270, 3); // 270은 크기, 3은 둥근 정도
+			imageLabel.setBounds(70, 189, 270, 270);
+			imageLabel.addMouseListener(commonMouseListener);
+			add(imageLabel);
 		}
 
 		// 이름
@@ -341,8 +346,9 @@ public class UpdateUserScreen extends JFrame {
 		return new JLabel(new ImageIcon(scaledImage));
 	}
 
-	public JLabel getImageLabel() {
-		return imageLabel;
+	// 이미지 레이블 반환 타입을 RoundedImageLabel로 수정
+	public RoundedImageLabel getImageLabel() {
+	    return imageLabel;
 	}
 
 	// 이미지 바이트 배열을 설정하는 setter
