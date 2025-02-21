@@ -50,5 +50,10 @@ public class RoundedImageLabel extends JPanel {
 
         g2.dispose();
     }
-}
+    
+    public void setImage(Image image) {
+        this.image = image;
+        repaint();  // 이미지 변경 후 UI 갱신
+    }
 
+}

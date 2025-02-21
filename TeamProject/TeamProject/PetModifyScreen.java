@@ -35,8 +35,7 @@ public class PetModifyScreen extends JFrame {
 	private PetPhotoModifyDialog ppm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 	boolean flag = true;
-
-
+	
 	public PetModifyScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(402, 874);
@@ -108,6 +107,14 @@ public class PetModifyScreen extends JFrame {
 					System.out.println("반려동물 정보 삭제 버튼 클릭됨!");
 					new PetDeleteDialog(PetModifyScreen.this);
 				}else if(source == calLabel && calLabel.isEnabled()) {
+					mgr.delPet(StaticData.pet_id);
+					dispose();
+					if (mgr.isPet(StaticData.user_id)) {
+						new PetAddMainScreen();
+					} else {
+						new UserHomeScreen();
+					}
+				} else if (source == calLabel && calLabel.isEnabled()) {
 					setEnabled(false);
 					new CalendarDialog(PetModifyScreen.this, petBirthTField);
 				} else if (source == petModifyButton) {
@@ -128,6 +135,12 @@ public class PetModifyScreen extends JFrame {
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
 		
+		// 🔹 캘린더 아이콘
+		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);
+		calLabel.setBounds(155, 700, 30, 30);
+		calLabel.addMouseListener(commonMouseListener);
+		add(calLabel);
+
 		// 🔹 캘린더 아이콘
 		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);
 		calLabel.setBounds(155, 700, 30, 30);
@@ -167,7 +180,6 @@ public class PetModifyScreen extends JFrame {
 		warningLabel.setBounds(43, 545, 250, 60);
 		add(warningLabel);
 		warningLabel.setVisible(false);
-
 
 		// 반려동물 이름 라벨
 		petNameLabel = new JLabel("이름");
