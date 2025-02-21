@@ -118,8 +118,9 @@ public class PetPhotoModifyDialog extends JFrame {
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 	        // 미리보기 업데이트
-	        petModifyScreen.getImageLabel().setIcon(resizedIcon);
-	        petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+	        RoundedImageLabel imageLabel = petModifyScreen.getImageLabel();
+			imageLabel.setImage(resizedImg); // 이미지를 새로 설정
+			imageLabel.repaint(); // UI 갱신
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
@@ -148,8 +149,9 @@ public class PetPhotoModifyDialog extends JFrame {
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		petModifyScreen.getImageLabel().setIcon(resizedIcon);
-		petModifyScreen.getImageLabel().setText(""); // 텍스트 제거
+	    RoundedImageLabel imageLabel = petModifyScreen.getImageLabel();
+	    imageLabel.setImage(resizedImg);  // 이미지를 새로 설정
+	    imageLabel.repaint();  // UI 갱신
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);

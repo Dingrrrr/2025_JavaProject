@@ -160,7 +160,7 @@ public class PetHomeScreen extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
-					new UpdateUserScreen(PetHomeScreen.this);
+					new PetModifyScreen(PetHomeScreen.this);
 				}
 			});
 			add(roundedProfileImageLabel);
