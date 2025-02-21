@@ -46,17 +46,20 @@ public class VotePhotoAddDialog extends JFrame {
 					dispose();
 					voteAddDialog.setEnabled(true);
 					preFrame.setVisible(true);
+					voteAddDialog.setVisible(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
 					dispose();
 					voteAddDialog.setEnabled(true);
 					preFrame.setVisible(true);
+					voteAddDialog.setVisible(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
 					voteAddDialog.setEnabled(true);
 					preFrame.setVisible(true);
+					voteAddDialog.setVisible(true);
 				}
 
 			}
