@@ -133,7 +133,7 @@ public class CommuMainScreen extends JFrame {
 		add(homeLabel);
 
 		// 🔹 커뮤니티 버튼
-		commuLabel = createScaledImageLabel("TeamProject/commu.png", 58, 58);
+		commuLabel = createScaledImageLabel("TeamProject/commu_click.png", 58, 58);
 		commuLabel.setBounds(215, 788, 58, 58);
 		commuLabel.addMouseListener(commonMouseListener);
 		add(commuLabel);

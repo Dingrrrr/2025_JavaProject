@@ -55,6 +55,7 @@ public class VoteMainScreen extends JFrame {
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
+					
 					dispose();
 					new AlarmMainScreen(VoteMainScreen.this);
 				} else if (source == profileLabel) {
@@ -156,7 +157,7 @@ public class VoteMainScreen extends JFrame {
 		add(commuLabel);
 
 		// 🔹 투표 버튼
-		voteLabel = createScaledImageLabel("TeamProject/vote.png", 55, 55);
+		voteLabel = createScaledImageLabel("TeamProject/vote_click.png", 55, 55);
 		voteLabel.setBounds(305, 789, 55, 55);
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
