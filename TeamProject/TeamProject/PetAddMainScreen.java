@@ -88,25 +88,34 @@
 	
 			// 메인 프로필 이미지
 			byte[] imgBytes = bean1.getUser_image();
-			String imgNull = Arrays.toString(imgBytes);
 			if (imgBytes == null || imgBytes.length == 0) {
-				imageLabel = new JLabel();
-				imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
-				imageLabel.setBounds(101, 178, 200, 200);
-				imageLabel.addMouseListener(commonMouseListener);
-				add(imageLabel);
+			    // 기본 프로필 이미지 사용
+			    imageLabel = new JLabel();
+			    imageLabel = createScaledImageLabel("TeamProject/profile.png", 200, 200);
+			    imageLabel.setBounds(101, 178, 200, 200);
+			    imageLabel.addMouseListener(commonMouseListener);
+			    add(imageLabel);
 			} else {
-				ImageIcon icon = new ImageIcon(imgBytes);
-				Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-				imageLabel = new JLabel();
-				imageLabel.setIcon(new ImageIcon(img));
-				imageLabel.setBounds(101, 178, 200, 200);
-				imageLabel.addMouseListener(commonMouseListener);
-				add(imageLabel);
+			    // 사용자 이미지가 있을 경우
+			    ImageIcon icon = new ImageIcon(imgBytes);
+			    Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+			    // RoundedImageLabel 사용
+			    RoundedImageLabel roundedImageLabel = new RoundedImageLabel(img, 200, 200, 3); // 100은 둥근 정도
+			    roundedImageLabel.setBounds(101, 185, 200, 200);
+			    roundedImageLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("👤 프로필 클릭됨!");
+						dispose();
+						new UpdateUserScreen(PetAddMainScreen.this);
+					}
+				});
+			    add(roundedImageLabel);
 			}
 	
 			// 상단 프로필 아이디
-			if (imgNull == "[]") {
+			if (imgBytes == null || imgBytes.length == 0) {
 				imageProfileLabel = new JLabel();
 				imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
 				imageProfileLabel.setBounds(330, 120, 40, 40);
@@ -221,8 +230,6 @@
 				petAddMainPanel.setBackground(Color.WHITE);
 				petAddMainPanel.setBorder(new LineBorder(Color.black, 0));
 				petAddMainPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
-				
-				
 
 	
 				// 2) 상단 패널 (USER_ID + 날짜)

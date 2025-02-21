@@ -99,8 +99,7 @@ public class NoteModifyScreen extends JFrame {
 				add(DescriptionLabel);
 				
 				// 게시글 설명 텍스트 필드 추가
-				DescriptionTArea = new JTextArea();
-				DescriptionTArea.setText("");
+				DescriptionTArea = new JTextArea(mb.getMsg_content());
 				DescriptionTArea.setLineWrap(true);
 				DescriptionTArea.setWrapStyleWord(true);
 				add(DescriptionTArea);

@@ -52,7 +52,7 @@ public class AlbumResultDialog extends JFrame {
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
-				} else if (source == addButtonLabel) {
+				} else if (source == addButtonLabel && addButtonLabel.isEnabled()) {
 					System.out.println("+아이콘 클릭됨");
 					if (amd == null) {
 						amd = new AlbumPhotoModifyDialog(AlbumResultDialog.this);
@@ -61,7 +61,7 @@ public class AlbumResultDialog extends JFrame {
 						amd.setLocation(getX() + 1, getY() + 455);
 						amd.setVisible(true);
 					}
-				} else if (source == SaveButton) {
+				} else if (source == SaveButton && SaveButton.isEnabled()) {
 					System.out.println("저장 버튼클릭됨");
 					if(flag) {
 						ab.setAlbum_desc(diaryWriteArea.getText().trim());
@@ -71,6 +71,8 @@ public class AlbumResultDialog extends JFrame {
 							diaryTagTField.setEnabled(false);
 							diaryWriteArea.setEnabled(false);
 							addButtonLabel.setEnabled(false);
+							SaveButton.setEnabled(false);
+							delButton.setEnabled(false);
 						}
 					}
 					dispose();
@@ -81,8 +83,10 @@ public class AlbumResultDialog extends JFrame {
 					diaryTagTField.setEnabled(true);
 					diaryWriteArea.setEnabled(true);
 					addButtonLabel.setEnabled(true);
+					SaveButton.setEnabled(true);
+					delButton.setEnabled(true);
 					flag = true;
-				} else if (source == delButton) {
+				} else if (source == delButton && delButton.isEnabled()) {
 					System.out.println("삭제 버튼 클릭됨");
 					System.out.println(StaticData.album_id);
 					if (mgr.delAlbum(StaticData.album_id)) {
@@ -165,6 +169,7 @@ public class AlbumResultDialog extends JFrame {
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
 		addButtonLabel.setEnabled(false);
+		
 
 		// 앨범 이미지
 		byte[] imgBytes = ab.getAlbum_image();
@@ -182,6 +187,12 @@ public class AlbumResultDialog extends JFrame {
 		}
 		add(imageLabel);
 
+		diaryTagTField.setEnabled(false);
+		diaryWriteArea.setEnabled(false);
+		addButtonLabel.setEnabled(false);
+		SaveButton.setEnabled(false);
+		delButton.setEnabled(false);
+		
 		// JPanel 추가
 		JPanel panel = new JPanel() {
 			@Override

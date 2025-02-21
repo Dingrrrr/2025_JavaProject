@@ -266,7 +266,6 @@ public class DiaryMainScreen extends JFrame {
 	public void addDiary() {
 		diaryPanel.removeAll();
 		for (DiaryBean db : vlist) {
-			StaticData.diary_id = db.getDiary_id();
 			// 날짜 라벨 생성
 			JLabel diaryDateLabel = new JLabel("날짜: " + sdf.format(db.getDiary_date()));
 			diaryDateLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -301,7 +300,7 @@ public class DiaryMainScreen extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					setEnabled(false);
-					new DiaryResultDialog(DiaryMainScreen.this);
+					new DiaryResultDialog(db, DiaryMainScreen.this);
 				}
 			});
 
