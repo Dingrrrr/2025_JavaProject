@@ -128,36 +128,52 @@ public class UserPhotoModifyDialog extends JFrame {
 	                JOptionPane.showMessageDialog(this, "유효한 이미지 파일이 아닙니다.", "오류", JOptionPane.ERROR_MESSAGE);
 	                return;
 	            }
-	            
-	            // 이미지를 byte[]로 변환
-	            byte[] imageBytes = convertFileToByteArray(selectedFile);
-	            
-	            // 변환된 이미지를 updateUserScreen에 저장
-	            if (imageBytes != null && imageBytes.length > 0) {
-	                updateUserScreen.setImageBytes(imageBytes);
-	                
-	                // UI에 이미지 표시 로직
-	                JLabel imageLabel = updateUserScreen.getImageLabel();
-	                if (imageLabel != null) {
-	                	
-	                    // 기존 imageLabel이 있는 경우 업데이트
-	                    ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
-	                    Image img = icon.getImage();
-	                    Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
-	                    ImageIcon resizedIcon = new ImageIcon(resizedImg);
-	                    imageLabel.setIcon(resizedIcon);
-	                    imageLabel.setText("");
-	                } else {
-	                    // imageLabel이 null인 경우 - UpdateUserScreen 새로고침 요청
-	                    JOptionPane.showMessageDialog(this, "이미지가 선택되었습니다. 확인 버튼을 누르면 적용됩니다.");
-	                    // 이미지 변경 후 필요한 경우 화면 갱신을 위한 코드 추가
-	                    updateUserScreen.repaint();
-	                }
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            JOptionPane.showMessageDialog(this, "이미지 처리 중 오류가 발생했습니다: " + e.getMessage());
-	        }
+
+	        // 이미지 읽기
+	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+	        Image img = icon.getImage();
+
+	        // 이미지 크기 조정 (270x270)
+	        Image resizedImg = img.getScaledInstance(270, 270, Image.SCALE_SMOOTH);
+
+	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
+	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
+	        
+	        // JLabel이 null이 아닌지 확인
+            JLabel imageLabel = updateUserScreen.getImageLabel();
+            if (imageLabel != null) {
+                imageLabel.setIcon(resizedIcon);
+                imageLabel.setText(""); // 텍스트 제거
+            } else {
+                System.out.println("이미지 라벨이 null입니다.");
+            }
+            
+	        // 미리보기 업데이트
+	        updateUserScreen.getImageLabel().setIcon(resizedIcon);
+	        updateUserScreen.getImageLabel().setText(""); // 텍스트 제거
+
+	        // 이미지를 byte[]로 변환
+	        byte[] imageBytes = convertFileToByteArray(selectedFile);
+	        
+	        if (imageBytes != null && imageBytes.length > 0) {
+	        	
+	        // 변환된 이미지를 updateUserScreen에 저장
+	        updateUserScreen.setImageBytes(imageBytes);
+	        } else {
+                System.out.println("이미지 변환 실패");
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "이미지를 불러오는 중 오류가 발생했습니다: " + e.getMessage(), 
+                                         "오류", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "예상치 못한 오류가 발생했습니다: " + e.getMessage(), 
+                                         "오류", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+	    } else {
+	        // 파일 선택이 취소된 경우
+	        System.out.println("파일 선택이 취소되었습니다.");
 	    }
 	}
 	
