@@ -248,21 +248,21 @@ public class AlbumMainScreen extends JFrame {
 
 		// 🔹 일기 추가 버튼
 		addAlbumLabel = createScaledImageLabel("TeamProject/add_album.png", 40, 40);
-		addAlbumLabel.setBounds(313, 650, 40, 40);
+		addAlbumLabel.setBounds(313, 670, 40, 40);
 		addAlbumLabel.addMouseListener(commonMouseListener);
 		add(addAlbumLabel);
 		addAlbumLabel.setVisible(false);
 
 		// 🔹 최신순 정렬
 		newLineUpLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
-		newLineUpLabel.setBounds(313, 590, 40, 40);
+		newLineUpLabel.setBounds(313, 610, 40, 40);
 		newLineUpLabel.addMouseListener(commonMouseListener);
 		add(newLineUpLabel);
 		newLineUpLabel.setVisible(false);
 
 		// 🔹 오래된순 정렬
 		oldLineUpLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
-		oldLineUpLabel.setBounds(313, 530, 40, 40);
+		oldLineUpLabel.setBounds(313, 550, 40, 40);
 		oldLineUpLabel.addMouseListener(commonMouseListener);
 		add(oldLineUpLabel);
 		oldLineUpLabel.setVisible(false);
@@ -294,8 +294,8 @@ public class AlbumMainScreen extends JFrame {
 		add(panel);
 
 		// 🔹 추가 버튼 (화면에 고정)
-		menuLabel = createScaledImageLabel("TeamProject/menu.png", 60, 60);
-		menuLabel.setBounds(300, 700, 60, 60);
+		menuLabel = createScaledImageLabel("TeamProject/album_menu.png", 100, 100);
+		menuLabel.setBounds(280, 690, 100, 100);
 		menuLabel.addMouseListener(commonMouseListener);
 		menuLabel.setOpaque(true);
 		menuLabel.setBackground(new Color(255, 255, 255, 0));

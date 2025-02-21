@@ -181,21 +181,21 @@ public class DiaryMainScreen extends JFrame {
 
 		// 🔹 일기 추가 버튼
 		addDiaryLabel = createScaledImageLabel("TeamProject/diary.png", 40, 40);
-		addDiaryLabel.setBounds(313, 650, 40, 40);
+		addDiaryLabel.setBounds(313, 670, 40, 40);
 		addDiaryLabel.addMouseListener(commonMouseListener);
 		add(addDiaryLabel);
 		addDiaryLabel.setVisible(false);
 
 		// 🔹 최신순 정렬
 		newLineUpLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
-		newLineUpLabel.setBounds(313, 590, 40, 40);
+		newLineUpLabel.setBounds(313, 610, 40, 40);
 		newLineUpLabel.addMouseListener(commonMouseListener);
 		add(newLineUpLabel);
 		newLineUpLabel.setVisible(false);
 
 		// 🔹 오래된순 정렬
 		oldLineUpLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
-		oldLineUpLabel.setBounds(313, 530, 40, 40);
+		oldLineUpLabel.setBounds(313, 550, 40, 40);
 		oldLineUpLabel.addMouseListener(commonMouseListener);
 		add(oldLineUpLabel);
 		oldLineUpLabel.setVisible(false);
@@ -240,8 +240,8 @@ public class DiaryMainScreen extends JFrame {
 		panel.add(scrollPane);
 
 		// 🔹 추가 버튼 (화면에 고정)
-		menuLabel = createScaledImageLabel("TeamProject/menu.png", 30, 30);
-		menuLabel.setBounds(315, 710, 30, 30);
+		menuLabel = createScaledImageLabel("TeamProject/diary_menu.png", 100, 100);
+		menuLabel.setBounds(280, 690, 100, 100);
 		menuLabel.addMouseListener(commonMouseListener);
 		menuLabel.setOpaque(true);
 		menuLabel.setBackground(new Color(255, 255, 255, 0));
