@@ -149,8 +149,8 @@ public class PetHomeScreen extends JFrame {
 			add(imageLabel);
 		} else {
 			// 사용자 이미지가 있을 경우
-			ImageIcon icon = new ImageIcon(imgBytes1);
-			Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+			ImageIcon icon1 = new ImageIcon(imgBytes1);
+			Image img = icon1.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
 			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 150, 150, 3); // 100은 둥근 정도
@@ -160,7 +160,7 @@ public class PetHomeScreen extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
-					new PetModifyScreen(PetHomeScreen.this);
+					new UpdateUserScreen(PetHomeScreen.this);
 				}
 			});
 			add(roundedProfileImageLabel);
