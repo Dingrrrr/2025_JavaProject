@@ -12,14 +12,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.*;
 
-public class UserDeleteDialog extends JFrame {
+public class PetDeleteDialog extends JFrame {
 	private JPanel p;
 	private BufferedImage image;
 	private JButton yesButton, noButton;
 	private JLabel closeLabel;
 	TPMgr mgr;
 
-	public UserDeleteDialog(UpdateUserScreen parent) {
+	public PetDeleteDialog(PetModifyScreen parent) {
 		setTitle("프레임 설정");
 		setSize(358, 192);
 		setUndecorated(true);
@@ -39,14 +39,18 @@ public class UserDeleteDialog extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 				if (source == yesButton && yesButton.isEnabled()) {
-					System.out.println("회원 탈퇴 버튼 클릭됨");
-							mgr.delUser(StaticData.user_id);
-							JOptionPane.showMessageDialog(null, "회원 탈퇴가 완료되었습니다.");
-							dispose();
-							parent.dispose();
-							new LoginScreen();
+					System.out.println("반려동물 삭제 버튼 클릭됨");
+						mgr.delPet(StaticData.pet_id);
+						JOptionPane.showMessageDialog(null, "반려견 삭제가 완료되었습니다.");
+						dispose();
+						parent.dispose();
+						if (mgr.isPet(StaticData.user_id)) {
+							new PetAddMainScreen();
+						} else {
+							new UserHomeScreen();
+						}
 				} else if (source == noButton) {
-					System.out.println("회원 탈퇴 취소 클릭됨");
+					System.out.println("반려동물 삭제 취소 클릭됨");
 					dispose();
 				} else if (source == closeLabel) {
 					System.out.println("취소 버튼 클릭됨");
@@ -56,8 +60,8 @@ public class UserDeleteDialog extends JFrame {
 			}
 		};
 		
-		JLabel deleteLabel = new JLabel("정말 탈퇴하시겠습니까?");
-		deleteLabel.setBounds(120, 50, 200 ,40);
+		JLabel deleteLabel = new JLabel("<html><div style='text-align: center;'>삭제 시 관련정보가 제거됩니다.<br>정말 삭제하시겠습니까?</html>");
+		deleteLabel.setBounds(100, 50, 200 ,40);
 		deleteLabel.setForeground(Color.black);
 		add(deleteLabel);
 		
