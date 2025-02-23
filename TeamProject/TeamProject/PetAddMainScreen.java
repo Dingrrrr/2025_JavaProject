@@ -239,7 +239,7 @@ public class PetAddMainScreen extends JFrame {
 
 	private void petAddMain() {
 		petaddPanel.removeAll();
-		
+
 		for (PetBean pb : vlist) {
 			JPanel petAddMainPanel = new JPanel();
 			petAddMainPanel.setPreferredSize(new Dimension(353, 160)); // 크기 지정
@@ -303,6 +303,7 @@ public class PetAddMainScreen extends JFrame {
 			textPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
 			contentPanel.add(textPanel, BorderLayout.CENTER);
+
 			// 5) 전체 구성
 			petAddMainPanel.add(contentPanel, BorderLayout.CENTER);
 			petAddMainPanel.add(separator, BorderLayout.SOUTH);
@@ -642,7 +643,7 @@ public class PetAddMainScreen extends JFrame {
 			}
 
 		}
-		
+
 		petaddPanel.revalidate();
 		petaddPanel.repaint();
 
