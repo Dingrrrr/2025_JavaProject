@@ -352,12 +352,39 @@ public class AlbumMainScreen extends JFrame {
 				albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
 				albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
 			} else {
-				ImageIcon icon1 = new ImageIcon(imgBytes);
-				Image img1 = icon1.getImage().getScaledInstance(173, 100, Image.SCALE_SMOOTH);
-				albumLabel.setIcon(new ImageIcon(img1));
-				albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
-				albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
+			    ImageIcon icon1 = new ImageIcon(imgBytes);
+			    Image img1 = icon1.getImage();
+			    
+			    // 원본 이미지 크기
+			    int imgWidth = icon1.getIconWidth();
+			    int imgHeight = icon1.getIconHeight();
+
+			    // 자를 크기 (173x100으로 설정)
+			    int targetWidth = 173;
+			    int targetHeight = 100;
+
+			    // 중심을 기준으로 자를 영역 계산
+			    int x = (imgWidth - targetWidth) / 2;
+			    int y = (imgHeight - targetHeight) / 2;
+
+			    // 이미지 자르기
+			    BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+			    Graphics g = bufferedImage.getGraphics();
+			    g.drawImage(img1, 0, 0, null);
+			    g.dispose();
+
+			    // 중심 기준으로 자르기
+			    BufferedImage croppedImage = bufferedImage.getSubimage(x, y, targetWidth, targetHeight);
+
+			    // 잘라낸 이미지를 ImageIcon으로 변환
+			    ImageIcon croppedIcon = new ImageIcon(croppedImage);
+
+			    // 이미지를 알림 레이블에 설정
+			    albumLabel.setIcon(croppedIcon);
+			    albumLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			    albumLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
 			}
+
 
 			/*
 			 * // 앨범 레이블 생성 JLabel albumLabel = new JLabel("📸 앨범 " +
