@@ -70,7 +70,7 @@ public class PetModifyScreen extends JFrame {
 				} else if (source == petAddProButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 					if (ppm == null) {
-						ppm = new PetPhotoModifyDialog(PetModifyScreen.this); // 'this'를 넘겨줍니다.
+						ppm = new PetPhotoModifyDialog(preFrame, PetModifyScreen.this); // 'this'를 넘겨줍니다.
 						ppm.setLocation(getX() + 22, getY() + 630);
 						ppm.setVisible(true); // 최초로 보여줄 때만 setVisible 호출
 					} else {
@@ -79,6 +79,7 @@ public class PetModifyScreen extends JFrame {
 							ppm.setVisible(true);
 						}
 					}
+					setEnabled(false);
 				} else if (source == petSpSearchButton && petSpSearchButton.isEnabled()) {
 					System.out.println("반려동물 종 검색 버튼 클릭됨!");
 					setEnabled(false);
