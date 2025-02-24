@@ -95,6 +95,7 @@ public class NoteCheckScreen extends JFrame {
 				DescriptionTArea.setLineWrap(true);
 				DescriptionTArea.setWrapStyleWord(true);
 				add(DescriptionTArea);
+				DescriptionTArea.setEnabled(false);
 
 				JScrollPane scrollPane = new JScrollPane(DescriptionTArea);
 				scrollPane.setBounds(15, 210, 318, 275); // 텍스트 영역 크기와 위치 설정

@@ -19,13 +19,14 @@ public class AlarmNewDialog extends JFrame {
 	private JLabel closeLabel;
 	TPMgr mgr;
 
-	public AlarmNewDialog() {
+	public AlarmNewDialog(JFrame preFrame) {
 		setTitle("프레임 설정");
 		setSize(358, 192);
 		setUndecorated(true);
 		// setLocationRelativeTo(parent);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
+		setLocationRelativeTo(preFrame);
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -41,9 +42,13 @@ public class AlarmNewDialog extends JFrame {
 				if (source == chkButton) {
 					System.out.println("확인 버튼 클릭됨");
 					dispose();
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				} else if (source == closeLabel) {
 					System.out.println("닫힘 버튼 클릭됨");
 					dispose();
+					preFrame.setEnabled(true);
+					preFrame.setVisible(true);
 				}
 
 			}
@@ -100,6 +105,6 @@ public class AlarmNewDialog extends JFrame {
 		return new JLabel(new ImageIcon(scaledImage));
 	}
 	public static void main(String[] args) {
-		new AlarmNewDialog();
+//		new AlarmNewDialog();
 	}
 }

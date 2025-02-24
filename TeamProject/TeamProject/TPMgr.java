@@ -1777,7 +1777,7 @@ public class TPMgr {
 		boolean flag = false;
 		try {
 			con = pool.getConnection();
-			sql = "insert msg values(null, ?, ?, ?, ?, now())";
+			sql = "insert msg values(null, ?, ?, ?, ?, now(), 'N')";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bean.getMsg_title());
 			pstmt.setString(2, user_id);
@@ -1816,7 +1816,7 @@ public class TPMgr {
 
 	        // 2. for문으로 전체 알림 보내기
 	        for (String user : userList) {
-		        sql = "insert msg values(null, ?, ?, ?, ?, now())";
+		        sql = "insert msg values(null, ?, ?, ?, ?, now(), 'N')";
 		        pstmt = con.prepareStatement(sql);
 		        pstmt.setString(1, title);
 		        pstmt.setString(2, "admin");
@@ -1847,6 +1847,49 @@ public class TPMgr {
 	            closeEx.printStackTrace();
 	        }
 	    }
+	}
+	
+	//알림 읽음
+	public void readMsg(int msg_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		try {
+			con = pool.getConnection();
+			sql = "update msg set msg_read = ? where msg_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "Y");
+			pstmt.setInt(2, msg_id);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt);
+		}
+	}
+	
+	//안읽은 알림(안읽은 알림이 있으면 true 출력)
+	public boolean nonReadMsg(String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select * from msg where receiver_id = ? and msg_read = 'N'";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
 	}
 	
 	//받은 알림
