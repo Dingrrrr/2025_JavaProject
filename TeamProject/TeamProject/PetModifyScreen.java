@@ -153,7 +153,7 @@ public class PetModifyScreen extends JFrame {
 		byte[] imgBytes = bean.getPet_image();
 		if (imgBytes == null || imgBytes.length == 0) {
 			// 기본 프로필 이미지 사용
-			ImageIcon icon = new ImageIcon("TeamProject/profile.png");
+			ImageIcon icon = new ImageIcon("TeamProject/dog.png");
 			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 			// RoundedImageLabel 사용
 			imageLabel = new RoundedImageLabel(img, 200, 200, 3); // 270은 크기, 3은 둥근 정도
