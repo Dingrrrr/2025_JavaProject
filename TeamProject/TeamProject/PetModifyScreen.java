@@ -135,12 +135,6 @@ public class PetModifyScreen extends JFrame {
 		calLabel.addMouseListener(commonMouseListener);
 		add(calLabel);
 
-		// 🔹 캘린더 아이콘
-		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);
-		calLabel.setBounds(155, 700, 30, 30);
-		calLabel.addMouseListener(commonMouseListener);
-		add(calLabel);
-
 		// 반려동물 프로필 사진 추가 버튼
 		petAddProButton = new JButton("추가");
 		petAddProButton.setBounds(277, 450, 80, 35);
@@ -216,7 +210,7 @@ public class PetModifyScreen extends JFrame {
 		add(petBirthLabel);
 
 		// 반려동물 종 생년월일 필드 추가
-		petBirthTField = new JTextField();
+		petBirthTField = new JTextField(bean.getPet_age());
 		petBirthTField.setForeground(Color.GRAY);
 		petBirthTField.setBounds(43, 696, 100, 40);
 		add(petBirthTField);

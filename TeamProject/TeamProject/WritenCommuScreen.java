@@ -153,6 +153,7 @@ public class WritenCommuScreen extends JFrame {
 		TitleTArea = new JTextArea(cb.getComu_title());
 		TitleTArea.setBounds(5, 70, 330, 30);
 		TitleTArea.setEditable(false);
+		TitleTArea.setOpaque(false);
 		TitleTArea.setBackground(Color.WHITE);
 		TitleTArea.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)));
 
