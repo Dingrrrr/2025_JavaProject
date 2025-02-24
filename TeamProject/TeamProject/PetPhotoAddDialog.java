@@ -115,6 +115,7 @@ public class PetPhotoAddDialog extends JFrame {
 	    JFileChooser fileChooser = new JFileChooser();
 	    if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 	        selectedFile = fileChooser.getSelectedFile();
+
 	        // 이미지 읽기
 	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 	        Image img = icon.getImage();
@@ -126,8 +127,9 @@ public class PetPhotoAddDialog extends JFrame {
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 	        // 미리보기 업데이트
-	        petAddScreen.getImageLabel().setIcon(resizedIcon);
-	        petAddScreen.getImageLabel().setText(""); // 텍스트 제거
+	        RoundedImageLabel imageLabel = petAddScreen.getImageLabel();
+			imageLabel.setImage(resizedImg); // 이미지를 새로 설정
+			imageLabel.repaint(); // UI 갱신
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
@@ -156,14 +158,15 @@ public class PetPhotoAddDialog extends JFrame {
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 		// 미리보기 업데이트
-		petAddScreen.getImageLabel().setIcon(resizedIcon);
-		petAddScreen.getImageLabel().setText(""); // 텍스트 제거
+	    RoundedImageLabel imageLabel = petAddScreen.getImageLabel();
+	    imageLabel.setImage(resizedImg);  // 이미지를 새로 설정
+	    imageLabel.repaint();  // UI 갱신
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
 		
 		// 변환된 이미지를 PetAddScreen에 저장
-        petAddScreen.setImageBytes(imageBytes);
+		petAddScreen.setImageBytes(imageBytes);
 
 	}
 	
@@ -186,3 +189,4 @@ public class PetPhotoAddDialog extends JFrame {
 	public static void main(String[] args) {
 	}
 }
+

@@ -26,7 +26,7 @@ import java.util.Stack;
 
 public class PetAddScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel backLabel, petProfileLabel, deleteLabel, imageLabel, calLabel;
+	private JLabel backLabel, petProfileLabel, deleteLabel, calLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel,
 			warningLabel;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
@@ -38,7 +38,7 @@ public class PetAddScreen extends JFrame {
 	private PetPhotoAddDialog ppm;
 	private byte[] imageBytes; // 이미지 데이터를 저장할 멤버 변수
 	boolean flag = true;
-	
+	private RoundedImageLabel imageLabel;
 
 	public PetAddScreen(JFrame preFrame) {
 		setTitle("프레임 설정");
@@ -96,6 +96,7 @@ public class PetAddScreen extends JFrame {
 						bean.setPet_name(petNameTField.getText().trim());
 						bean.setPet_species(petSpecTField.getText().trim());
 						bean.setPet_age(petBirthTField.getText().trim());
+						bean.setPet_image(imageBytes);
 						dispose();
 						new PetRecordAddScreen(bean, PetAddScreen.this);
 					}
@@ -121,16 +122,14 @@ public class PetAddScreen extends JFrame {
 		// 메인 프로필 이미지
 		byte[] imgBytes = bean.getPet_image();
 		if (imgBytes == null || imgBytes.length == 0) {
-		    imageLabel = createScaledImageLabel("TeamProject/dog.png", 200, 200); // 기본 이미지
-		} else {
-		    ImageIcon icon = new ImageIcon(imgBytes);
-		    Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-		    imageLabel = new JLabel();
-		    imageLabel.setIcon(new ImageIcon(img));
-		}
-		imageLabel.setBounds(101, 230, 200, 200);
-		imageLabel.addMouseListener(commonMouseListener);
-		add(imageLabel);
+			// 기본 프로필 이미지 사용
+						ImageIcon icon = new ImageIcon("TeamProject/dog.png");
+						Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+						// RoundedImageLabel 사용
+						imageLabel = new RoundedImageLabel(img, 200, 200, 3); // 270은 크기, 3은 둥근 정도
+						imageLabel.setBounds(101, 230, 200, 200);
+						imageLabel.addMouseListener(commonMouseListener);
+						add(imageLabel);
 
 		// 반려동물 프로필 사진 추가 버튼
 		petAddProButton = new RoundedButton("추가");
@@ -318,6 +317,7 @@ public class PetAddScreen extends JFrame {
 
 		setVisible(true);
 	}
+	}
 
 
 	public void updateSpecies(String species) {
@@ -333,8 +333,10 @@ public class PetAddScreen extends JFrame {
 		return new JLabel(new ImageIcon(scaledImage));
 	}
 
-	public JLabel getImageLabel() {
-		return imageLabel;
+	// 이미지 레이블 반환 타입을 RoundedImageLabel로 수정
+		public RoundedImageLabel getImageLabel() {
+			    return imageLabel;
+			    
 	}
 
 	// 이미지 바이트 배열을 설정하는 setter
