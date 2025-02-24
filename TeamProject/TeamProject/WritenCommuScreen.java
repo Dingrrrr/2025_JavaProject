@@ -153,6 +153,7 @@ public class WritenCommuScreen extends JFrame {
 		TitleTArea = new JTextArea(cb.getComu_title());
 		TitleTArea.setBounds(5, 70, 330, 30);
 		TitleTArea.setEditable(false);
+		TitleTArea.setBackground(Color.WHITE);
 		TitleTArea.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)));
 
 		// 설명 라벨
@@ -164,6 +165,7 @@ public class WritenCommuScreen extends JFrame {
 		ExplainTArea = new JTextArea(cb.getComu_content());
 		ExplainTArea.setBounds(5, 155, 330, 100);
 		ExplainTArea.setEditable(false);
+		ExplainTArea.setBackground(Color.WHITE);
 		ExplainTArea
 				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)));
 

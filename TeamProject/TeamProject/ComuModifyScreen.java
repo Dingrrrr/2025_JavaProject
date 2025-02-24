@@ -96,6 +96,7 @@ public class ComuModifyScreen extends JFrame {
 
 		titleField = new JTextField(cb.getComu_title());
 		titleField.setBounds(35, 51, 280, 32);
+		titleField.setBackground(Color.WHITE);
 		titleField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
 																														// 여백
 																														// (위,
@@ -134,9 +135,9 @@ public class ComuModifyScreen extends JFrame {
 
 		// 게시글 설명 텍스트 필드 추가
 		contentArea = new JTextArea(cb.getComu_content());
-		contentArea.setText(cb.getComu_content());
 		contentArea.setLineWrap(true);
 		contentArea.setWrapStyleWord(true);
+		contentArea.setBackground(Color.WHITE);
 		add(contentArea);
 
 		JScrollPane scrollPane = new JScrollPane(contentArea);
