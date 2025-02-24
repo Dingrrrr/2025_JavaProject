@@ -21,7 +21,7 @@ public class ComuAddDialog extends JFrame{
 	private File selectedFile;
 	private JFrame frame;
 	
-	public ComuAddDialog(CommuAddScreen comuAddScreen) {
+	public ComuAddDialog(JFrame preFrame, CommuAddScreen comuAddScreen) {
 		setTitle("프레임 설정");
 		setSize(347, 160);
 		setUndecorated(true);
@@ -44,12 +44,23 @@ public class ComuAddDialog extends JFrame{
 						if (source == addpicButton) {
 							System.out.println("추가 버튼 클릭됨");
 							selectImage();
+							dispose();
+							preFrame.setVisible(true);
+							comuAddScreen.setVisible(true);
+							comuAddScreen.setEnabled(true);
 						} else if (source == deletepicButton) {
 							System.out.println("삭제 버튼 클릭됨");
 							deleteImage();
+							dispose();
+							preFrame.setVisible(true);
+							comuAddScreen.setVisible(true);
+							comuAddScreen.setEnabled(true);
 						} else if (source == cancelButton) {
 							System.out.println("취소 버튼 클릭됨");
 							dispose();
+							preFrame.setVisible(true);
+							comuAddScreen.setVisible(true);
+							comuAddScreen.setEnabled(true);
 						}
 
 					}

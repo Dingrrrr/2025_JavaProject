@@ -52,12 +52,13 @@ public class CommuAddScreen extends JFrame {
 				} else if (source == addButtonLabel) {
 					System.out.println("+아이콘 클릭됨");
 					if (cad == null) {
-						cad = new ComuAddDialog(CommuAddScreen.this);
+						cad = new ComuAddDialog(preFrame, CommuAddScreen.this);
 						cad.setLocation(getX() + 1, getY() + 455);
 					} else {
 						cad.setLocation(getX() + 1, getY() + 455);
 						cad.setVisible(true);
 					}
+					setEnabled(false);
 					// 이미지 추가
 				} else if (source == SaveButton) {
 					System.out.println("저장 버튼클릭됨");
@@ -84,8 +85,8 @@ public class CommuAddScreen extends JFrame {
 		CommuAddTagTField = new JTextField();
 		CommuAddTagTField.setBounds(15, 355, 318, 40);
 		CommuAddTagTField.setText("");
-		CommuAddTagTField
-				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+		CommuAddTagTField.setBorder(BorderFactory.
+				createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
 																														// 여백
 																														// (위,
 																														// 왼쪽,

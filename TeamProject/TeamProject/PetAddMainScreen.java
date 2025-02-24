@@ -232,9 +232,14 @@ public class PetAddMainScreen extends JFrame {
 			}
 		});
 		panel.add(closeButton);
+		
 
 		setVisible(true);
-
+		
+		if(mgr.nonReadMsg(StaticData.user_id)) {
+			new AlarmNewDialog(PetAddMainScreen.this);
+			setEnabled(false);
+		}
 	}
 
 	private void petAddMain() {

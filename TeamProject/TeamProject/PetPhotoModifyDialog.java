@@ -21,7 +21,7 @@ public class PetPhotoModifyDialog extends JFrame {
 	private File selectedFile;
 	private PetModifyScreen petModifyScreen;
 
-	public PetPhotoModifyDialog(PetModifyScreen petModifyScreen) {
+	public PetPhotoModifyDialog(JFrame preFrame, PetModifyScreen petModifyScreen) {
 		setTitle("프레임 설정");
 		setSize(358, 160);
 		setUndecorated(true);
@@ -43,12 +43,24 @@ public class PetPhotoModifyDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
+					dispose();
+					preFrame.setVisible(true);
+					petModifyScreen.setVisible(true);
+					petModifyScreen.setEnabled(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
+					dispose();
+					preFrame.setVisible(true);
+					petModifyScreen.setVisible(true);
+					petModifyScreen.setEnabled(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					dispose();
+					preFrame.setVisible(true);
+					petModifyScreen.setVisible(true);
+					petModifyScreen.setEnabled(true);
 				}
 
 			}
