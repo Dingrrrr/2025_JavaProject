@@ -27,7 +27,7 @@ public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
-			imageProfileLabel, logoutLabel;
+			imageProfileLabel, logoutLabel, logoLabel;
 	private ImageIcon image2;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
@@ -96,6 +96,11 @@ public class PetAddMainScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(83, 54, 180, 165);
+		add(logoLabel);
 
 		// 메인 프로필 이미지
 		byte[] imgBytes = bean1.getUser_image();
