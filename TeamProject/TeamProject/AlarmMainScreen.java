@@ -153,21 +153,21 @@ public class AlarmMainScreen extends JFrame {
 		add(SendButton);
 
 		// 🔹 메뉴 아이콘
-		menuLabel = createScaledImageLabel("TeamProject/menu.png", 40, 40);
-		menuLabel.setBounds(310, 795, 40, 40);
+		menuLabel = createScaledImageLabel("TeamProject/note_menu.png", 140, 140);
+		menuLabel.setBounds(260, 675, 140, 140);
 		menuLabel.addMouseListener(commonMouseListener);
 		add(menuLabel);
 
 		// 🔹 보낸 알림 아이콘
 		sendMsgLabel = createScaledImageLabel("TeamProject/send_msg.png", 40, 40);
-		sendMsgLabel.setBounds(310, 720, 40, 40);
+		sendMsgLabel.setBounds(310, 675, 40, 40);
 		sendMsgLabel.addMouseListener(commonMouseListener);
 		add(sendMsgLabel);
 		sendMsgLabel.setVisible(false);
 
 		// 🔹 받은 알림 아이콘
 		receiveMsgLabel = createScaledImageLabel("TeamProject/receive_msg.png", 40, 40);
-		receiveMsgLabel.setBounds(310, 660, 40, 40);
+		receiveMsgLabel.setBounds(310, 615, 40, 40);
 		receiveMsgLabel.addMouseListener(commonMouseListener);
 		add(receiveMsgLabel);
 		receiveMsgLabel.setVisible(false);
