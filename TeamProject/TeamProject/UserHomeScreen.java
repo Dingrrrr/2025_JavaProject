@@ -135,8 +135,8 @@ public class UserHomeScreen extends JFrame {
 		}
 
 		// 🔹 추가 버튼
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-		addButtonLabel.setBounds(280, 730, 70, 70);
+		addButtonLabel = createScaledImageLabel("TeamProject/pet_menu.png", 140, 140);
+		addButtonLabel.setBounds(260, 675, 140, 140);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
 

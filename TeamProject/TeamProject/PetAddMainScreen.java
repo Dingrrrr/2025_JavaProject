@@ -27,7 +27,7 @@ public class PetAddMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, mainProfileLabel, petProfileLabel, addButtonLabel, imageLabel,
-			imageProfileLabel;
+			imageProfileLabel, logoutLabel;
 	private ImageIcon image2;
 	private JButton logoutButton;
 	private JLabel welcomeLabel, petNameLabel, petSpeciesLabel, petAgeLabel, petGenderLabel;
@@ -83,6 +83,10 @@ public class PetAddMainScreen extends JFrame {
 						pc.setVisible(true);
 					}
 					setEnabled(false);
+				} else if (source == logoutLabel) {
+					dispose();
+					mgr.userOut(StaticData.user_id);
+					new LoginScreen();
 				}
 			}
 		};
@@ -154,19 +158,10 @@ public class PetAddMainScreen extends JFrame {
 		add(welcomeLabel);
 
 		// 로그아웃 버튼
-		logoutButton = new RoundedButton("로그아웃");
-		logoutButton.setBounds(30, 122, 85, 36);
-		logoutButton.setBackground(new Color(91, 91, 91));
-		logoutButton.setForeground(Color.WHITE);
-		logoutButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				mgr.userOut(StaticData.user_id);
-				new LoginScreen();
-			}
-		});
-		add(logoutButton);
+		logoutLabel = createScaledImageLabel("TeamProject/logout_icon.png", 40, 40);
+		logoutLabel.setBounds(30, 122, 40, 40);
+		logoutLabel.addMouseListener(commonMouseListener);
+		add(logoutLabel);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
@@ -209,8 +204,8 @@ public class PetAddMainScreen extends JFrame {
 		panel.add(scrollPane);
 
 		// 🔹 추가 버튼 (화면에 고정)
-		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 70, 70);
-		addButtonLabel.setBounds(300, 700, 70, 70);
+		addButtonLabel = createScaledImageLabel("TeamProject/pet_menu.png", 140, 140);
+		addButtonLabel.setBounds(260, 675, 140, 140);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		addButtonLabel.setOpaque(true);
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
