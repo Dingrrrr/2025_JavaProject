@@ -247,6 +247,7 @@ public class AlarmMainScreen extends JFrame {
 					setEnabled(false);
 					if (flag) {// 받은 쪽지이기 때문에 쪽지 확인 화면
 						setEnabled(false);
+						mgr.readMsg(mb.getMsg_id());
 						new NoteCheckScreen(AlarmMainScreen.this, mb);
 					} else {
 						setEnabled(false);
