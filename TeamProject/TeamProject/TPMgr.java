@@ -912,6 +912,68 @@ public class TPMgr {
 		return vlist;
 	}
 	
+	//앨범 화면에 출력(오래된순, 태그O)
+	public Vector<AlbumBean> showOldAlbumByTags(int pet_id, String tag){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<AlbumBean> vlist = new Vector<AlbumBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from album where pet_id = ? and album_tags like ? ORDER BY album_date asc;";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			pstmt.setString(2, "%" + tag + "%");
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				AlbumBean bean = new AlbumBean();
+				bean.setAlbum_id(rs.getInt("album_id"));
+				bean.setAlbum_image(rs.getBytes("album_image"));
+				bean.setAlbum_tags(rs.getString("album_tags"));
+				bean.setAlbum_date(rs.getTimestamp("album_date"));
+				bean.setAlbum_desc(rs.getString("album_desc"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
+	//앨범 화면에 출력(최신순, 태그O)
+	public Vector<AlbumBean> showNewAlbumByTags(int pet_id, String tag){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<AlbumBean> vlist = new Vector<AlbumBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from album where pet_id = ? and album_tags like ? ORDER BY album_date desc;";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pet_id);
+			pstmt.setString(2, "%" + tag + "%");
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				AlbumBean bean = new AlbumBean();
+				bean.setAlbum_id(rs.getInt("album_id"));
+				bean.setAlbum_image(rs.getBytes("album_image"));
+				bean.setAlbum_tags(rs.getString("album_tags"));
+				bean.setAlbum_date(rs.getTimestamp("album_date"));
+				bean.setAlbum_desc(rs.getString("album_desc"));
+				vlist.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
 	//앨범에서 태그로 검색
 	public Vector<AlbumBean> showAlbumByTags(int pet_id, String tag){
 		Connection con = null;

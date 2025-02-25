@@ -31,7 +31,7 @@ public class AlbumMainScreen extends JFrame {
 	private JScrollPane scrollPane; // 스크롤 패널
 	private AlbumAddDialog pc;
 	TPMgr mgr = new TPMgr();
-	boolean flag = true;
+	boolean flag = true, flag1 = true;
 
 	Vector<AlbumBean> vlist = mgr.showAlbum(StaticData.pet_id);
 
@@ -105,14 +105,22 @@ public class AlbumMainScreen extends JFrame {
 					setEnabled(false);
 				} else if (source == newLineUpLabel) {
 					System.out.println("최신순 정렬 클릭됨");
-					vlist = mgr.showAlbum(StaticData.pet_id);
+					if(flag1) {	//전체 앨범에서 최신순
+						vlist = mgr.showAlbum(StaticData.pet_id);
+					} else {	//태그로 선택된 앨범에서 최신순
+						vlist = mgr.showNewAlbumByTags(StaticData.pet_id, tagField.getText().trim());
+					}
 					addAlbum();
 					addAlbumLabel.setVisible(false);
 					newLineUpLabel.setVisible(false);
 					oldLineUpLabel.setVisible(false);
 				} else if (source == oldLineUpLabel) {
 					System.out.println("오래된순 정렬 클릭됨");
-					vlist = mgr.showOldAlbum(StaticData.pet_id);
+					if(flag1) {	//전체 앨범에서 오래된순
+						vlist = mgr.showOldAlbum(StaticData.pet_id);
+					} else {	//태그로 선택된 앨범에서 오래된순
+						vlist = mgr.showOldAlbumByTags(StaticData.pet_id, tagField.getText().trim());
+					}
 					addAlbum();
 					addAlbumLabel.setVisible(false);
 					newLineUpLabel.setVisible(false);
@@ -170,9 +178,11 @@ public class AlbumMainScreen extends JFrame {
 				if (flag) {
 					vlist = mgr.showAlbum(StaticData.pet_id);
 					addAlbum();
+					flag1 = true;
 				} else {
 					vlist = mgr.showAlbumByTags(StaticData.pet_id, tagField.getText().trim());
 					addAlbum();
+					flag1 = false;
 				}
 			}
 		});
