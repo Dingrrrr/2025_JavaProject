@@ -204,8 +204,8 @@ public class PetAddMainScreen extends JFrame {
 		panel.add(scrollPane);
 
 		// 🔹 추가 버튼 (화면에 고정)
-		addButtonLabel = createScaledImageLabel("TeamProject/pet_menu.png", 140, 140);
-		addButtonLabel.setBounds(260, 675, 140, 140);
+		addButtonLabel = createScaledImageLabel("TeamProject/pet_menu.png", 85, 45);
+		addButtonLabel.setBounds(280, 725, 85, 45);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		addButtonLabel.setOpaque(true);
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));
