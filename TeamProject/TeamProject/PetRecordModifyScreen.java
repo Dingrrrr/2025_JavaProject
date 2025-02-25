@@ -234,7 +234,7 @@ public class PetRecordModifyScreen extends JFrame {
         add(petMtTimeLabel);
 
         // 반려동물 진료 관련 시간 텍스트 필드 추가
-        petMtTimeTField = new JTextField();
+        petMtTimeTField = new JTextField(bean.getDate());
         petMtTimeTField.setForeground(Color.GRAY);
         petMtTimeTField.setBounds(43, 675, 280, 40);
         petMtTimeTField.setEnabled(false);
