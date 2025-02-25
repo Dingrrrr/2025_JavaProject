@@ -352,39 +352,53 @@ public class AlbumMainScreen extends JFrame {
 				albumLabel.setPreferredSize(new Dimension(173, 100)); // 크기 고정
 				albumLabel.setMaximumSize(new Dimension(173, 100)); // 크기 고정
 			} else {
-			    ImageIcon icon1 = new ImageIcon(imgBytes);
-			    Image img1 = icon1.getImage();
-			    
-			    // 원본 이미지 크기
-			    int imgWidth = icon1.getIconWidth();
-			    int imgHeight = icon1.getIconHeight();
+				ImageIcon icon1 = new ImageIcon(imgBytes);
+				Image img1 = icon1.getImage();
 
-			    // 자를 크기 (173x100으로 설정)
-			    int targetWidth = 173;
-			    int targetHeight = 100;
+				// 원본 이미지 크기
+				int imgWidth = icon1.getIconWidth();
+				int imgHeight = icon1.getIconHeight();
 
-			    // 중심을 기준으로 자를 영역 계산
-			    int x = (imgWidth - targetWidth) / 2;
-			    int y = (imgHeight - targetHeight) / 2;
+				// 타겟 크기 (173x100)
+				int targetWidth = 173;
+				int targetHeight = 100;
 
-			    // 이미지 자르기
-			    BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
-			    Graphics g = bufferedImage.getGraphics();
-			    g.drawImage(img1, 0, 0, null);
-			    g.dispose();
+				// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+				double targetRatio = (double) targetWidth / targetHeight;
+				double imgRatio = (double) imgWidth / imgHeight;
 
-			    // 중심 기준으로 자르기
-			    BufferedImage croppedImage = bufferedImage.getSubimage(x, y, targetWidth, targetHeight);
+				int cropWidth = imgWidth;
+				int cropHeight = imgHeight;
 
-			    // 잘라낸 이미지를 ImageIcon으로 변환
-			    ImageIcon croppedIcon = new ImageIcon(croppedImage);
+				if (imgRatio > targetRatio) {
+					// 원본이 더 넓은 경우 → 가로를 자름
+					cropWidth = (int) (imgHeight * targetRatio);
+				} else {
+					// 원본이 더 높은 경우 → 세로를 자름
+					cropHeight = (int) (imgWidth / targetRatio);
+				}
 
-			    // 이미지를 알림 레이블에 설정
-			    albumLabel.setIcon(croppedIcon);
-			    albumLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
-			    albumLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+				// 중심을 기준으로 자를 영역 계산
+				int x = (imgWidth - cropWidth) / 2;
+				int y = (imgHeight - cropHeight) / 2;
+
+				// BufferedImage로 자르기
+				BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+				Graphics g = bufferedImage.getGraphics();
+				g.drawImage(img1, 0, 0, null);
+				g.dispose();
+
+				BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+
+				// 173x100으로 크기 조정
+				Image scaledImage = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+				ImageIcon croppedIcon = new ImageIcon(scaledImage);
+
+				// 이미지를 알림 레이블에 설정
+				albumLabel.setIcon(croppedIcon);
+				albumLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+				albumLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
 			}
-
 
 			/*
 			 * // 앨범 레이블 생성 JLabel albumLabel = new JLabel("📸 앨범 " +
@@ -471,3 +485,4 @@ public class AlbumMainScreen extends JFrame {
 		new LoginScreen();
 	}
 }
+

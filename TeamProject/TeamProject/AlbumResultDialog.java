@@ -63,11 +63,11 @@ public class AlbumResultDialog extends JFrame {
 					}
 				} else if (source == SaveButton && SaveButton.isEnabled()) {
 					System.out.println("저장 버튼클릭됨");
-					if(flag) {
+					if (flag) {
 						ab.setAlbum_desc(diaryWriteArea.getText().trim());
 						ab.setAlbum_tags(diaryTagTField.getText().trim());
 						ab.setAlbum_image(imageBytes);
-						if(mgr.updAlbum(StaticData.album_id, ab)) {
+						if (mgr.updAlbum(StaticData.album_id, ab)) {
 							diaryTagTField.setEnabled(false);
 							diaryWriteArea.setEnabled(false);
 							addButtonLabel.setEnabled(false);
@@ -173,16 +173,50 @@ public class AlbumResultDialog extends JFrame {
 		// 앨범 이미지
 		byte[] imgBytes = ab.getAlbum_image();
 		imageBytes = ab.getAlbum_image();
+		JLabel imageLabel = new JLabel(); // JLabel을 먼저 생성
 		if (imgBytes == null || imgBytes.length == 0) {
-			imageLabel = new JLabel();
 			imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
 			imageLabel.setBounds(35, 35, 280, 280);
 		} else {
-		    ImageIcon icon = new ImageIcon(imgBytes);
-		    Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
-		    imageLabel = new JLabel();
-		    imageLabel.setIcon(new ImageIcon(img));
-		    imageLabel.setBounds(35, 35, 280, 280);
+			ImageIcon icon = new ImageIcon(imgBytes);
+			Image img = icon.getImage();
+
+			// 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
+
+			// 타겟 크기 (280x280)
+			int targetWidth = 280;
+			int targetHeight = 280;
+
+			// 비율 유지하며 축소
+			double widthRatio = (double) targetWidth / imgWidth;
+			double heightRatio = (double) targetHeight / imgHeight;
+			double ratio = Math.min(widthRatio, heightRatio);
+			int newWidth = (int) (imgWidth * ratio);
+			int newHeight = (int) (imgHeight * ratio);
+
+			// 새 BufferedImage 생성 (투명 배경)
+			BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+
+			// Graphics2D로 그리기 (안티앨리어싱 적용)
+			Graphics2D g2d = resizedImage.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+			// 중앙 정렬 (여백 생김)
+			int x = (targetWidth - newWidth) / 2;
+			int y = (targetHeight - newHeight) / 2;
+			g2d.drawImage(img, x, y, newWidth, newHeight, null);
+			g2d.dispose();
+
+			// 새 ImageIcon 설정
+			ImageIcon resizedIcon = new ImageIcon(resizedImage);
+			imageLabel.setIcon(resizedIcon);
+			imageLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			imageLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			imageLabel.setBounds(35, 35, targetWidth, targetHeight);
 		}
 		add(imageLabel);
 
@@ -191,7 +225,7 @@ public class AlbumResultDialog extends JFrame {
 		addButtonLabel.setEnabled(false);
 		SaveButton.setEnabled(false);
 		delButton.setEnabled(false);
-		
+
 		// JPanel 추가
 		JPanel panel = new JPanel() {
 			@Override
@@ -232,7 +266,7 @@ public class AlbumResultDialog extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
-	
+
 	public JLabel getImageLabel() {
 		return imageLabel;
 	}
@@ -246,7 +280,6 @@ public class AlbumResultDialog extends JFrame {
 	public byte[] getImageBytes() {
 		return imageBytes;
 	}
-
 
 	public static void main(String[] args) {
 		new LoginScreen();
