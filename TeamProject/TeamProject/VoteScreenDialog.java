@@ -75,7 +75,7 @@ public class VoteScreenDialog extends JFrame {
 			heartLabel.setOpaque(false);
 			heartLabel.addMouseListener(commonMouseListener);
 		} else {
-			heartLabel = createScaledImageLabel("TeamProject/vote.png", 70, 70);
+			heartLabel = createScaledImageLabel("TeamProject/vote_empty.png", 70, 70);
 			heartLabel.setBounds(235, 240, 70, 70);
 			heartLabel.addMouseListener(commonMouseListener);
 		}
