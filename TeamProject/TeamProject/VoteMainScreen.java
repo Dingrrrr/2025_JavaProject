@@ -55,7 +55,7 @@ public class VoteMainScreen extends JFrame {
 
 				if (source == alarmLabel) {
 					System.out.println("🔔 알람 클릭됨!");
-					
+
 					dispose();
 					new AlarmMainScreen(VoteMainScreen.this);
 				} else if (source == profileLabel) {
@@ -109,7 +109,7 @@ public class VoteMainScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
-		
+
 		// 로고 아이콘
 		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
 		logoLabel.setBounds(5, 54, 180, 165);
@@ -300,10 +300,51 @@ public class VoteMainScreen extends JFrame {
 				imageLabel.setOpaque(false);
 			} else {
 				ImageIcon icon1 = new ImageIcon(imgBytes);
-				Image img1 = icon1.getImage().getScaledInstance(176, 150, Image.SCALE_SMOOTH);
-				imageLabel.setIcon(new ImageIcon(img1));
-				imageLabel.setPreferredSize(new Dimension(176, 150));
-				imageLabel.setMaximumSize(new Dimension(176, 150));
+				Image img1 = icon1.getImage();
+
+				// 원본 이미지 크기
+				int imgWidth = icon1.getIconWidth();
+				int imgHeight = icon1.getIconHeight();
+
+				// 타겟 크기 (176x150)
+				int targetWidth = 176;
+				int targetHeight = 150;
+
+				// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+				double targetRatio = (double) targetWidth / targetHeight;
+				double imgRatio = (double) imgWidth / imgHeight;
+
+				int cropWidth = imgWidth;
+				int cropHeight = imgHeight;
+
+				if (imgRatio > targetRatio) {
+					// 원본이 더 넓은 경우 → 가로를 자름
+					cropWidth = (int) (imgHeight * targetRatio);
+				} else {
+					// 원본이 더 높은 경우 → 세로를 자름
+					cropHeight = (int) (imgWidth / targetRatio);
+				}
+
+				// 중심을 기준으로 자를 영역 계산
+				int x = (imgWidth - cropWidth) / 2;
+				int y = (imgHeight - cropHeight) / 2;
+
+				// BufferedImage로 자르기
+				BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+				Graphics g = bufferedImage.getGraphics();
+				g.drawImage(img1, 0, 0, null);
+				g.dispose();
+
+				BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+
+				// 173x100으로 크기 조정
+				Image scaledImage = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+				ImageIcon croppedIcon = new ImageIcon(scaledImage);
+				
+				imageLabel.setIcon(croppedIcon);
+				imageLabel.setPreferredSize(new Dimension(targetWidth, targetHeight));
+				imageLabel.setMaximumSize(new Dimension(targetWidth, targetHeight));
+				
 				imageLabel.setOpaque(false);
 			}
 			imageLabel.setBounds(0, 0, 176, 150);

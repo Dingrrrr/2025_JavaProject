@@ -20,6 +20,7 @@ public class WritenCommuScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, modifyLabel, grayFrameLabel;
 	private JLabel TitleLabel, ExplainLabel, PhotoLabel, commentLabel, useridLabel;
+	private JLabel commentSeparatorLine;
 	private JTextArea ExplainTArea, CommentTArea, TitleTArea;
 	private JPanel CommuPanel;
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
@@ -115,8 +116,6 @@ public class WritenCommuScreen extends JFrame {
 
 					// y=520 위치에 가로로 회색 선 그리기
 					g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
-					g.drawLine(0, 550, 350, 550);
-					g.drawLine(0, 320, 350, 320);
 					g.drawLine(0, 34, 350, 34);
 					Graphics2D g2 = (Graphics2D) g; // Graphics를 Graphics2D로 캐스팅
 					g2.setStroke(new BasicStroke(6)); // 선 두께 6px 설정
@@ -131,27 +130,27 @@ public class WritenCommuScreen extends JFrame {
 		// 🔹 스크롤 가능한 게시글 패널 설정
 		CommuPanel = new JPanel();
 		CommuPanel.setLayout(new BoxLayout(CommuPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
-		CommuPanel.setBackground(Color.WHITE);
+		CommuPanel.setBackground(Color.black);
 
 		// 상단 컨텐츠를 담을 새로운 패널 생성
 		JPanel contentPanel = new JPanel();
 		contentPanel.setLayout(null);
 		contentPanel.setBackground(Color.WHITE);
-		contentPanel.setPreferredSize(new Dimension(340, 460)); // 적절한 높이 설정
+		contentPanel.setPreferredSize(new Dimension(340, 480)); // 적절한 높이 설정
 
 		// 유저 아이디 라벨
 		useridLabel = new JLabel(cb.getUser_id());
-		useridLabel.setBounds(5, 8, 66, 30);
+		useridLabel.setBounds(5, 0, 66, 30);
 		useridLabel.setForeground(Color.BLACK);
 
 		// 제목 라벨
 		TitleLabel = new JLabel("제목");
-		TitleLabel.setBounds(5, 35, 48, 30);
+		TitleLabel.setBounds(5, 30, 48, 30);
 		TitleLabel.setForeground(Color.black);
 
 		// 제목 텍스트 필드
 		TitleTArea = new JTextArea(cb.getComu_title());
-		TitleTArea.setBounds(5, 70, 330, 30);
+		TitleTArea.setBounds(5, 55, 330, 30);
 		TitleTArea.setEditable(false);
 		TitleTArea.setOpaque(false);
 		TitleTArea.setBackground(Color.WHITE);
@@ -159,12 +158,12 @@ public class WritenCommuScreen extends JFrame {
 
 		// 설명 라벨
 		ExplainLabel = new JLabel("설명");
-		ExplainLabel.setBounds(5, 115, 48, 30);
+		ExplainLabel.setBounds(5, 80, 48, 30);
 		ExplainLabel.setForeground(Color.black);
 
 		// 설명 텍스트 필드
 		ExplainTArea = new JTextArea(cb.getComu_content());
-		ExplainTArea.setBounds(5, 155, 330, 100);
+		ExplainTArea.setBounds(5, 105, 330, 100);
 		ExplainTArea.setEditable(false);
 		ExplainTArea.setBackground(Color.WHITE);
 		ExplainTArea
@@ -174,20 +173,25 @@ public class WritenCommuScreen extends JFrame {
 		byte[] imgBytes1 = cb.getComu_image();
 		if (imgBytes1 == null || imgBytes1.length == 0) {
 			grayFrameLabel = new JLabel();
-			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 300, 150);
-			grayFrameLabel.setBounds(15, 270, 300, 150);
+			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 300, 220);
+			grayFrameLabel.setBounds(20, 216, 300, 220);
 		} else {
 			ImageIcon icon = new ImageIcon(imgBytes1);
-			Image img = icon.getImage().getScaledInstance(300, 150, Image.SCALE_SMOOTH);
+			Image img = icon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH);
 			grayFrameLabel = new JLabel();
 			grayFrameLabel.setIcon(new ImageIcon(img));
-			grayFrameLabel.setBounds(15, 270, 300, 150);
+			grayFrameLabel.setBounds(20, 216, 300, 220);
 		}
 
 		// 댓글 라벨
 		commentLabel = new JLabel("댓글");
-		commentLabel.setBounds(5, 425, 48, 30);
+		commentLabel.setBounds(5, 450, 48, 30);
 		commentLabel.setForeground(Color.black);
+		
+		commentSeparatorLine = new JLabel();
+		commentSeparatorLine.setBounds(0, 450, 380, 1);
+		commentSeparatorLine.setOpaque(true);
+		commentSeparatorLine.setBackground(Color.LIGHT_GRAY);
 
 		// 컨텐츠 패널에 컴포넌트 추가
 		contentPanel.add(useridLabel);
@@ -196,7 +200,9 @@ public class WritenCommuScreen extends JFrame {
 		contentPanel.add(ExplainLabel);
 		contentPanel.add(ExplainTArea);
 		contentPanel.add(grayFrameLabel);
+		contentPanel.add(commentSeparatorLine);
 		contentPanel.add(commentLabel);
+		
 
 		// 컨텐츠 패널을 CommuPanel에 먼저 추가
 		CommuPanel.add(contentPanel);
