@@ -182,8 +182,8 @@ public class PetAddMainScreen extends JFrame {
 				// y=158 위치에 가로로 회색 선 그리기
 				g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
 				g.drawLine(22, 165, 379, 165);
-				g.drawLine(22, 443, 379, 443);
-				g.drawLine(22, 639, 379, 639);
+				g.drawLine(22, 429, 379, 429);
+//				g.drawLine(22, 639, 379, 639);
 			}
 		};
 
@@ -194,7 +194,7 @@ public class PetAddMainScreen extends JFrame {
 		// 🔹 스크롤 가능한 게시글 패널 설정
 		petaddPanel = new JPanel();
 		petaddPanel.setLayout(new BoxLayout(petaddPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
-		petaddPanel.setBorder(new LineBorder(Color.BLACK, 1));
+		petaddPanel.setBorder(new LineBorder(Color.WHITE, 1));
 		petaddPanel.setBackground(Color.WHITE);
 
 		petAddMain();
@@ -205,7 +205,7 @@ public class PetAddMainScreen extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
-		scrollPane.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+		scrollPane.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane);
 
 		// 🔹 추가 버튼 (화면에 고정)
@@ -247,18 +247,26 @@ public class PetAddMainScreen extends JFrame {
 
 		for (PetBean pb : vlist) {
 			JPanel petAddMainPanel = new JPanel();
+			petAddMainPanel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					dispose();
+					new PetHomeScreen(pb.getPet_id());
+				}
+			});
 			petAddMainPanel.setPreferredSize(new Dimension(353, 160)); // 크기 지정
 			petAddMainPanel.setMaximumSize(new Dimension(353, 160)); // 최대 크기 고정
 			petAddMainPanel.setBackground(Color.WHITE);
-			petAddMainPanel.setBorder(new LineBorder(Color.black, 0));
+//			petAddMainPanel.setBorder(new LineBorder(Color.black, 1));
+			petAddMainPanel.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 			petAddMainPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
 
-			// 2) 상단 패널 (USER_ID + 날짜)
-			JPanel topPanel = new JPanel(new BorderLayout());
+//			// 2) 상단 패널 (USER_ID + 날짜)
+//			JPanel topPanel = new JPanel(new BorderLayout());
 
 			// 3) 구분선
 			JSeparator separator = new JSeparator();
-			separator.setForeground(Color.BLACK);
+//			separator.setForeground(Color.BLACK);
 
 			// 왼쪽 - 이미지
 			byte[] imgBytes = pb.getPet_image();
@@ -275,14 +283,6 @@ public class PetAddMainScreen extends JFrame {
 			}
 			// petImageLabel 크기 지정
 			petImageLabel.setPreferredSize(new Dimension(135, 135)); // 이미지 크기 지정
-
-			petImageLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					dispose();
-					new PetHomeScreen(pb.getPet_id());
-				}
-			});
 
 			// 4) 본문 패널 (이미지 + 텍스트)
 			JPanel contentPanel = new JPanel();
@@ -311,14 +311,15 @@ public class PetAddMainScreen extends JFrame {
 
 			// 5) 전체 구성
 			petAddMainPanel.add(contentPanel, BorderLayout.CENTER);
-			petAddMainPanel.add(separator, BorderLayout.SOUTH);
+//			petAddMainPanel.add(separator, BorderLayout.SOUTH);
 
 			// petaddPanel에 추가
 			petaddPanel.add(petAddMainPanel);
 
 			// 각 애완동물 항목 간에 간격을 둔다
-			petaddPanel.add(Box.createVerticalStrut(0)); // 0px 간격
+			petaddPanel.add(Box.createVerticalStrut(1)); // 0px 간격
 
+			
 			String birth = pb.getPet_age();
 			if (!birth.isEmpty()) { // 생일이 기입했을 경우
 				// 반려동물 생일 알림
