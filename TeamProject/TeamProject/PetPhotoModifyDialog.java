@@ -126,9 +126,6 @@ public class PetPhotoModifyDialog extends JFrame {
 	        // 이미지 크기 조정 (200x200)
 	        Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 
-	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
-	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
-
 	        // 미리보기 업데이트
 	        RoundedImageLabel imageLabel = petModifyScreen.getImageLabel();
 			imageLabel.setImage(resizedImg); // 이미지를 새로 설정
