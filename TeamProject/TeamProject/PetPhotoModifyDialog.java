@@ -21,7 +21,7 @@ public class PetPhotoModifyDialog extends JFrame {
 	private File selectedFile;
 	private PetModifyScreen petModifyScreen;
 
-	public PetPhotoModifyDialog(JFrame preFrame, PetModifyScreen petModifyScreen) {
+	public PetPhotoModifyDialog(PetModifyScreen petModifyScreen) {
 		setTitle("프레임 설정");
 		setSize(358, 160);
 		setUndecorated(true);
@@ -43,23 +43,19 @@ public class PetPhotoModifyDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
-					preFrame.setVisible(true);
+					dispose();
 					petModifyScreen.setVisible(true);
 					petModifyScreen.setEnabled(true);
-					petModifyScreen.toFront();
-					dispose();
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
 					dispose();
-					preFrame.setVisible(true);
 					petModifyScreen.setVisible(true);
 					petModifyScreen.setEnabled(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
 					dispose();
-					preFrame.setVisible(true);
 					petModifyScreen.setVisible(true);
 					petModifyScreen.setEnabled(true);
 				}
@@ -123,10 +119,45 @@ public class PetPhotoModifyDialog extends JFrame {
 	        // 이미지 읽기
 	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 	        Image img = icon.getImage();
-
-	        // 이미지 크기 조정 (200x200)
-	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 	        
+			// 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
+
+			// 타겟 크기 (200x200)
+			int targetWidth = 200;
+			int targetHeight = 200;
+
+			// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+			double targetRatio = (double) targetWidth / targetHeight;
+			double imgRatio = (double) imgWidth / imgHeight;
+
+			int cropWidth = imgWidth;
+			int cropHeight = imgHeight;
+
+			if (imgRatio > targetRatio) {
+				// 원본이 더 넓은 경우 → 가로를 자름
+				cropWidth = (int) (imgHeight * targetRatio);
+			} else {
+				// 원본이 더 높은 경우 → 세로를 자름
+				cropHeight = (int) (imgWidth / targetRatio);
+			}
+
+			// 중심을 기준으로 자를 영역 계산
+			int x = (imgWidth - cropWidth) / 2;
+			int y = (imgHeight - cropHeight) / 2;
+
+			// BufferedImage로 자르기
+			BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bufferedImage.getGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.dispose();
+
+			BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+	        
+	        // 이미지 크기 조정 (200x200)
+	        Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+
 	        // 미리보기 업데이트
 	        RoundedImageLabel imageLabel = petModifyScreen.getImageLabel();
 			imageLabel.setImage(resizedImg); // 이미지를 새로 설정
@@ -153,7 +184,7 @@ public class PetPhotoModifyDialog extends JFrame {
 		Image img = icon.getImage();
 
 		// getScaledInstance로 이미지 크기 조정
-		Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+		Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 
 		// 새로운 ImageIcon 생성
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
