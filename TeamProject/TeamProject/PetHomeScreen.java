@@ -244,7 +244,7 @@ public class PetHomeScreen extends JFrame {
 				// y=158 위치에 가로로 회색 선 그리기
 				g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
 				g.drawLine(22, 165, 379, 165);
-				g.drawLine(22, 370, 379, 370);
+				g.drawLine(22, 369, 379, 369);
 				g.drawLine(22, 574, 379, 574);
 				g.drawLine(22, 780, 379, 780);
 				g.drawLine(111, 780, 111, 851);
@@ -266,6 +266,7 @@ public class PetHomeScreen extends JFrame {
 		recordPanel = new JPanel();
 		recordPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // 아이템이 정렬되도록 설정
 		recordPanel.setBackground(Color.WHITE);
+		recordPanel.setBorder(new LineBorder(Color.WHITE, 1));
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		scrollPane = new JScrollPane(recordPanel);
@@ -273,6 +274,7 @@ public class PetHomeScreen extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		scrollPane.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane);
 
 		addRecord();

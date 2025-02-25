@@ -183,7 +183,7 @@ public class PetAddMainScreen extends JFrame {
 				g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
 				g.drawLine(22, 165, 379, 165);
 				g.drawLine(22, 429, 379, 429);
-//				g.drawLine(22, 639, 379, 639);
+				g.drawLine(22, 791, 379, 791);
 			}
 		};
 
