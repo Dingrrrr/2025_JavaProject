@@ -172,28 +172,62 @@ public class ReadenCommuScreen extends JFrame {
 
 		// 커뮤 이미지
 		byte[] imgBytes1 = cb.getComu_image();
+		grayFrameLabel = new JLabel();
 		if (imgBytes1 == null || imgBytes1.length == 0) {
-			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 300, 220);
 			grayFrameLabel.setBounds(20, 216, 300, 220);
 		} else {
 			ImageIcon icon = new ImageIcon(imgBytes1);
-			Image img = icon.getImage().getScaledInstance(300, 220, Image.SCALE_SMOOTH);
-			grayFrameLabel = new JLabel();
-			grayFrameLabel.setIcon(new ImageIcon(img));
-			grayFrameLabel.setBounds(20, 216, 300, 220);
+			Image img = icon.getImage();
+
+			// 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
+
+			// 타겟 크기 (300x220)
+			int targetWidth = 300;
+			int targetHeight = 220;
+
+			// 비율 유지하며 축소
+			double widthRatio = (double) targetWidth / imgWidth;
+			double heightRatio = (double) targetHeight / imgHeight;
+			double ratio = Math.min(widthRatio, heightRatio);
+			int newWidth = (int) (imgWidth * ratio);
+			int newHeight = (int) (imgHeight * ratio);
+
+			// 새 BufferedImage 생성 (투명 배경)
+			BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+
+			// Graphics2D로 그리기 (안티앨리어싱 적용)
+			Graphics2D g2d = resizedImage.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+			// 중앙 정렬 (여백 생김)
+			int x = (targetWidth - newWidth) / 2;
+			int y = (targetHeight - newHeight) / 2;
+			g2d.drawImage(img, x, y, newWidth, newHeight, null);
+			g2d.dispose();
+
+			// 새 ImageIcon 설정
+			ImageIcon resizedIcon = new ImageIcon(resizedImage);
+			grayFrameLabel.setIcon(resizedIcon);
+			grayFrameLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			grayFrameLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			grayFrameLabel.setBounds(20, 216, targetWidth, targetHeight);
 		}
 
 		// 댓글 라벨
 		commentLabel = new JLabel("댓글");
 		commentLabel.setBounds(5, 450, 48, 30);
 		commentLabel.setForeground(Color.black);
-		
-		//회색선
-				commentSeparatorLine = new JLabel();
-				commentSeparatorLine.setBounds(0, 450, 380, 1);
-				commentSeparatorLine.setOpaque(true);
-				commentSeparatorLine.setBackground(Color.LIGHT_GRAY);
+
+		// 회색선
+		commentSeparatorLine = new JLabel();
+		commentSeparatorLine.setBounds(0, 450, 380, 1);
+		commentSeparatorLine.setOpaque(true);
+		commentSeparatorLine.setBackground(Color.LIGHT_GRAY);
 
 		// 컨텐츠 패널에 컴포넌트 추가
 		contentPanel.add(useridLabel);
