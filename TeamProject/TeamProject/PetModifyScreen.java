@@ -70,7 +70,7 @@ public class PetModifyScreen extends JFrame {
 				} else if (source == petAddProButton && petAddProButton.isEnabled()) {
 					System.out.println("반려동물 프로필 사진 추가 클릭됨!");
 					if (ppm == null) {
-						ppm = new PetPhotoModifyDialog(preFrame, PetModifyScreen.this); // 'this'를 넘겨줍니다.
+						ppm = new PetPhotoModifyDialog(PetModifyScreen.this); // 'this'를 넘겨줍니다.
 						ppm.setLocation(getX() + 22, getY() + 630);
 						ppm.setVisible(true); // 최초로 보여줄 때만 setVisible 호출
 					} else {
@@ -100,7 +100,8 @@ public class PetModifyScreen extends JFrame {
 							pb.setPet_gender("수컷");
 						} else if (petFemaleRdBotton.isSelected()) {
 							pb.setPet_gender("암컷");
-						}
+						} else
+							pb.setPet_gender("");
 						pb.setPet_image(imageBytes);
 						mgr.updPet(StaticData.pet_id, pb);
 						dispose();
@@ -163,10 +164,48 @@ public class PetModifyScreen extends JFrame {
 		} else {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon = new ImageIcon(imgBytes);
-			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			Image img = icon.getImage();
+			
+			// 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
+
+			// 타겟 크기 (200x200)
+			int targetWidth = 200;
+			int targetHeight = 200;
+
+			// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+			double targetRatio = (double) targetWidth / targetHeight;
+			double imgRatio = (double) imgWidth / imgHeight;
+
+			int cropWidth = imgWidth;
+			int cropHeight = imgHeight;
+
+			if (imgRatio > targetRatio) {
+				// 원본이 더 넓은 경우 → 가로를 자름
+				cropWidth = (int) (imgHeight * targetRatio);
+			} else {
+				// 원본이 더 높은 경우 → 세로를 자름
+				cropHeight = (int) (imgWidth / targetRatio);
+			}
+
+			// 중심을 기준으로 자를 영역 계산
+			int x = (imgWidth - cropWidth) / 2;
+			int y = (imgHeight - cropHeight) / 2;
+
+			// BufferedImage로 자르기
+			BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bufferedImage.getGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.dispose();
+
+			BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+	        
+	        // 이미지 크기 조정 (200x200)
+	        Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			imageLabel = new RoundedImageLabel(img, 200, 200, 3); // 270은 크기, 3은 둥근 정도
+			imageLabel = new RoundedImageLabel(resizedImg, 200, 200, 3); // 270은 크기, 3은 둥근 정도
 			imageLabel.setBounds(101, 230, 200, 200);
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);
