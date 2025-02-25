@@ -160,7 +160,7 @@ public class CommuMainScreen extends JFrame {
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				g.setColor(Color.LIGHT_GRAY);
-				g.drawLine(22, 165, 379, 165);
+				g.drawLine(22, 164, 379, 164);
 				g.drawLine(22, 780, 379, 780);
 				g.drawLine(111, 780, 111, 851);
 				g.drawLine(200, 780, 200, 851);
@@ -180,6 +180,7 @@ public class CommuMainScreen extends JFrame {
 		commuPanel = new JPanel();
 		commuPanel.setLayout(new BoxLayout(commuPanel, BoxLayout.Y_AXIS)); // 세로로 정렬
 		commuPanel.setBackground(Color.WHITE);
+		commuPanel.setBorder(new LineBorder(Color.WHITE, 1));
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		scrollPane = new JScrollPane(commuPanel);
@@ -187,6 +188,7 @@ public class CommuMainScreen extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		scrollPane.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane);
 
 		// 🔹 추가 버튼 (화면에 고정)

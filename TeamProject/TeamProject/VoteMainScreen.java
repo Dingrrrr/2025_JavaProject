@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
@@ -221,7 +222,7 @@ public class VoteMainScreen extends JFrame {
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				g.setColor(Color.LIGHT_GRAY);
-				g.drawLine(22, 165, 379, 165);
+				g.drawLine(22, 164, 379, 164);
 				g.drawLine(22, 780, 379, 780);
 				g.drawLine(111, 780, 111, 851);
 				g.drawLine(200, 780, 200, 851);
@@ -250,6 +251,7 @@ public class VoteMainScreen extends JFrame {
 		votePanel = new JPanel();
 		votePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // 2열 정렬
 		votePanel.setBackground(Color.WHITE);
+		votePanel.setBorder(new LineBorder(Color.WHITE, 1));
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		// 이전 코드에서는 scrollPane이 이 부분 앞에 있을 수 있어, 여기에 잘못된 위치에서 접근되고 있었을 가능성이 있습니다.
@@ -258,6 +260,7 @@ public class VoteMainScreen extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		scrollPane.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane);
 
 		addVote();
