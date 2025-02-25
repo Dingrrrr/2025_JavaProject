@@ -155,10 +155,48 @@ public class PetHomeScreen extends JFrame {
 		} else {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes1);
-			Image img = icon1.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+			Image img = icon1.getImage();
+			
+			// 원본 이미지 크기
+			int imgWidth = icon1.getIconWidth();
+			int imgHeight = icon1.getIconHeight();
+
+			// 타겟 크기 (200x200)
+			int targetWidth = 200;
+			int targetHeight = 200;
+
+			// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+			double targetRatio = (double) targetWidth / targetHeight;
+			double imgRatio = (double) imgWidth / imgHeight;
+
+			int cropWidth = imgWidth;
+			int cropHeight = imgHeight;
+
+			if (imgRatio > targetRatio) {
+				// 원본이 더 넓은 경우 → 가로를 자름
+				cropWidth = (int) (imgHeight * targetRatio);
+			} else {
+				// 원본이 더 높은 경우 → 세로를 자름
+				cropHeight = (int) (imgWidth / targetRatio);
+			}
+
+			// 중심을 기준으로 자를 영역 계산
+			int x = (imgWidth - cropWidth) / 2;
+			int y = (imgHeight - cropHeight) / 2;
+
+			// BufferedImage로 자르기
+			BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bufferedImage.getGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.dispose();
+
+			BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+	        
+	        // 이미지 크기 조정 (200x200)
+	        Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 150, 150, 3); // 100은 둥근 정도
+			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(resizedImg, 150, 150, 3); // 100은 둥근 정도
 			roundedProfileImageLabel.setBounds(40, 190, 150, 150);
 			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
 				@Override
