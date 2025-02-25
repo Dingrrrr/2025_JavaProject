@@ -262,7 +262,7 @@ public class LoginScreen extends JFrame {
 		if (logoImage != null) {
 			// 로고 이미지 크기 조정 (예: 402x402)
 			Image scaledLogo = logoImage.getScaledInstance(402, 402, Image.SCALE_SMOOTH);
-			g.drawImage(scaledLogo, 0, 105, this); // 위치도 조정 가능
+			g.drawImage(scaledLogo, 0, 98, this); // 위치도 조정 가능
 		}
 	}
 
