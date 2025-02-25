@@ -58,7 +58,7 @@ public class DiaryResultDialog extends JFrame {
 					new DiaryMainScreen();
 				} else if (source == DelButton && DelButton.isEnabled()) {
 					System.out.println("삭제 버튼 클릭됨");
-					mgr.delDiary(StaticData.diary_id);
+					mgr.delDiary(db.getDiary_id());
 					dispose();
 					preFrame.dispose();
 					if(mgr.isDiary(StaticData.pet_id)) {	//일기가 있으면 실행
