@@ -86,7 +86,7 @@ public class PetHomeScreen extends JFrame {
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
-					new PetAddMainScreen();
+					new PetHomeScreen(StaticData.pet_id);
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 					dispose();
@@ -192,7 +192,7 @@ public class PetHomeScreen extends JFrame {
 
 		// 🔹 추가 버튼 (화면에 고정)
 		addButtonLabel = createScaledImageLabel("TeamProject/record_menu.png", 140, 140);
-		addButtonLabel.setBounds(260, 675, 140, 140);
+		addButtonLabel.setBounds(280, 690, 100, 100);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		addButtonLabel.setOpaque(true);
 		addButtonLabel.setBackground(new Color(255, 255, 255, 0));

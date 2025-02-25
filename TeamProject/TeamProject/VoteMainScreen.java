@@ -69,7 +69,7 @@ public class VoteMainScreen extends JFrame {
 				} else if (source == homeLabel) {
 					System.out.println("홈 버튼 클릭됨");
 					dispose();
-					new PetAddMainScreen();
+					new PetHomeScreen(StaticData.pet_id);
 				} else if (source == commuLabel) {
 					System.out.println("커뮤 버튼 클릭됨");
 					dispose();
