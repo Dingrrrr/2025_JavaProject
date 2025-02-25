@@ -21,7 +21,7 @@ import java.io.*;
 public class UpdateUserScreen extends JFrame {
 
 	private BufferedImage image;
-	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, deleteLabel;
+	private JLabel nameLabel, pwLabel, emailLabel, phoneLabel, profileLabel, delLabel, backLabel, deleteLabel, logoLabel;
 	private JTextField nameField, emailField, phoneField;
 	private JPasswordField pwField;
 	private JButton updataButton, fisButton, addButton;
@@ -136,6 +136,11 @@ public class UpdateUserScreen extends JFrame {
 		backLabel.setBounds(25, 120, 40, 40);
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(105, 54, 180, 165);
+		add(logoLabel);
 
 		// 이미지 추가 버튼
 		addButton = new RoundedButton("추가");
@@ -313,6 +318,7 @@ public class UpdateUserScreen extends JFrame {
 
 				// y=158 위치에 가로로 회색 선 그리기
 				g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
+				g.drawLine(22, 165, 379, 165);
 			}
 		};
 		panel.setOpaque(false);

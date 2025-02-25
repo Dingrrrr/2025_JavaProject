@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 public class PetRecordModifyScreen extends JFrame {
     private BufferedImage image;
     private JLabel backLabel, modifyLabel, calLabel;
-    private JLabel petRecordLabel;
+    private JLabel petRecordLabel, logoLabel;
     private JLabel petHeightLabel, petWeightLabel, petMtLabel, petVsLabel, petChecksLabel, petMtTimeLabel, warningLabel;
     private JTextField petHeightTField, petWeightTField, petMtTField, petVsTField, petChecksTField, petMtTimeTField;
     private JButton petRcModifyButton, petRcDeleteButton;
@@ -125,6 +125,11 @@ public class PetRecordModifyScreen extends JFrame {
         backLabel.setBounds(25, 120, 40, 40);
         backLabel.addMouseListener(commonMouseListener);
         add(backLabel);
+        
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(105, 54, 180, 165);
+		add(logoLabel);
         
 		// 🔹 캘린더 아이콘
 		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);
@@ -229,7 +234,7 @@ public class PetRecordModifyScreen extends JFrame {
         add(petMtTimeLabel);
 
         // 반려동물 진료 관련 시간 텍스트 필드 추가
-        petMtTimeTField = new JTextField();
+        petMtTimeTField = new JTextField(bean.getDate());
         petMtTimeTField.setForeground(Color.GRAY);
         petMtTimeTField.setBounds(43, 675, 280, 40);
         petMtTimeTField.setEnabled(false);
@@ -267,6 +272,10 @@ public class PetRecordModifyScreen extends JFrame {
                     // 이미지 크기 조정 후 그리기
                     g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
                 }
+                
+				// y=158 위치에 가로로 회색 선 그리기
+				g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
+				g.drawLine(22, 165, 379, 165);
             }
         };
         panel.setBounds(0, 0, 402, 874);

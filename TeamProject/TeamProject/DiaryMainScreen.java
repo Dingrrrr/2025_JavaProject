@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
@@ -23,7 +24,7 @@ public class DiaryMainScreen extends JFrame {
 
 	private BufferedImage image;
 	private JLabel alarmLabel, profileLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel, menuLabel,
-			addDiaryLabel, newLineUpLabel, oldLineUpLabel;
+			addDiaryLabel, newLineUpLabel, oldLineUpLabel, logoLabel;
 	private JPanel diaryPanel; // 다이어리 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private DiaryAddDialog pc;
@@ -126,6 +127,12 @@ public class DiaryMainScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(5, 54, 180, 165);
+		logoLabel.setVisible(true);
+		add(logoLabel);
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean.getUser_image();
@@ -210,7 +217,7 @@ public class DiaryMainScreen extends JFrame {
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				g.setColor(Color.LIGHT_GRAY);
-				g.drawLine(22, 165, 379, 165);
+				g.drawLine(22, 164, 379, 164);
 				g.drawLine(22, 780, 379, 780);
 				g.drawLine(111, 780, 111, 851);
 				g.drawLine(200, 780, 200, 851);
@@ -230,6 +237,7 @@ public class DiaryMainScreen extends JFrame {
 		diaryPanel = new JPanel();
 		diaryPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // 아이템이 정렬되도록 설정
 		diaryPanel.setBackground(Color.WHITE);
+		diaryPanel.setBorder(new LineBorder(Color.WHITE, 1));
 
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		scrollPane = new JScrollPane(diaryPanel);
@@ -237,6 +245,7 @@ public class DiaryMainScreen extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		scrollPane.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane);
 
 		// 🔹 추가 버튼 (화면에 고정)

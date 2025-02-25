@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
@@ -20,7 +21,7 @@ import java.util.Vector;
 
 public class AlarmMainScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, sendMsgLabel, receiveMsgLabel, imageProfileLabel;
+	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, sendMsgLabel, receiveMsgLabel, imageProfileLabel, logoLabel;
 	private JPanel alarmPanel; // 알람 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private JButton SendButton;
@@ -105,10 +106,15 @@ public class AlarmMainScreen extends JFrame {
 		};
 
 		// 🔹 알람 아이콘
-		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
+		alarmLabel = createScaledImageLabel("TeamProject/alarm_in.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(105, 54, 180, 165);
+		add(logoLabel);
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean.getUser_image();
@@ -183,7 +189,8 @@ public class AlarmMainScreen extends JFrame {
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				g.setColor(Color.LIGHT_GRAY);
-				g.drawLine(22, 165, 379, 165);
+				g.drawLine(22, 164, 379, 164);
+				g.drawLine(22, 785, 379, 785);
 			}
 		};
 
@@ -195,6 +202,7 @@ public class AlarmMainScreen extends JFrame {
 		alarmPanel = new JPanel();
 		alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
 		alarmPanel.setBackground(Color.WHITE);
+		alarmPanel.setBorder(new LineBorder(Color.WHITE, 1));
 		// alarmPanel의 레이아웃을 FlowLayout으로 설정하여 항목들이 수직으로 정렬되게 함
 		alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.Y_AXIS)); // 수직 정렬
 
@@ -204,6 +212,7 @@ public class AlarmMainScreen extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		scrollPane.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane);
 
 		addAlarm();
