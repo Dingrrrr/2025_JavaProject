@@ -99,7 +99,7 @@ public class PetAddMainScreen extends JFrame {
 		
 		// 로고 아이콘
 		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
-		logoLabel.setBounds(83, 54, 180, 165);
+		logoLabel.setBounds(105, 54, 180, 165);
 		add(logoLabel);
 
 		// 메인 프로필 이미지

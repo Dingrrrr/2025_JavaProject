@@ -15,7 +15,7 @@ import java.util.Vector;
 public class DiaryScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel alarmLabel, imageProfileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel;
-	private JLabel additionLabel, welcomeLabel1, welcomeLabel2, welcomeLabel3;
+	private JLabel additionLabel, welcomeLabel1, welcomeLabel2, welcomeLabel3, logoLabel;
 	private DiaryAddDialog pc;
 	TPMgr mgr = new TPMgr();
 
@@ -82,6 +82,12 @@ public class DiaryScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(5, 54, 180, 165);
+		logoLabel.setVisible(true);
+		add(logoLabel);
 
 		byte[] imgBytes = bean.getUser_image();
 		// 상단 프로필 아이디
