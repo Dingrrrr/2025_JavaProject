@@ -28,7 +28,7 @@ public class PetAddScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel backLabel, petProfileLabel, deleteLabel, calLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, petMaleLabel, petFemaleLabel,
-			warningLabel;
+			warningLabel, logoLabel;
 	private JTextField petNameTField, petSpecTField, petBirthTField;
 	private JButton petAddProButton, petSpSearchButton, nextButton;
 	private JRadioButton petMaleRdButton, petFemaleRdBotton;
@@ -112,6 +112,11 @@ public class PetAddScreen extends JFrame {
 		backLabel.setBounds(25, 120, 40, 40);
 		backLabel.addMouseListener(commonMouseListener);
 		add(backLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(105, 54, 180, 165);
+		add(logoLabel);
 		
 		// 🔹 캘린더 아이콘
 		calLabel = createScaledImageLabel("TeamProject/calendar.png", 30, 30);

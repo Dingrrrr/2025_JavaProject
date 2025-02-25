@@ -26,7 +26,7 @@ public class AlbumMainScreen extends JFrame {
 	private BufferedImage image;
 	private JTextField tagField;
 	private JLabel alarmLabel, profileLabel, menuLabel, photoLabel, homeLabel, commuLabel, voteLabel, imageProfileLabel,
-			addAlbumLabel, newLineUpLabel, oldLineUpLabel;
+			addAlbumLabel, newLineUpLabel, oldLineUpLabel, searchLabel, logoLabel;
 	private JPanel albumPanel; // 앨범 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private AlbumAddDialog pc;
@@ -117,6 +117,14 @@ public class AlbumMainScreen extends JFrame {
 					addAlbumLabel.setVisible(false);
 					newLineUpLabel.setVisible(false);
 					oldLineUpLabel.setVisible(false);
+				} else if(source == searchLabel) {
+					if(tagField.isVisible()) {
+						tagField.setVisible(false); 
+						logoLabel.setVisible(true);
+					} else {
+						tagField.setVisible(true);
+						logoLabel.setVisible(false);						
+					}
 				}
 			}
 		};
@@ -131,9 +139,10 @@ public class AlbumMainScreen extends JFrame {
 																														// 아래,
 																														// 오른쪽)
 		));
-		tagField.setBounds(37, 120, 220, 40); // (x, y, 너비, 높이)
+		tagField.setBounds(35, 123, 190, 35); // (x, y, 너비, 높이)
 		tagField.setText("찾고 싶은 태그를 입력하세요");
 		tagField.setForeground(Color.GRAY);
+		tagField.setVisible(false);
 		tagField.addFocusListener(new FocusListener() {
 
 			@Override
@@ -147,30 +156,10 @@ public class AlbumMainScreen extends JFrame {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (tagField.getText().isEmpty() || flag) {
-					tagField.setForeground(Color.GRAY);
-					tagField.setText("찾고 싶은 태그를 입력하세요");
-					flag = true;
-				}
-			}
-		});
-
-		tagField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
 				if (flag) {
-					tagField.setText("");
-					setForeground(Color.BLACK);
-					flag = false;
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (tagField.getText().isEmpty()) {
 					tagField.setForeground(Color.GRAY);
-					tagField.setText("찾고 싶은 태그를 입력하세요");
-					flag = true;
+					tagField.setText("");
+					flag = false;
 				}
 			}
 		});
@@ -188,12 +177,24 @@ public class AlbumMainScreen extends JFrame {
 			}
 		});
 		add(tagField);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(5, 54, 180, 165);
+		logoLabel.setVisible(true);
+		add(logoLabel);
 
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 🔹 검색 아이콘
+		searchLabel = createScaledImageLabel("TeamProject/album_search.png", 45, 45);
+		searchLabel.setBounds(230, 118, 45, 45);
+		searchLabel.addMouseListener(commonMouseListener);
+		add(searchLabel);
 
 		byte[] imgBytes = bean.getUser_image();
 		// 상단 프로필 아이디

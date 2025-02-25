@@ -25,7 +25,7 @@ public class CommuMainScreen extends JFrame {
 	private BufferedImage image;
 	private ImageIcon image2;
 	private JLabel alarmLabel, profileLabel, addButtonLabel, photoLabel, homeLabel, commuLabel, voteLabel,imageProfileLabel,
-			comuImageLabel;
+			comuImageLabel, logoLabel;
 	private JPanel commuPanel; // 커뮤니티 게시글 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	Vector<ComuBean> vlist;
@@ -91,6 +91,12 @@ public class CommuMainScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(5, 54, 180, 165);
+		logoLabel.setVisible(true);
+		add(logoLabel);
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean1.getUser_image();

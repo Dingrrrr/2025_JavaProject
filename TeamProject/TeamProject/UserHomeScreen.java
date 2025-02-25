@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 public class UserHomeScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel, logoutLabel;
+	private JLabel alarmLabel, profileLabel, mainProfileLabel, addButtonLabel, imageLabel, imageProfileLabel, logoutLabel, logoLabel;
 	private JLabel welcomeLabel, additionLabel;
 	private PetChooseDialog pc;
 	TPMgr mgr = new TPMgr();
@@ -79,6 +79,11 @@ public class UserHomeScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(105, 54, 180, 165);
+		add(logoLabel);
 
 		// 메인 프로필 이미지
 		byte[] imgBytes = bean.getUser_image();

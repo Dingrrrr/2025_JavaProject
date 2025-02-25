@@ -23,7 +23,7 @@ import java.util.Vector;
 public class PetHomeScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel backLabel, alarmLabel, profileLabel, petProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
-	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel;
+	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, logoLabel;
 //	private JLabel petRcDateLabel, petRcWHLabel, petRecordLabel, petRcVcLabel, petRcCheckLabel, petRcTimeLabel;
 	private JLabel photoLabel, homeLabel, commuLabel, voteLabel;
 	private JPanel recordPanel;
@@ -110,6 +110,11 @@ public class PetHomeScreen extends JFrame {
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
+		
+		// 로고 아이콘
+		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
+		logoLabel.setBounds(105, 54, 180, 165);
+		add(logoLabel);
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean1.getUser_image();
