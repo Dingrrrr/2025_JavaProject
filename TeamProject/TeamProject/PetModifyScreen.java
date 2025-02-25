@@ -149,7 +149,7 @@ public class PetModifyScreen extends JFrame {
 		if (imgBytes == null || imgBytes.length == 0) {
 			// 기본 프로필 이미지 사용
 			ImageIcon icon = new ImageIcon("TeamProject/dog.png");
-			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 			// RoundedImageLabel 사용
 			imageLabel = new RoundedImageLabel(img, 200, 200, 3); // 270은 크기, 3은 둥근 정도
 			imageLabel.setBounds(101, 230, 200, 200);
@@ -158,10 +158,10 @@ public class PetModifyScreen extends JFrame {
 		} else {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon = new ImageIcon(imgBytes);
-			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			imageLabel = new RoundedImageLabel(img, 200, 200, 3); // 270은 크기, 3은 둥근 정도
+			imageLabel = new RoundedImageLabel(img, 280, 280, 3); // 270은 크기, 3은 둥근 정도
 			imageLabel.setBounds(101, 230, 200, 200);
 			imageLabel.addMouseListener(commonMouseListener);
 			add(imageLabel);

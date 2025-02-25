@@ -43,10 +43,11 @@ public class PetPhotoModifyDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
-					dispose();
 					preFrame.setVisible(true);
 					petModifyScreen.setVisible(true);
 					petModifyScreen.setEnabled(true);
+					petModifyScreen.toFront();
+					dispose();
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
@@ -124,8 +125,8 @@ public class PetPhotoModifyDialog extends JFrame {
 	        Image img = icon.getImage();
 
 	        // 이미지 크기 조정 (200x200)
-	        Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-
+	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+	        
 	        // 미리보기 업데이트
 	        RoundedImageLabel imageLabel = petModifyScreen.getImageLabel();
 			imageLabel.setImage(resizedImg); // 이미지를 새로 설정
@@ -152,7 +153,7 @@ public class PetPhotoModifyDialog extends JFrame {
 		Image img = icon.getImage();
 
 		// getScaledInstance로 이미지 크기 조정
-		Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 
 		// 새로운 ImageIcon 생성
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
