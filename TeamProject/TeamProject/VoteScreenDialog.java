@@ -83,17 +83,50 @@ public class VoteScreenDialog extends JFrame {
 
 		// 투표 이미지
 		byte[] imgBytes = vb.getVote_image();
-		imageBytes = vb.getVote_image();
+		grayFrameLabel = new JLabel();
 		if (imgBytes == null || imgBytes.length == 0) {
-			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
 			grayFrameLabel.setBounds(35, 35, 280, 280);
 		} else {
 			ImageIcon icon = new ImageIcon(imgBytes);
-			Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
-			grayFrameLabel = new JLabel();
-			grayFrameLabel.setIcon(new ImageIcon(img));
-			grayFrameLabel.setBounds(35, 35, 280, 280);
+			Image img = icon.getImage();
+
+			// 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
+
+			// 타겟 크기 (280x280)
+			int targetWidth = 280;
+			int targetHeight = 280;
+
+			// 비율 유지하며 축소
+			double widthRatio = (double) targetWidth / imgWidth;
+			double heightRatio = (double) targetHeight / imgHeight;
+			double ratio = Math.min(widthRatio, heightRatio);
+			int newWidth = (int) (imgWidth * ratio);
+			int newHeight = (int) (imgHeight * ratio);
+
+			// 새 BufferedImage 생성 (투명 배경)
+			BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+
+			// Graphics2D로 그리기 (안티앨리어싱 적용)
+			Graphics2D g2d = resizedImage.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+			// 중앙 정렬 (여백 생김)
+			int x = (targetWidth - newWidth) / 2;
+			int y = (targetHeight - newHeight) / 2;
+			g2d.drawImage(img, x, y, newWidth, newHeight, null);
+			g2d.dispose();
+
+			// 새 ImageIcon 설정
+			ImageIcon resizedIcon = new ImageIcon(resizedImage);
+			grayFrameLabel.setIcon(resizedIcon);
+			grayFrameLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			grayFrameLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			grayFrameLabel.setBounds(35, 35, targetWidth, targetHeight);
 		}
 		add(grayFrameLabel);
 
