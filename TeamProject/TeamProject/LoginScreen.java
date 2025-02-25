@@ -42,7 +42,7 @@ public class LoginScreen extends JFrame {
 		}
 
 		try {
-			logoImage = ImageIO.read(new File("TeamProject/logo.png")); // 로고 이미지 불러오기
+			logoImage = ImageIO.read(new File("TeamProject/logo1.png")); // 로고 이미지 불러오기
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
