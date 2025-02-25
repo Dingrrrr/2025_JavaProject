@@ -31,6 +31,7 @@ public class VoteModifyScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mgr = new TPMgr();
 		bean = new VoteBean();
+		imageBytes = vb.getVote_image();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
@@ -104,7 +105,7 @@ public class VoteModifyScreen extends JFrame {
 		imageLabel = new JLabel();
 		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 318, 318);
-			imageLabel.setBounds(23, 45, 318, 318);
+			imageLabel.setBounds(35, 55, 280, 280);
 		} else {
 			ImageIcon icon = new ImageIcon(imgBytes);
 			Image img = icon.getImage();
@@ -113,9 +114,9 @@ public class VoteModifyScreen extends JFrame {
 			int imgWidth = icon.getIconWidth();
 			int imgHeight = icon.getIconHeight();
 
-			// 타겟 크기 (318x318)
-			int targetWidth = 318;
-			int targetHeight = 318;
+			// 타겟 크기 (280x280)
+			int targetWidth = 280;
+			int targetHeight = 280;
 
 			// 비율 유지하며 축소
 			double widthRatio = (double) targetWidth / imgWidth;
@@ -144,7 +145,7 @@ public class VoteModifyScreen extends JFrame {
 			imageLabel.setIcon(resizedIcon);
 			imageLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
 			imageLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
-			imageLabel.setBounds(35, 35, targetWidth, targetHeight);
+			imageLabel.setBounds(35, 55, targetWidth, targetHeight);
 		}
 		add(imageLabel);
 
