@@ -23,11 +23,10 @@ public class VoteMainScreen extends JFrame {
 	private BufferedImage image;
 	private ImageIcon image2;
 	private JLabel alarmLabel, profileLabel, voteLabel, addButtonLabel, photoLabel, homeLabel, commuLabel,
-			imageProfileLabel, likeCountLabel, logoLabel;
+			imageProfileLabel, likeCountLabel, logoLabel, popularLabel, newLabel, oldLabel, voteAddLabel;
 	private JPanel votePanel; // 투표 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private VoteAddDialog va;
-	private JButton popularButton, recentButton, oldButton;
 	private TPMgr mgr = new TPMgr();
 
 	private Vector<VoteBean> vlist = mgr.showVote(StaticData.vote_id);;
@@ -79,6 +78,30 @@ public class VoteMainScreen extends JFrame {
 					dispose();
 					new VoteMainScreen();
 				} else if (source == addButtonLabel) {
+					if(popularLabel.isVisible()) {
+						popularLabel.setVisible(false);
+						newLabel.setVisible(false);
+						oldLabel.setVisible(false);
+						voteAddLabel.setVisible(false);
+					} else {
+						popularLabel.setVisible(true);
+						newLabel.setVisible(true);
+						oldLabel.setVisible(true);
+						voteAddLabel.setVisible(true);
+					}
+				} else if (source == popularLabel) {
+					System.out.println("인기순 버튼 클릭됨");
+					vlist = mgr.popVote();
+					addVote();
+				} else if (source == newLabel) {
+					System.out.println("최신순 버튼 클릭됨");
+					vlist = mgr.newVote();
+					addVote();
+				} else if (source == oldLabel) {
+					System.out.println("오래된순 버튼 클릭됨");
+					vlist = mgr.oldVote();
+					addVote();
+				} else if(source == voteAddLabel) {
 					System.out.println("투표 추가 버튼 클릭됨!");
 					if (va == null) {
 						va = new VoteAddDialog(VoteMainScreen.this);
@@ -88,18 +111,10 @@ public class VoteMainScreen extends JFrame {
 						va.setVisible(true);
 					}
 					setEnabled(false);
-				} else if (source == popularButton) {
-					System.out.println("인기순 버튼 클릭됨");
-					vlist = mgr.popVote();
-					addVote();
-				} else if (source == recentButton) {
-					System.out.println("최신순 버튼 클릭됨");
-					vlist = mgr.newVote();
-					addVote();
-				} else if (source == oldButton) {
-					System.out.println("오래된순 버튼 클릭됨");
-					vlist = mgr.oldVote();
-					addVote();
+					popularLabel.setVisible(false);
+					newLabel.setVisible(false);
+					oldLabel.setVisible(false);
+					voteAddLabel.setVisible(false);
 				}
 			}
 		};
@@ -167,30 +182,34 @@ public class VoteMainScreen extends JFrame {
 		voteLabel.setBounds(305, 789, 55, 55);
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
-
-		// 인기순 버튼
-		popularButton = new RoundedButton("인기순");
-		popularButton.setBounds(175, 165, 60, 30);
-		popularButton.setBackground(new Color(91, 91, 91));
-		popularButton.setForeground(Color.WHITE);
-		popularButton.addMouseListener(commonMouseListener);
-		add(popularButton);
-
-		// 최신순 버튼
-		recentButton = new RoundedButton("최신순");
-		recentButton.setBounds(245, 165, 60, 30);
-		recentButton.setBackground(new Color(91, 91, 91));
-		recentButton.setForeground(Color.WHITE);
-		recentButton.addMouseListener(commonMouseListener);
-		add(recentButton);
-
-		// 오래된 순 버튼
-		oldButton = new RoundedButton("오래된순");
-		oldButton.setBounds(315, 165, 60, 30);
-		oldButton.setBackground(new Color(91, 91, 91));
-		oldButton.setForeground(Color.WHITE);
-		oldButton.addMouseListener(commonMouseListener);
-		add(oldButton);
+		
+		//인기순
+		popularLabel = createScaledImageLabel("TeamProject/popularity.png", 40, 40);
+		popularLabel.setBounds(305, 615, 40, 40);
+		popularLabel.addMouseListener(commonMouseListener);
+		popularLabel.setVisible(false);
+		add(popularLabel); 
+		
+		//최신순
+		newLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
+		newLabel.setBounds(305, 555, 40, 40);
+		newLabel.addMouseListener(commonMouseListener);
+		newLabel.setVisible(false);
+		add(newLabel); 
+		
+		//오래된순
+		oldLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
+		oldLabel.setBounds(305, 495, 40, 40);
+		oldLabel.addMouseListener(commonMouseListener);
+		oldLabel.setVisible(false);
+		add(oldLabel);
+		
+		//투표 추가 버튼
+		voteAddLabel = createScaledImageLabel("TeamProject/vote_add.png", 40, 40);
+		voteAddLabel.setBounds(305, 675, 40, 40);
+		voteAddLabel.addMouseListener(commonMouseListener);
+		voteAddLabel.setVisible(false);
+		add(voteAddLabel); 
 
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
@@ -202,6 +221,7 @@ public class VoteMainScreen extends JFrame {
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				g.setColor(Color.LIGHT_GRAY);
+				g.drawLine(22, 165, 379, 165);
 				g.drawLine(22, 780, 379, 780);
 				g.drawLine(111, 780, 111, 851);
 				g.drawLine(200, 780, 200, 851);
@@ -234,7 +254,7 @@ public class VoteMainScreen extends JFrame {
 		// 🔹 스크롤 패널 추가 (23, 165, 357, 615 영역에 배치)
 		// 이전 코드에서는 scrollPane이 이 부분 앞에 있을 수 있어, 여기에 잘못된 위치에서 접근되고 있었을 가능성이 있습니다.
 		scrollPane = new JScrollPane(votePanel);
-		scrollPane.setBounds(23, 200, 357, 580);
+		scrollPane.setBounds(23, 165, 357, 615);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
@@ -359,7 +379,7 @@ public class VoteMainScreen extends JFrame {
 			layeredPane.setBounds(0, 0, 176, 150); // 전체 크기 맞춤
 			// 🔹 이미지 추가 (기본 레이어)
 			layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
-			JLabel voteLabel = createScaledImageLabel("TeamProject/vote.png", 40, 40);
+			JLabel voteLabel = createScaledImageLabel("TeamProject/vote_empty.png", 40, 40);
 
 			// 중복 투표 여부 확인
 			if (!mgr.alrLikeVote(vb.getVote_id(), StaticData.user_id)) {
