@@ -23,7 +23,7 @@ public class ComuModifyDialog extends JFrame{
 	
 	public ComuModifyDialog(ComuModifyScreen comuModifyScreen) {
 		setTitle("프레임 설정");
-		setSize(347, 160);
+		setSize(360, 160);
 		setUndecorated(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +56,7 @@ public class ComuModifyDialog extends JFrame{
 		
 		//사진 추가 라벨
 		addpicButton = new JButton("사진 추가");
-		addpicButton.setBounds(2, 2, 343, 53);
+		addpicButton.setBounds(2, 2, 360, 53);
 		addpicButton.setBackground(Color.white);
 		addpicButton.setFocusable(false); // 포커스 끄기
 		addpicButton.addMouseListener(commonMouseListener);
@@ -64,7 +64,7 @@ public class ComuModifyDialog extends JFrame{
 		
 		// 사진 삭제 버튼
 		deletepicButton = new JButton("사진 삭제");
-		deletepicButton.setBounds(2, 55, 343, 53);
+		deletepicButton.setBounds(2, 55, 360, 53);
 		deletepicButton.setBackground(Color.white);
 		deletepicButton.setFocusable(false); // 포커스 끄기
 		deletepicButton.addMouseListener(commonMouseListener);
@@ -72,7 +72,7 @@ public class ComuModifyDialog extends JFrame{
 		
 		// 취소 버튼
 		cancelButton = new JButton("취소");
-		cancelButton.setBounds(2, 105, 343, 53);
+		cancelButton.setBounds(2, 105, 360, 53);
 		cancelButton.setBackground(Color.white);
 		cancelButton.setFocusable(false); // 포커스 끄기
 		cancelButton.addMouseListener(commonMouseListener);
@@ -85,7 +85,7 @@ public class ComuModifyDialog extends JFrame{
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(347, 160, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(360, 160, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 				// y=158 위치에 가로로 회색 선 그리기
@@ -181,6 +181,6 @@ public class ComuModifyDialog extends JFrame{
 	
 	
 	public static void main(String[] args) {
-	
+		new LoginScreen();
 	}
 }
