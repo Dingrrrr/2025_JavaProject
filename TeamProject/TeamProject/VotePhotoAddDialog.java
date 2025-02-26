@@ -119,38 +119,64 @@ public class VotePhotoAddDialog extends JFrame {
 		 * BorderLayout.SOUTH);
 		 */
 	}
-	
+
 	private void selectImage() {
-	    JFileChooser fileChooser = new JFileChooser();
-	    if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-	        selectedFile = fileChooser.getSelectedFile();
+		JFileChooser fileChooser = new JFileChooser();
+		if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+			selectedFile = fileChooser.getSelectedFile();
 
-	        // 이미지 읽기
-	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
-	        Image img = icon.getImage();
+			// 이미지 읽기
+			ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+			Image img = icon.getImage();
+			// 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
 
-	        // 이미지 크기 조정 (280x280)
-	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+			// 타겟 크기 (280x280)
+			int targetWidth = 280;
+			int targetHeight = 280;
 
-	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
-	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
+			// 비율 유지하며 축소
+			double widthRatio = (double) targetWidth / imgWidth;
+			double heightRatio = (double) targetHeight / imgHeight;
+			double ratio = Math.min(widthRatio, heightRatio);
+			int newWidth = (int) (imgWidth * ratio);
+			int newHeight = (int) (imgHeight * ratio);
 
-	        // 미리보기 업데이트
-	        voteAddDialog.getImageLabel().setIcon(resizedIcon);
-	        voteAddDialog.getImageLabel().setText(""); // 텍스트 제거
+			// 새 BufferedImage 생성 (투명 배경)
+			BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
 
-	        // 이미지를 byte[]로 변환
-	        byte[] imageBytes = convertFileToByteArray(selectedFile);
+			// Graphics2D로 그리기 (안티앨리어싱 적용)
+			Graphics2D g2d = resizedImage.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-	        // 변환된 이미지를 updateUserScreen에 저장
-	        voteAddDialog.setImageBytes(imageBytes);
+			// 중앙 정렬 (여백 생김)
+			int x = (targetWidth - newWidth) / 2;
+			int y = (targetHeight - newHeight) / 2;
+			g2d.drawImage(img, x, y, newWidth, newHeight, null);
+			g2d.dispose();
 
-	    } else {
-	        // 파일 선택이 취소된 경우
-	        System.out.println("파일 선택이 취소되었습니다.");
-	    }
+			// 이미지 크기 조정 (200x200)
+			ImageIcon resizedIcon = new ImageIcon(resizedImage);
+
+			// 미리보기 업데이트
+			JLabel imageLabel = voteAddDialog.getImageLabel();
+			imageLabel.setIcon(resizedIcon); // 이미지를 새로 설정
+			imageLabel.repaint(); // UI 갱신
+
+			// 이미지를 byte[]로 변환
+			byte[] imageBytes = convertFileToByteArray(selectedFile);
+
+			// 변환된 이미지를 updateUserScreen에 저장
+			voteAddDialog.setImageBytes(imageBytes);
+		} else {
+			// 파일 선택이 취소된 경우
+			System.out.println("파일 선택이 취소되었습니다.");
+		}
 	}
-	
+
 	private void deleteImage() {
 		// 직접 파일 경로 지정
 		File selectedFile = new File("TeamProject/photo_frame.png");
@@ -171,7 +197,7 @@ public class VotePhotoAddDialog extends JFrame {
 
 		// 이미지를 byte[]로 변환
 		byte[] imageBytes = convertFileToByteArray(selectedFile);
-		
+
 		// 변환된 이미지를 updateUserScreen에 저장
 		voteAddDialog.setImageBytes(imageBytes);
 
@@ -179,18 +205,18 @@ public class VotePhotoAddDialog extends JFrame {
 
 	// 파일을 byte 배열로 변환하는 메서드
 	private byte[] convertFileToByteArray(File file) {
-	    try (FileInputStream fis = new FileInputStream(file);
-	         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-	        byte[] buffer = new byte[1024];
-	        int bytesRead;
-	        while ((bytesRead = fis.read(buffer)) != -1) {
-	            baos.write(buffer, 0, bytesRead);
-	        }
-	        return baos.toByteArray();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return null;
-	    }
+		try (FileInputStream fis = new FileInputStream(file);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+			return baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static void main(String[] args) {
