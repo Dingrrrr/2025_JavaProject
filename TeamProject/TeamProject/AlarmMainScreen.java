@@ -321,6 +321,7 @@ public class AlarmMainScreen extends JFrame {
 			topPanel.setBackground(Color.WHITE);
 			topPanel.setPreferredSize(new Dimension(353, 25)); // 상단 패널 높이 증가
 			
+			
 			isRead = createScaledImageLabel("TeamProject/non_read.png", 22, 22);
 			if(mgr.isReadMsg(mb.getMsg_id())) {		//읽었으면 true 출력
 				isRead = createScaledImageLabel("TeamProject/read.png", 22, 22);
