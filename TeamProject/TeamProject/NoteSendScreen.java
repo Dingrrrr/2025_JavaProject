@@ -44,6 +44,7 @@ public class NoteSendScreen extends JFrame {
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
 					dispose(); // 창 닫기
+					prePreFrame.setVisible(true);
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
 				} else if (source == SendButton) {
@@ -55,10 +56,16 @@ public class NoteSendScreen extends JFrame {
 					bean.setMsg_title(title);
 					bean.setMsg_content(content);
 					mgr.sendMsg(StaticData.user_id, bean);
-					StaticData.msg_user_id = "";
-					dispose();
-					preFrame.dispose();
-					new AlarmMainScreen(prePreFrame);
+					if(preFrame instanceof ReadenCommuScreen) {
+						dispose(); // 창 닫기
+						prePreFrame.setVisible(true);
+						preFrame.setEnabled(true);
+						preFrame.setVisible(true);
+					} else {
+						dispose();
+						preFrame.dispose();
+						new AlarmMainScreen(prePreFrame);						
+					}
 				} 
 			}
 		};
