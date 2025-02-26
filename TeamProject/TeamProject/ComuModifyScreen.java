@@ -90,12 +90,12 @@ public class ComuModifyScreen extends JFrame {
 		};
 
 		titleLabel = new JLabel("제목");
-		titleLabel.setBounds(35, 23, 33, 30);
+		titleLabel.setBounds(50, 23, 33, 30);
 		titleLabel.setForeground(Color.BLACK);
 		add(titleLabel);
 
 		titleField = new JTextField(cb.getComu_title());
-		titleField.setBounds(35, 51, 280, 32);
+		titleField.setBounds(50, 51, 280, 32);
 		titleField.setBackground(Color.WHITE);
 		titleField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
 																														// 여백
@@ -108,28 +108,61 @@ public class ComuModifyScreen extends JFrame {
 
 		// 🔹 추가 버튼
 		addButtonLabel = createScaledImageLabel("TeamProject/add_button.png", 62, 62);
-		addButtonLabel.setBounds(244, 299, 62, 62);
+		addButtonLabel.setBounds(259, 299, 62, 62);
 		addButtonLabel.addMouseListener(commonMouseListener);
 		add(addButtonLabel);
 
 		// 회색 프레임
 		byte[] imgBytes = cb.getComu_image();
-		imageBytes = cb.getComu_image();
+		grayFrameLabel = new JLabel();
 		if (imgBytes == null || imgBytes.length == 0) {
-			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
-			grayFrameLabel.setBounds(35, 90, 280, 280);
+			grayFrameLabel.setBounds(50, 90, 280, 280);
 		} else {
 			ImageIcon icon = new ImageIcon(imgBytes);
-			Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
-			grayFrameLabel = new JLabel();
-			grayFrameLabel.setIcon(new ImageIcon(img));
-			grayFrameLabel.setBounds(35, 90, 280, 280);
+			Image img = icon.getImage();
+
+			// 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
+
+			// 타겟 크기 (280x280)
+			int targetWidth = 280;
+			int targetHeight = 280;
+
+			// 비율 유지하며 축소
+			double widthRatio = (double) targetWidth / imgWidth;
+			double heightRatio = (double) targetHeight / imgHeight;
+			double ratio = Math.min(widthRatio, heightRatio);
+			int newWidth = (int) (imgWidth * ratio);
+			int newHeight = (int) (imgHeight * ratio);
+
+			// 새 BufferedImage 생성 (투명 배경)
+			BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+
+			// Graphics2D로 그리기 (안티앨리어싱 적용)
+			Graphics2D g2d = resizedImage.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+			// 중앙 정렬 (여백 생김)
+			int x = (targetWidth - newWidth) / 2;
+			int y = (targetHeight - newHeight) / 2;
+			g2d.drawImage(img, x, y, newWidth, newHeight, null);
+			g2d.dispose();
+
+			// 새 ImageIcon 설정
+			ImageIcon resizedIcon = new ImageIcon(resizedImage);
+			grayFrameLabel.setIcon(resizedIcon);
+			grayFrameLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			grayFrameLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
+			grayFrameLabel.setBounds(50, 90, targetWidth, targetHeight);
 		}
 		add(grayFrameLabel);
 
 		contentLabel = new JLabel("설명");
-		contentLabel.setBounds(35, 370, 33, 30);
+		contentLabel.setBounds(50, 370, 33, 30);
 		contentLabel.setForeground(Color.BLACK);
 		add(contentLabel);
 
@@ -141,18 +174,21 @@ public class ComuModifyScreen extends JFrame {
 		add(contentArea);
 
 		JScrollPane scrollPane = new JScrollPane(contentArea);
-		scrollPane.setBounds(35, 400, 280, 135); // 텍스트 영역 크기와 위치 설정
+		scrollPane.setBounds(50, 400, 280, 135); // 텍스트 영역 크기와 위치 설정
 		scrollPane.setBackground(Color.WHITE);
 		// 스크롤 바 안 보이게 설정
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위, 왼쪽, 아래, 오른쪽)
-				));
+		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
 
 		// 저장 버튼
 		saveButton = new RoundedButton("저장");
-		saveButton.setBounds(65, 555, 100, 40);
+		saveButton.setBounds(80, 555, 100, 40);
 		saveButton.setBackground(new Color(91, 91, 91));
 		saveButton.setForeground(Color.WHITE);
 		saveButton.addMouseListener(commonMouseListener);
@@ -160,7 +196,7 @@ public class ComuModifyScreen extends JFrame {
 
 		// 삭제 버튼
 		delButton = new RoundedButton("삭제");
-		delButton.setBounds(190, 555, 100, 40);
+		delButton.setBounds(185, 555, 100, 40);
 		delButton.setBackground(new Color(91, 91, 91));
 		delButton.setForeground(Color.WHITE);
 		delButton.addMouseListener(commonMouseListener);
@@ -173,7 +209,7 @@ public class ComuModifyScreen extends JFrame {
 				super.paintComponent(g);
 				if (image != null) {
 					// 이미지 크기 조정 후 그리기
-					Image scaledImage = image.getScaledInstance(350, 620, Image.SCALE_SMOOTH);
+					Image scaledImage = image.getScaledInstance(364, 630, Image.SCALE_SMOOTH);
 					g.drawImage(scaledImage, 0, 0, this);
 				}
 			}
@@ -185,7 +221,7 @@ public class ComuModifyScreen extends JFrame {
 
 		// 🔹 닫기 버튼 이미지 추가
 		closeLabel = createScaledImageLabel("TeamProject/delete_button.png", 28, 28);
-		closeLabel.setBounds(315, 7, 28, 28);
+		closeLabel.setBounds(330, 7, 28, 28);
 		closeLabel.addMouseListener(commonMouseListener);
 		panel.add(closeLabel); // 🔹 패널에 추가
 

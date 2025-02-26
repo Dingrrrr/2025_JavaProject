@@ -67,7 +67,7 @@ public class AlbumResultDialog extends JFrame {
 						ab.setAlbum_desc(diaryWriteArea.getText().trim());
 						ab.setAlbum_tags(diaryTagTField.getText().trim());
 						ab.setAlbum_image(imageBytes);
-						if (mgr.updAlbum(StaticData.album_id, ab)) {
+						if (mgr.updAlbum(ab.getAlbum_id(), ab)) {
 							diaryTagTField.setEnabled(false);
 							diaryWriteArea.setEnabled(false);
 							addButtonLabel.setEnabled(false);
@@ -89,7 +89,7 @@ public class AlbumResultDialog extends JFrame {
 				} else if (source == delButton && delButton.isEnabled()) {
 					System.out.println("삭제 버튼 클릭됨");
 					System.out.println(StaticData.album_id);
-					if (mgr.delAlbum(StaticData.album_id)) {
+					if (mgr.delAlbum(ab.getAlbum_id())) {
 						dispose();
 						preFrame.dispose();
 						if (mgr.isAlbum(StaticData.pet_id)) {
