@@ -330,7 +330,7 @@ public class DiaryMainScreen extends JFrame {
 
 			// 내용 입력된 창 설정
 			JLabel diaryTitle = new JLabel(db.getDiary_name());
-			diaryTitle.setPreferredSize(new Dimension(60, 30)); // 크기 고정
+			diaryTitle.setPreferredSize(new Dimension(120, 30)); // 크기 고정
 //			JTextArea diaryContentArea = new JTextArea(db.getDiary_name());
 //			diaryContentArea.setPreferredSize(new Dimension(160, 75)); // 크기 고정
 //			diaryContentArea.setOpaque(true); // 배경을 흰색으로 설정하려면 true
