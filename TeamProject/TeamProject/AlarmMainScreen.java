@@ -21,7 +21,8 @@ import java.util.Vector;
 
 public class AlarmMainScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, sendMsgLabel, receiveMsgLabel, imageProfileLabel, logoLabel;
+	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, 
+	sendMsgLabel, receiveMsgLabel, imageProfileLabel, logoLabel, nonReadMsgLabel, isRead;
 	private JPanel alarmPanel; // 알람 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private JButton SendButton;
@@ -65,8 +66,38 @@ public class AlarmMainScreen extends JFrame {
 					new UpdateUserScreen(AlarmMainScreen.this);
 				} else if (source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
-					dispose();
-					preFrame.setVisible(true);
+					if(preFrame instanceof PetAddMainScreen) {	
+							dispose();
+							new PetAddMainScreen();
+					} else if(preFrame instanceof UserHomeScreen) {
+						dispose();
+						new UserHomeScreen();
+					} else if(preFrame instanceof PetHomeScreen) {
+						dispose();
+						new PetHomeScreen(StaticData.pet_id);
+					} else if(preFrame instanceof AlbumScreen) {
+						dispose();
+						new AlbumScreen();
+					} else if(preFrame instanceof AlbumMainScreen) {
+						dispose();
+						new AlbumMainScreen();
+					}  else if(preFrame instanceof DiaryScreen) {
+						dispose();
+						new DiaryScreen();
+					} else if(preFrame instanceof DiaryMainScreen) {
+						dispose();
+						new DiaryMainScreen();
+					} else if(preFrame instanceof CommuMainScreen) {
+						dispose();
+						new CommuMainScreen();
+					} else if(preFrame instanceof VoteMainScreen) {
+						dispose();
+						new VoteMainScreen();
+					}
+					else {
+						dispose();
+						preFrame.setVisible(true);
+					}
 				} else if (source == SendButton) {
 					System.out.println("쪽지 보내기 버튼 클릭됨");
 
@@ -83,15 +114,18 @@ public class AlarmMainScreen extends JFrame {
 					if (sendMsgLabel.isVisible() && receiveMsgLabel.isVisible()) {
 						sendMsgLabel.setVisible(false);
 						receiveMsgLabel.setVisible(false);
+						nonReadMsgLabel.setVisible(false);
 					} else {
 						sendMsgLabel.setVisible(true);
 						receiveMsgLabel.setVisible(true);
+						nonReadMsgLabel.setVisible(true);
 					}
 				} else if (source == sendMsgLabel) {
 					System.out.println("보낸 쪽지 출력");
 					vlist = mgr.showSendMsgList(StaticData.user_id);
 					sendMsgLabel.setVisible(false);
 					receiveMsgLabel.setVisible(false);
+					nonReadMsgLabel.setVisible(false);
 					flag = false;
 					addAlarm();
 				} else if (source == receiveMsgLabel) {
@@ -99,17 +133,26 @@ public class AlarmMainScreen extends JFrame {
 					vlist = mgr.showMsgList(StaticData.user_id);
 					sendMsgLabel.setVisible(false);
 					receiveMsgLabel.setVisible(false);
+					nonReadMsgLabel.setVisible(false);
+					flag = true;
+					addAlarm();
+				} else if(source == nonReadMsgLabel) {
+					System.out.println("안읽은 쪽지 출력");
+					vlist = mgr.showNonReadMsg(StaticData.user_id);
+					sendMsgLabel.setVisible(false);
+					receiveMsgLabel.setVisible(false);
+					nonReadMsgLabel.setVisible(false);
 					flag = true;
 					addAlarm();
 				}
 			}
 		};
 
-		// 🔹 알람 아이콘
-		alarmLabel = createScaledImageLabel("TeamProject/alarm_in.png", 40, 40);
-		alarmLabel.setBounds(280, 120, 40, 40);
-		alarmLabel.addMouseListener(commonMouseListener);
-		add(alarmLabel);
+//		// 🔹 알람 아이콘
+//		alarmLabel = createScaledImageLabel("TeamProject/alarm_in.png", 40, 40);
+//		alarmLabel.setBounds(280, 120, 40, 40);
+//		alarmLabel.addMouseListener(commonMouseListener);
+//		add(alarmLabel);
 		
 		// 로고 아이콘
 		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
@@ -173,11 +216,18 @@ public class AlarmMainScreen extends JFrame {
 		sendMsgLabel.setVisible(false);
 
 		// 🔹 받은 알림 아이콘
-		receiveMsgLabel = createScaledImageLabel("TeamProject/receive_msg.png", 40, 40);
+		receiveMsgLabel = createScaledImageLabel("TeamProject/read2.png", 40, 40);
 		receiveMsgLabel.setBounds(305, 615, 40, 40);
 		receiveMsgLabel.addMouseListener(commonMouseListener);
 		add(receiveMsgLabel);
 		receiveMsgLabel.setVisible(false);
+		
+		// 🔹 안읽은 알림 아이콘
+		nonReadMsgLabel = createScaledImageLabel("TeamProject/non_read3.png", 50, 50);
+		nonReadMsgLabel.setBounds(299, 550, 50, 50);
+		nonReadMsgLabel.addMouseListener(commonMouseListener);
+		add(nonReadMsgLabel);
+		nonReadMsgLabel.setVisible(false);
 
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
@@ -270,6 +320,11 @@ public class AlarmMainScreen extends JFrame {
 			JPanel topPanel = new JPanel(new BorderLayout());
 			topPanel.setBackground(Color.WHITE);
 			topPanel.setPreferredSize(new Dimension(353, 25)); // 상단 패널 높이 증가
+			
+			isRead = createScaledImageLabel("TeamProject/non_read.png", 22, 22);
+			if(mgr.isReadMsg(mb.getMsg_id())) {		//읽었으면 true 출력
+				isRead = createScaledImageLabel("TeamProject/read.png", 22, 22);
+			}
 
 			JLabel userIdLabel = new JLabel("from. " + name);
 			userIdLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
@@ -282,7 +337,8 @@ public class AlarmMainScreen extends JFrame {
 			JLabel dateLabel = new JLabel(sdf.format(mb.getMsg_date()), SwingConstants.RIGHT);
 			dateLabel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5)); // 위/아래 여백 추가
 
-			topPanel.add(userIdLabel, BorderLayout.WEST);
+			topPanel.add(isRead, BorderLayout.WEST);
+			topPanel.add(userIdLabel);
 			topPanel.add(dateLabel, BorderLayout.EAST);
 
 			// 구분선
@@ -340,6 +396,10 @@ public class AlarmMainScreen extends JFrame {
 		ImageIcon icon = new ImageIcon(imagePath);
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
+	}
+	
+	public void updRead() {
+		isRead = createScaledImageLabel("TeamProject/read.png", 22, 22);
 	}
 
 	public static void main(String[] args) {
