@@ -43,12 +43,20 @@ public class AlbumPhotoModifyDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
+					dispose();
+					albumResultDialog.setVisible(true);
+					albumResultDialog.setEnabled(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
+					dispose();
+					albumResultDialog.setVisible(true);
+					albumResultDialog.setEnabled(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					albumResultDialog.setVisible(true);
+					albumResultDialog.setEnabled(true);
 				}
 
 			}
@@ -117,15 +125,48 @@ public class AlbumPhotoModifyDialog extends JFrame {
 	        // 이미지 읽기
 	        ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 	        Image img = icon.getImage();
+	        
+		    // 원본 이미지 크기
+			int imgWidth = icon.getIconWidth();
+			int imgHeight = icon.getIconHeight();
+			
+			// 타겟 크기 (280x280)
+			int targetWidth = 280;
+			int targetHeight = 280;
+			
+			// 비율 유지하며 축소
+			double widthRatio = (double) targetWidth / imgWidth;
+			double heightRatio = (double) targetHeight / imgHeight;
+			double ratio = Math.min(widthRatio, heightRatio);
+			int newWidth = (int) (imgWidth * ratio);
+			int newHeight = (int) (imgHeight * ratio);
+			
 
-	        // 이미지 크기 조정 (280x280)
-	        Image resizedImg = img.getScaledInstance(280, 280, Image.SCALE_SMOOTH);
+			// 새 BufferedImage 생성 (투명 배경)
+			BufferedImage resizedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+
+			// Graphics2D로 그리기 (안티앨리어싱 적용)
+			Graphics2D g2d = resizedImage.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+			// 중앙 정렬 (여백 생김)
+			int x = (targetWidth - newWidth) / 2;
+			int y = (targetHeight - newHeight) / 2;
+			g2d.drawImage(img, x, y, newWidth, newHeight, null);
+			g2d.dispose();
+			
+
+	        // 이미지 크기 조정 (318x318)
+	        Image resizedImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 
 	        // 크기 조정된 이미지로 새로운 ImageIcon 생성
 	        ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
 	        // 미리보기 업데이트
 	        albumResultDialog.getImageLabel().setIcon(resizedIcon);
+//	        albumResultDialog.getImageLabel().setText(""); // 텍스트 제거
 
 	        // 이미지를 byte[]로 변환
 	        byte[] imageBytes = convertFileToByteArray(selectedFile);
