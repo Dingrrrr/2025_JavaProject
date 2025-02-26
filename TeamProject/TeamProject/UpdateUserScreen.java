@@ -316,7 +316,7 @@ public class UpdateUserScreen extends JFrame {
 
 		// 회원 탈퇴 버튼
 		deleteLabel = createScaledImageLabel("TeamProject/user_delete.png", 40, 40);
-		deleteLabel.setBounds(320, 125, 40, 40);
+		deleteLabel.setBounds(332, 120, 40, 40);
 		deleteLabel.addMouseListener(commonMouseListener);
 		add(deleteLabel);
 
