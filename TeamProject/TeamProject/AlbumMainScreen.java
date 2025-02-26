@@ -356,8 +356,7 @@ public class AlbumMainScreen extends JFrame {
 			/**
 			 * 앨범 추가
 			 */
-			StaticData.album_id = ab.getAlbum_id();
-
+			
 			// 앨범 레이블 생성
 			byte[] imgBytes = ab.getAlbum_image();
 			JLabel albumLabel = new JLabel(); // JLabel을 먼저 생성
