@@ -7,7 +7,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -64,9 +67,15 @@ public class CommuAddScreen extends JFrame {
 					System.out.println("저장 버튼클릭됨");
 					title = CommuAddTagTField.getText().trim();
 					content = CommuAddWriteTArea.getText().trim();
+					if (imageBytes == null || imageBytes.length == 0) {
+						File selectedFile = new File("TeamProject/photo_frame.png");
+						byte[] imageBytes = convertFileToByteArray(selectedFile);
+						bean.setComu_image(imageBytes);
+					} else {
+						bean.setComu_image(imageBytes);
+					}
 					bean.setComu_title(title);
 					bean.setComu_content(content);
-					bean.setComu_image(imageBytes);
 					mgr.addComu(StaticData.user_id, bean);
 					dispose();
 					preFrame.dispose();
@@ -85,8 +94,8 @@ public class CommuAddScreen extends JFrame {
 		CommuAddTagTField = new JTextField();
 		CommuAddTagTField.setBounds(15, 355, 318, 40);
 		CommuAddTagTField.setText("");
-		CommuAddTagTField.setBorder(BorderFactory.
-				createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
+		CommuAddTagTField
+				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부
 																														// 여백
 																														// (위,
 																														// 왼쪽,
@@ -114,8 +123,11 @@ public class CommuAddScreen extends JFrame {
 		// 스크롤 바 안 보이게 설정
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위, 왼쪽, 아래, 오른쪽)
-				));
+		scrollPane.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부여백(위,
+																														// 왼쪽,
+																														// 아래,
+																														// 오른쪽)
+		));
 		add(scrollPane, BorderLayout.CENTER); // JScrollPane을 프레임에 추가
 
 		// 저장 버튼
@@ -138,14 +150,17 @@ public class CommuAddScreen extends JFrame {
 			grayFrameLabel = new JLabel();
 			grayFrameLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
 			grayFrameLabel.setBounds(35, 35, 280, 280);
+			grayFrameLabel.addMouseListener(commonMouseListener);
+			add(grayFrameLabel);
 		} else {
 			ImageIcon icon = new ImageIcon(imgBytes);
 			Image img = icon.getImage().getScaledInstance(280, 280, Image.SCALE_SMOOTH);
 			grayFrameLabel = new JLabel();
 			grayFrameLabel.setIcon(new ImageIcon(img));
 			grayFrameLabel.setBounds(35, 35, 280, 280);
+			grayFrameLabel.addMouseListener(commonMouseListener);
+			add(grayFrameLabel);
 		}
-		add(grayFrameLabel);
 
 		// JPanel 추가
 		JPanel panel = new JPanel() {
@@ -181,7 +196,23 @@ public class CommuAddScreen extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
-	
+
+	// 파일을 byte 배열로 변환하는 메서드
+	private byte[] convertFileToByteArray(File file) {
+		try (FileInputStream fis = new FileInputStream(file);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+			return baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public JLabel getImageLabel() {
 		return grayFrameLabel;
 	}
