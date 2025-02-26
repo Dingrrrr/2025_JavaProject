@@ -78,6 +78,7 @@ public class PetHomeScreen extends JFrame {
 					dispose();
 					new PetRecordAddScreen(bean, PetHomeScreen.this);
 				} else if (source == backLabel) {
+					System.out.println("뒤로가기 버튼 클릭됨!");
 					dispose();
 					new PetAddMainScreen();
 				} else if (source == photoLabel) {
