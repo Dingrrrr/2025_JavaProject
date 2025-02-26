@@ -237,7 +237,8 @@ public class CommuMainScreen extends JFrame {
 			commuItemPanel.setPreferredSize(new Dimension(353, 99)); // 크기 고정
 			commuItemPanel.setMaximumSize(new Dimension(353, 99)); // 최대 크기 고정
 			commuItemPanel.setBackground(Color.WHITE);
-			commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+//			commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+			commuItemPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
 			commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
 			commuItemPanel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -349,7 +350,7 @@ public class CommuMainScreen extends JFrame {
 			commuPanel.add(commuItemPanel);
 
 			// 각 커뮤니티 게시글 항목 간에 간격을 둡니다
-			commuPanel.add(Box.createVerticalStrut(5)); // 5px 간격
+			commuPanel.add(Box.createVerticalStrut(2)); // 2px 간격
 		}
 
 		commuPanel.revalidate();

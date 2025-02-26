@@ -359,7 +359,8 @@ public class PetHomeScreen extends JFrame {
 			recordItemPanel.setPreferredSize(new Dimension(353, 171));
 			recordItemPanel.setMaximumSize(new Dimension(353, 171));
 			recordItemPanel.setBackground(Color.WHITE);
-			recordItemPanel.setBorder(new LineBorder(Color.black, 1));
+//			recordItemPanel.setBorder(new LineBorder(Color.black, 1));
+			recordItemPanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.black));
 			recordItemPanel.setLayout(new BorderLayout(10, 10));
 
 			// 2) 전체 텍스트를 하나의 패널로 묶기

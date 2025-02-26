@@ -116,7 +116,8 @@ public class WritenCommuScreen extends JFrame {
 
 					// y=520 위치에 가로로 회색 선 그리기
 					g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
-					g.drawLine(0, 34, 350, 34);
+					g.drawLine(2, 37, 346, 37);
+					g.drawLine(2, 549, 346, 549);
 					Graphics2D g2 = (Graphics2D) g; // Graphics를 Graphics2D로 캐스팅
 					g2.setStroke(new BasicStroke(6)); // 선 두께 6px 설정
 				}
@@ -131,6 +132,7 @@ public class WritenCommuScreen extends JFrame {
 		CommuPanel = new JPanel();
 		CommuPanel.setLayout(new BoxLayout(CommuPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
 		CommuPanel.setBackground(Color.black);
+		CommuPanel.setBorder(new LineBorder(Color.WHITE, 1));
 
 		// 상단 컨텐츠를 담을 새로운 패널 생성
 		JPanel contentPanel = new JPanel();
@@ -246,6 +248,7 @@ public class WritenCommuScreen extends JFrame {
 		scrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane1.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		scrollPane1.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane1);
 
 //	 // 🔹 더미 게시글 데이터 추가
@@ -279,7 +282,8 @@ public class WritenCommuScreen extends JFrame {
 			JPanel commuItemPanel = new JPanel();
 			commuItemPanel.setPreferredSize(new Dimension(75, 99)); // 크기 지정
 			commuItemPanel.setBackground(Color.WHITE);
-			commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+//			commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+			commuItemPanel.setBorder(new MatteBorder(1, 0, 0, 0, Color.BLACK));
 			commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
 
 			// 2) 상단 패널 (작성자 + 날짜)
