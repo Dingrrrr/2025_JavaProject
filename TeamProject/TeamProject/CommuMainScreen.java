@@ -88,6 +88,8 @@ public class CommuMainScreen extends JFrame {
 
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
+		if(mgr.nonReadMsg(StaticData.user_id))
+			alarmLabel = createScaledImageLabel("TeamProject/alarm_in.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);

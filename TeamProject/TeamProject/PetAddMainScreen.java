@@ -93,6 +93,8 @@ public class PetAddMainScreen extends JFrame {
 
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
+		if(mgr.nonReadMsg(StaticData.user_id))
+			alarmLabel = createScaledImageLabel("TeamProject/alarm_in.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
@@ -241,6 +243,7 @@ public class PetAddMainScreen extends JFrame {
 			setEnabled(false);
 		}
 	}
+	
 
 	private void petAddMain() {
 		petaddPanel.removeAll();
@@ -698,6 +701,7 @@ public class PetAddMainScreen extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
+	
 
 	public static void main(String[] args) {
 		new LoginScreen();

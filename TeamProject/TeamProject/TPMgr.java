@@ -1954,6 +1954,65 @@ public class TPMgr {
 		return flag;
 	}
 	
+	//알림을 읽었는지 안읽었는지 출력(읽었으면 true 출력)
+	public boolean isReadMsg(int id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		boolean flag = false;
+		try {
+			con = pool.getConnection();
+			sql = "select msg_read from msg where msg_id = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				String msg_read = rs.getString("msg_read");
+				if(msg_read.equals("Y"))
+					flag = true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return flag;
+	}
+	
+	//안읽은 알림 출력
+	public Vector<MsgBean> showNonReadMsg(String id){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		Vector<MsgBean> vlist = new Vector<MsgBean>();
+		try {
+			con = pool.getConnection();
+			sql = "select * from msg where receiver_id = ? and msg_read = 'N' order by msg_date desc";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				MsgBean bean = new MsgBean();
+				bean.setMsg_id(rs.getInt("msg_id"));
+				bean.setSender_id(rs.getString("sender_id"));
+				bean.setReceiver_id(rs.getString("receiver_id"));
+				bean.setMsg_title(rs.getString("msg_title"));
+				bean.setMsg_content(rs.getString("msg_content"));
+				bean.setMsg_date(rs.getTimestamp("msg_date"));
+				vlist.add(bean);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vlist;
+	}
+	
 	//받은 알림
 	public Vector<MsgBean> showMsgList(String user_id){
 		Connection con = null;
