@@ -14,8 +14,8 @@ public class NoteSendScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel;
 	private JLabel SendIdLabel,TitleLabel, DescriptionLabel, modifyLabel;
-	private JTextField  SendIdTField;
-	private JTextArea TitleTArea, DescriptionTArea;
+	private JTextField  SendIdTField, TitleTField;
+	private JTextArea DescriptionTArea;
 	private JButton SendButton;
 	private String id, title, content;
 	TPMgr mgr;
@@ -49,7 +49,7 @@ public class NoteSendScreen extends JFrame {
 				} else if (source == SendButton) {
 					System.out.println("전송 버튼클릭됨");
 					id = SendIdTField.getText().trim();
-					title = TitleTArea.getText().trim();
+					title = TitleTField.getText().trim();
 					content = DescriptionTArea.getText().trim();
 					bean.setReceiver_id(id);
 					bean.setMsg_title(title);
@@ -84,13 +84,13 @@ public class NoteSendScreen extends JFrame {
 				add(TitleLabel);
 
 				// 제목 필드 추가
-				TitleTArea = new JTextArea();
-				TitleTArea.setBounds(15, 130, 318, 40);
-				TitleTArea.setText("");
-				TitleTArea.setBorder(BorderFactory.createCompoundBorder(
+				TitleTField = new JTextField();
+				TitleTField.setBounds(15, 130, 318, 40);
+				TitleTField.setText("");
+				TitleTField.setBorder(BorderFactory.createCompoundBorder(
 				        new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15) // 내부 여백 (위, 왼쪽, 아래, 오른쪽)
 				    ));
-				add(TitleTArea);
+				add(TitleTField);
 				
 				//설명 라벨
 				DescriptionLabel = new JLabel("설명");

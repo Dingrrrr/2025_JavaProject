@@ -19,7 +19,7 @@ public class NoteCheckScreen extends JFrame {
 	private JButton DeleteButton;
 	TPMgr mgr;
 
-	public NoteCheckScreen(JFrame preFrame, MsgBean mb) {
+	public NoteCheckScreen(AlarmMainScreen preFrame, MsgBean mb) {
 		setTitle("프레임 설정");
 		setSize(350, 620);
 		setUndecorated(true);
@@ -40,6 +40,8 @@ public class NoteCheckScreen extends JFrame {
 				Object source = e.getSource(); // 클릭된 컴포넌트 확인
 				if (source == closeLabel) {
 					System.out.println("닫기 버튼 클릭됨");
+					preFrame.updRead();
+					preFrame.addAlarm();
 					dispose(); // 창 닫기
 					preFrame.setEnabled(true);
 					preFrame.setVisible(true);
