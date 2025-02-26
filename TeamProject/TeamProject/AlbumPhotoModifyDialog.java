@@ -13,7 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class AlbumPhotoModifyDialog extends JFrame {
-	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel, imageLabel;
+	private JLabel addpicLabel, cancelLabel, deletepicLabel, grayFrameLabel;
 	private JPanel p;
 	private BufferedImage image;
 	private JButton addpicButton, deletepicButton, cancelButton;
@@ -43,12 +43,20 @@ public class AlbumPhotoModifyDialog extends JFrame {
 				if (source == addpicButton) {
 					System.out.println("추가 버튼 클릭됨");
 					selectImage();
+					dispose();
+					albumResultDialog.setVisible(true);
+					albumResultDialog.setEnabled(true);
 				} else if (source == deletepicButton) {
 					System.out.println("삭제 버튼 클릭됨");
 					deleteImage();
+					dispose();
+					albumResultDialog.setVisible(true);
+					albumResultDialog.setEnabled(true);
 				} else if (source == cancelButton) {
 					System.out.println("취소 버튼 클릭됨");
 					dispose();
+					albumResultDialog.setVisible(true);
+					albumResultDialog.setEnabled(true);
 				}
 
 			}
@@ -117,7 +125,6 @@ public class AlbumPhotoModifyDialog extends JFrame {
 			// 이미지 읽기
 			ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 			Image img = icon.getImage();
-
 			// 원본 이미지 크기
 			int imgWidth = icon.getIconWidth();
 			int imgHeight = icon.getIconHeight();
@@ -210,5 +217,6 @@ public class AlbumPhotoModifyDialog extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		new LoginScreen();
 	}
 }

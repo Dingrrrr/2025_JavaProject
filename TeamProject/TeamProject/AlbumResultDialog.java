@@ -173,7 +173,7 @@ public class AlbumResultDialog extends JFrame {
 		// 앨범 이미지
 		byte[] imgBytes = ab.getAlbum_image();
 		imageBytes = ab.getAlbum_image();
-		JLabel imageLabel = new JLabel(); // JLabel을 먼저 생성
+		imageLabel = new JLabel(); // JLabel을 먼저 생성
 		if (imgBytes == null || imgBytes.length == 0) {
 			imageLabel = createScaledImageLabel("TeamProject/photo_frame.png", 280, 280);
 			imageLabel.setBounds(35, 35, 280, 280);
@@ -203,7 +203,7 @@ public class AlbumResultDialog extends JFrame {
 			Graphics2D g2d = resizedImage.createGraphics();
 			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g2d.setRenderingHint(RenderingHints.KEY_RENDERING,         RenderingHints.VALUE_RENDER_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
 			// 중앙 정렬 (여백 생김)
 			int x = (targetWidth - newWidth) / 2;
@@ -216,7 +216,7 @@ public class AlbumResultDialog extends JFrame {
 			imageLabel.setIcon(resizedIcon);
 			imageLabel.setPreferredSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
 			imageLabel.setMaximumSize(new Dimension(targetWidth, targetHeight)); // 크기 고정
-			imageLabel.setBounds(35, 35, targetWidth, targetHeight);
+			imageLabel.setBounds(35, 55, targetWidth, targetHeight);
 		}
 		add(imageLabel);
 
