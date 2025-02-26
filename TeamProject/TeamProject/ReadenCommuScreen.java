@@ -20,7 +20,7 @@ public class ReadenCommuScreen extends JFrame {
 	private BufferedImage image;
 	private JLabel closeLabel, grayFrameLabel;
 	private JLabel TitleLabel, ExplainLabel, PhotoLabel, commentLabel, useridLabel;
-	private JLabel commentSeparatorLine;
+	private JLabel commentSeparatorLine, commentSeparatorLine2;
 	private JTextArea ExplainTArea, CommentTArea, TitleArea;
 	private JPanel CommuPanel;
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
@@ -110,7 +110,8 @@ public class ReadenCommuScreen extends JFrame {
 
 					// y=520 위치에 가로로 회색 선 그리기
 					g.setColor(Color.LIGHT_GRAY); // 선 색을 회색으로 설정
-					g.drawLine(0, 34, 350, 34);
+					g.drawLine(2, 37, 346, 37);
+					g.drawLine(2, 549, 346, 549);
 					Graphics2D g2 = (Graphics2D) g; // Graphics를 Graphics2D로 캐스팅
 					g2.setStroke(new BasicStroke(6)); // 선 두께 6px 설정
 				}
@@ -120,11 +121,6 @@ public class ReadenCommuScreen extends JFrame {
 		panel.setLayout(null);
 		panel.setOpaque(false); // 🔹 배경을 투명하게 설정
 		add(panel);
-
-		// 🔹 스크롤 가능한 게시글 패널 설정
-		CommuPanel = new JPanel();
-		CommuPanel.setLayout(new BoxLayout(CommuPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
-		CommuPanel.setBackground(Color.WHITE);
 
 		// 상단 컨텐츠를 담을 새로운 패널 생성
 		JPanel contentPanel = new JPanel();
@@ -228,6 +224,11 @@ public class ReadenCommuScreen extends JFrame {
 		commentSeparatorLine.setBounds(0, 450, 380, 1);
 		commentSeparatorLine.setOpaque(true);
 		commentSeparatorLine.setBackground(Color.LIGHT_GRAY);
+		
+		commentSeparatorLine2 = new JLabel();
+		commentSeparatorLine2.setBounds(0, 480, 380, 1);
+		commentSeparatorLine2.setOpaque(true);
+		commentSeparatorLine2.setBackground(Color.LIGHT_GRAY);
 
 		// 컨텐츠 패널에 컴포넌트 추가
 		contentPanel.add(useridLabel);
@@ -237,8 +238,15 @@ public class ReadenCommuScreen extends JFrame {
 		contentPanel.add(ExplainTArea);
 		contentPanel.add(grayFrameLabel);
 		contentPanel.add(commentSeparatorLine);
+		contentPanel.add(commentSeparatorLine2);
 		contentPanel.add(commentLabel);
-
+		
+		// 🔹 스크롤 가능한 게시글 패널 설정
+		CommuPanel = new JPanel();
+		CommuPanel.setLayout(new BoxLayout(CommuPanel, BoxLayout.Y_AXIS)); // 세로로 쌓이게 설정
+		CommuPanel.setBackground(Color.WHITE);
+		CommuPanel.setBorder(new LineBorder(Color.WHITE, 1));
+		
 		// 컨텐츠 패널을 CommuPanel에 먼저 추가
 		CommuPanel.add(contentPanel);
 
@@ -248,6 +256,7 @@ public class ReadenCommuScreen extends JFrame {
 		scrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // 스크롤바 숨기기
 		scrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane1.getVerticalScrollBar().setUnitIncrement(16); // 부드러운 스크롤 유지
+		scrollPane1.setBorder(new MatteBorder(0, 0, 0, 0, Color.white));
 		panel.add(scrollPane1);
 
 		addCommu();
@@ -270,7 +279,8 @@ public class ReadenCommuScreen extends JFrame {
 			JPanel commuItemPanel = new JPanel();
 			commuItemPanel.setPreferredSize(new Dimension(75, 99)); // 크기 지정
 			commuItemPanel.setBackground(Color.WHITE);
-			commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+//			commuItemPanel.setBorder(new LineBorder(Color.black, 1)); // 외곽 테두리
+			commuItemPanel.setBorder(new MatteBorder(1, 0, 0, 0, Color.BLACK));
 			commuItemPanel.setLayout(new BorderLayout(10, 10)); // 여백 포함
 
 			// 2) 상단 패널 (작성자 + 날짜)
