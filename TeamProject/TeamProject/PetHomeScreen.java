@@ -22,7 +22,8 @@ import java.util.Vector;
 
 public class PetHomeScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel backLabel, alarmLabel, profileLabel, petProfileLabel, addButtonLabel, imageLabel, imageProfileLabel;
+	private JLabel backLabel, alarmLabel, profileLabel, petProfileLabel, addButtonLabel, imageLabel;
+	RoundedImageLabel imageProfileLabel;
 	private JLabel petNameLabel, petSpecLabel, petBirthLabel, petGenderLabel, logoLabel;
 //	private JLabel petRcDateLabel, petRcWHLabel, petRecordLabel, petRcVcLabel, petRcCheckLabel, petRcTimeLabel;
 	private JLabel photoLabel, homeLabel, commuLabel, voteLabel;
@@ -64,7 +65,7 @@ public class PetHomeScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(PetHomeScreen.this);
-				} else if (source == profileLabel) {
+				} else if (source == imageProfileLabel) {
 					System.out.println("상단 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(PetHomeScreen.this);
@@ -107,12 +108,12 @@ public class PetHomeScreen extends JFrame {
 
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
-		if(mgr.nonReadMsg(StaticData.user_id))
+		if (mgr.nonReadMsg(StaticData.user_id))
 			alarmLabel = createScaledImageLabel("TeamProject/alarm_in.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
 		add(alarmLabel);
-		
+
 		// 로고 아이콘
 		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
 		logoLabel.setBounds(105, 54, 180, 165);
@@ -120,30 +121,64 @@ public class PetHomeScreen extends JFrame {
 
 		// 상단 프로필 아이디
 		byte[] imgBytes = bean1.getUser_image();
-		// 상단 프로필 아이디
-		if (imgBytes == null || imgBytes.length == 0) {
-			imageProfileLabel = new JLabel();
-			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+		if (imgBytes == null || imgBytes.length == 0) { // 330 120 40 40
+			// 기본 프로필 이미지 사용
+			ImageIcon icon = new ImageIcon("TeamProject/profile.png");
+			Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			imageProfileLabel = new RoundedImageLabel(img, 40, 40, 3); // 200은 크기, 3은 둥근 정도
 			imageProfileLabel.setBounds(330, 120, 40, 40);
 			imageProfileLabel.addMouseListener(commonMouseListener);
 			add(imageProfileLabel);
 		} else {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			Image img = icon1.getImage();
+
+			// 원본 이미지 크기
+			int imgWidth = icon1.getIconWidth();
+			int imgHeight = icon1.getIconHeight();
+
+			// 타겟 크기 (40x40)
+			int targetWidth = 40;
+			int targetHeight = 40;
+
+			// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+			double targetRatio = (double) targetWidth / targetHeight;
+			double imgRatio = (double) imgWidth / imgHeight;
+
+			int cropWidth = imgWidth;
+			int cropHeight = imgHeight;
+
+			if (imgRatio > targetRatio) {
+				// 원본이 더 넓은 경우 → 가로를 자름
+				cropWidth = (int) (imgHeight * targetRatio);
+			} else {
+				// 원본이 더 높은 경우 → 세로를 자름
+				cropHeight = (int) (imgWidth / targetRatio);
+			}
+
+			// 중심을 기준으로 자를 영역 계산
+			int x = (imgWidth - cropWidth) / 2;
+			int y = (imgHeight - cropHeight) / 2;
+
+			// BufferedImage로 자르기
+			BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bufferedImage.getGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.dispose();
+
+			BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+
+			// 이미지 크기 조정 (200x200)
+			Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
-			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
-			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println("👤 프로필 클릭됨!");
-					dispose();
-					new UpdateUserScreen(PetHomeScreen.this);
-				}
-			});
-			add(roundedProfileImageLabel);
+			imageProfileLabel = new RoundedImageLabel(resizedImg, 40, 40, 3); // 40은 크기, 3은 둥근 정도
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
 		}
 
 		// 펫 프로필 이미지
@@ -158,7 +193,7 @@ public class PetHomeScreen extends JFrame {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes1);
 			Image img = icon1.getImage();
-			
+
 			// 원본 이미지 크기
 			int imgWidth = icon1.getIconWidth();
 			int imgHeight = icon1.getIconHeight();
@@ -193,9 +228,9 @@ public class PetHomeScreen extends JFrame {
 			g.dispose();
 
 			BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
-	        
-	        // 이미지 크기 조정 (200x200)
-	        Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+
+			// 이미지 크기 조정 (200x200)
+			Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
 			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(resizedImg, 150, 150, 3); // 100은 둥근 정도

@@ -326,7 +326,7 @@ public class PetModifyScreen extends JFrame {
 
 		// 반려동물 정보 삭제 버튼
 		petDeleteLabel = createScaledImageLabel("TeamProject/pet_delete.png", 40, 40);
-		petDeleteLabel.setBounds(320, 123, 40, 40);
+		petDeleteLabel.setBounds(327, 123, 40, 40);
 		petDeleteLabel.setBackground(new Color(255, 102, 102));
 		petDeleteLabel.setForeground(Color.WHITE);
 		petDeleteLabel.addMouseListener(commonMouseListener);

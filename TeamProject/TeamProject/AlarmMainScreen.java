@@ -21,8 +21,9 @@ import java.util.Vector;
 
 public class AlarmMainScreen extends JFrame {
 	private BufferedImage image;
-	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, 
-	sendMsgLabel, receiveMsgLabel, imageProfileLabel, logoLabel, nonReadMsgLabel, isRead;
+	private JLabel alarmLabel, profileLabel, backLabel, menuLabel, sendMsgLabel, receiveMsgLabel, logoLabel,
+			nonReadMsgLabel, isRead;
+	RoundedImageLabel imageProfileLabel;
 	private JPanel alarmPanel; // 알람 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private JButton SendButton;
@@ -60,41 +61,40 @@ public class AlarmMainScreen extends JFrame {
 					System.out.println("🔔 알람 클릭됨!");
 					dispose();
 					new AlarmMainScreen(preFrame);
-				} else if (source == profileLabel) {
+				} else if (source == imageProfileLabel) {
 					System.out.println("👤 프로필 클릭됨!");
 					dispose();
 					new UpdateUserScreen(AlarmMainScreen.this);
 				} else if (source == backLabel) {
 					System.out.println("뒤로가기 버튼 클릭됨");
-					if(preFrame instanceof PetAddMainScreen) {	
-							dispose();
-							new PetAddMainScreen();
-					} else if(preFrame instanceof UserHomeScreen) {
+					if (preFrame instanceof PetAddMainScreen) {
+						dispose();
+						new PetAddMainScreen();
+					} else if (preFrame instanceof UserHomeScreen) {
 						dispose();
 						new UserHomeScreen();
-					} else if(preFrame instanceof PetHomeScreen) {
+					} else if (preFrame instanceof PetHomeScreen) {
 						dispose();
 						new PetHomeScreen(StaticData.pet_id);
-					} else if(preFrame instanceof AlbumScreen) {
+					} else if (preFrame instanceof AlbumScreen) {
 						dispose();
 						new AlbumScreen();
-					} else if(preFrame instanceof AlbumMainScreen) {
+					} else if (preFrame instanceof AlbumMainScreen) {
 						dispose();
 						new AlbumMainScreen();
-					}  else if(preFrame instanceof DiaryScreen) {
+					} else if (preFrame instanceof DiaryScreen) {
 						dispose();
 						new DiaryScreen();
-					} else if(preFrame instanceof DiaryMainScreen) {
+					} else if (preFrame instanceof DiaryMainScreen) {
 						dispose();
 						new DiaryMainScreen();
-					} else if(preFrame instanceof CommuMainScreen) {
+					} else if (preFrame instanceof CommuMainScreen) {
 						dispose();
 						new CommuMainScreen();
-					} else if(preFrame instanceof VoteMainScreen) {
+					} else if (preFrame instanceof VoteMainScreen) {
 						dispose();
 						new VoteMainScreen();
-					}
-					else {
+					} else {
 						dispose();
 						preFrame.setVisible(true);
 					}
@@ -136,7 +136,7 @@ public class AlarmMainScreen extends JFrame {
 					nonReadMsgLabel.setVisible(false);
 					flag = true;
 					addAlarm();
-				} else if(source == nonReadMsgLabel) {
+				} else if (source == nonReadMsgLabel) {
 					System.out.println("안읽은 쪽지 출력");
 					vlist = mgr.showNonReadMsg(StaticData.user_id);
 					sendMsgLabel.setVisible(false);
@@ -153,38 +153,73 @@ public class AlarmMainScreen extends JFrame {
 //		alarmLabel.setBounds(280, 120, 40, 40);
 //		alarmLabel.addMouseListener(commonMouseListener);
 //		add(alarmLabel);
-		
+
 		// 로고 아이콘
 		logoLabel = createScaledImageLabel("TeamProject/logo2.png", 180, 165);
 		logoLabel.setBounds(105, 54, 180, 165);
 		add(logoLabel);
 
-		// 상단 프로필 아이디
+		// 메인 프로필 이미지
 		byte[] imgBytes = bean.getUser_image();
 		// 상단 프로필 아이디
-		if (imgBytes == null || imgBytes.length == 0) {
-			imageProfileLabel = new JLabel();
-			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+		if (imgBytes == null || imgBytes.length == 0) { // 330 120 40 40
+			// 기본 프로필 이미지 사용
+			ImageIcon icon = new ImageIcon("TeamProject/profile.png");
+			Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			imageProfileLabel = new RoundedImageLabel(img, 40, 40, 3); // 200은 크기, 3은 둥근 정도
 			imageProfileLabel.setBounds(330, 120, 40, 40);
 			imageProfileLabel.addMouseListener(commonMouseListener);
 			add(imageProfileLabel);
 		} else {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			Image img = icon1.getImage();
+
+			// 원본 이미지 크기
+			int imgWidth = icon1.getIconWidth();
+			int imgHeight = icon1.getIconHeight();
+
+			// 타겟 크기 (40x40)
+			int targetWidth = 40;
+			int targetHeight = 40;
+
+			// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+			double targetRatio = (double) targetWidth / targetHeight;
+			double imgRatio = (double) imgWidth / imgHeight;
+
+			int cropWidth = imgWidth;
+			int cropHeight = imgHeight;
+
+			if (imgRatio > targetRatio) {
+				// 원본이 더 넓은 경우 → 가로를 자름
+				cropWidth = (int) (imgHeight * targetRatio);
+			} else {
+				// 원본이 더 높은 경우 → 세로를 자름
+				cropHeight = (int) (imgWidth / targetRatio);
+			}
+
+			// 중심을 기준으로 자를 영역 계산
+			int x = (imgWidth - cropWidth) / 2;
+			int y = (imgHeight - cropHeight) / 2;
+
+			// BufferedImage로 자르기
+			BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bufferedImage.getGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.dispose();
+
+			BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+
+			// 이미지 크기 조정 (200x200)
+			Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
-			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
-			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println("👤 프로필 클릭됨!");
-					dispose();
-					new UpdateUserScreen(AlarmMainScreen.this);
-				}
-			});
-			add(roundedProfileImageLabel);
+			imageProfileLabel = new RoundedImageLabel(resizedImg, 40, 40, 3); // 40은 크기, 3은 둥근 정도
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
 		}
 
 		// 🔹 상단 뒤로가기 아이콘
@@ -221,7 +256,7 @@ public class AlarmMainScreen extends JFrame {
 		receiveMsgLabel.addMouseListener(commonMouseListener);
 		add(receiveMsgLabel);
 		receiveMsgLabel.setVisible(false);
-		
+
 		// 🔹 안읽은 알림 아이콘
 		nonReadMsgLabel = createScaledImageLabel("TeamProject/non_read3.png", 50, 50);
 		nonReadMsgLabel.setBounds(299, 550, 50, 50);
@@ -320,9 +355,9 @@ public class AlarmMainScreen extends JFrame {
 			JPanel topPanel = new JPanel(new BorderLayout());
 			topPanel.setBackground(Color.WHITE);
 			topPanel.setPreferredSize(new Dimension(353, 25)); // 상단 패널 높이 증가
-			
+
 			isRead = createScaledImageLabel("TeamProject/non_read.png", 22, 22);
-			if(mgr.isReadMsg(mb.getMsg_id())) {		//읽었으면 true 출력
+			if (mgr.isReadMsg(mb.getMsg_id())) { // 읽었으면 true 출력
 				isRead = createScaledImageLabel("TeamProject/read.png", 22, 22);
 			}
 
@@ -397,7 +432,7 @@ public class AlarmMainScreen extends JFrame {
 		Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new JLabel(new ImageIcon(scaledImage));
 	}
-	
+
 	public void updRead() {
 		isRead = createScaledImageLabel("TeamProject/read.png", 22, 22);
 	}

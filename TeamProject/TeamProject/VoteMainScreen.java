@@ -24,7 +24,8 @@ public class VoteMainScreen extends JFrame {
 	private BufferedImage image;
 	private ImageIcon image2;
 	private JLabel alarmLabel, profileLabel, voteLabel, addButtonLabel, photoLabel, homeLabel, commuLabel,
-			imageProfileLabel, likeCountLabel, logoLabel, popularLabel, newLabel, oldLabel, voteAddLabel;
+			likeCountLabel, logoLabel, popularLabel, newLabel, oldLabel, voteAddLabel;
+	RoundedImageLabel imageProfileLabel;
 	private JPanel votePanel; // 투표 패널
 	private JScrollPane scrollPane; // 스크롤 패널
 	private VoteAddDialog va;
@@ -79,7 +80,7 @@ public class VoteMainScreen extends JFrame {
 					dispose();
 					new VoteMainScreen();
 				} else if (source == addButtonLabel) {
-					if(popularLabel.isVisible()) {
+					if (popularLabel.isVisible()) {
 						popularLabel.setVisible(false);
 						newLabel.setVisible(false);
 						oldLabel.setVisible(false);
@@ -102,7 +103,7 @@ public class VoteMainScreen extends JFrame {
 					System.out.println("오래된순 버튼 클릭됨");
 					vlist = mgr.oldVote();
 					addVote();
-				} else if(source == voteAddLabel) {
+				} else if (source == voteAddLabel) {
 					System.out.println("투표 추가 버튼 클릭됨!");
 					if (va == null) {
 						va = new VoteAddDialog(VoteMainScreen.this);
@@ -122,7 +123,7 @@ public class VoteMainScreen extends JFrame {
 
 		// 🔹 알람 아이콘
 		alarmLabel = createScaledImageLabel("TeamProject/alarm.png", 40, 40);
-		if(mgr.nonReadMsg(StaticData.user_id))
+		if (mgr.nonReadMsg(StaticData.user_id))
 			alarmLabel = createScaledImageLabel("TeamProject/alarm_in.png", 40, 40);
 		alarmLabel.setBounds(280, 120, 40, 40);
 		alarmLabel.addMouseListener(commonMouseListener);
@@ -134,32 +135,66 @@ public class VoteMainScreen extends JFrame {
 		logoLabel.setVisible(true);
 		add(logoLabel);
 
-		byte[] imgBytes = bean.getUser_image();
-		String imgNull = Arrays.toString(imgBytes);
 		// 상단 프로필 아이디
-		if (imgBytes == null || imgBytes.length == 0) {
-			imageProfileLabel = new JLabel();
-			imageProfileLabel = createScaledImageLabel("TeamProject/profile.png", 40, 40);
+		byte[] imgBytes = bean.getUser_image();
+		if (imgBytes == null || imgBytes.length == 0) { // 330 120 40 40
+			// 기본 프로필 이미지 사용
+			ImageIcon icon = new ImageIcon("TeamProject/profile.png");
+			Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+
+			// RoundedImageLabel 사용
+			imageProfileLabel = new RoundedImageLabel(img, 40, 40, 3); // 200은 크기, 3은 둥근 정도
 			imageProfileLabel.setBounds(330, 120, 40, 40);
 			imageProfileLabel.addMouseListener(commonMouseListener);
 			add(imageProfileLabel);
 		} else {
 			// 사용자 이미지가 있을 경우
 			ImageIcon icon1 = new ImageIcon(imgBytes);
-			Image img = icon1.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			Image img = icon1.getImage();
+
+			// 원본 이미지 크기
+			int imgWidth = icon1.getIconWidth();
+			int imgHeight = icon1.getIconHeight();
+
+			// 타겟 크기 (40x40)
+			int targetWidth = 40;
+			int targetHeight = 40;
+
+			// 비율 유지하면서 자르기 위해 더 많이 필요한 쪽 기준으로 크기 조정
+			double targetRatio = (double) targetWidth / targetHeight;
+			double imgRatio = (double) imgWidth / imgHeight;
+
+			int cropWidth = imgWidth;
+			int cropHeight = imgHeight;
+
+			if (imgRatio > targetRatio) {
+				// 원본이 더 넓은 경우 → 가로를 자름
+				cropWidth = (int) (imgHeight * targetRatio);
+			} else {
+				// 원본이 더 높은 경우 → 세로를 자름
+				cropHeight = (int) (imgWidth / targetRatio);
+			}
+
+			// 중심을 기준으로 자를 영역 계산
+			int x = (imgWidth - cropWidth) / 2;
+			int y = (imgHeight - cropHeight) / 2;
+
+			// BufferedImage로 자르기
+			BufferedImage bufferedImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bufferedImage.getGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.dispose();
+
+			BufferedImage croppedImage = bufferedImage.getSubimage(x, y, cropWidth, cropHeight);
+
+			// 이미지 크기 조정 (200x200)
+			Image resizedImg = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 
 			// RoundedImageLabel 사용
-			RoundedImageLabel roundedProfileImageLabel = new RoundedImageLabel(img, 40, 40, 3); // 100은 둥근 정도
-			roundedProfileImageLabel.setBounds(330, 120, 40, 40);
-			roundedProfileImageLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println("👤 프로필 클릭됨!");
-					dispose();
-					new UpdateUserScreen(VoteMainScreen.this);
-				}
-			});
-			add(roundedProfileImageLabel);
+			imageProfileLabel = new RoundedImageLabel(resizedImg, 40, 40, 3); // 40은 크기, 3은 둥근 정도
+			imageProfileLabel.setBounds(330, 120, 40, 40);
+			imageProfileLabel.addMouseListener(commonMouseListener);
+			add(imageProfileLabel);
 		}
 
 		// 🔹 앨범 & 일기 버튼
@@ -185,34 +220,34 @@ public class VoteMainScreen extends JFrame {
 		voteLabel.setBounds(305, 789, 55, 55);
 		voteLabel.addMouseListener(commonMouseListener);
 		add(voteLabel);
-		
-		//인기순
+
+		// 인기순
 		popularLabel = createScaledImageLabel("TeamProject/popularity.png", 40, 40);
 		popularLabel.setBounds(305, 615, 40, 40);
 		popularLabel.addMouseListener(commonMouseListener);
 		popularLabel.setVisible(false);
-		add(popularLabel); 
-		
-		//최신순
+		add(popularLabel);
+
+		// 최신순
 		newLabel = createScaledImageLabel("TeamProject/new.png", 40, 40);
 		newLabel.setBounds(305, 555, 40, 40);
 		newLabel.addMouseListener(commonMouseListener);
 		newLabel.setVisible(false);
-		add(newLabel); 
-		
-		//오래된순
+		add(newLabel);
+
+		// 오래된순
 		oldLabel = createScaledImageLabel("TeamProject/old.png", 40, 40);
 		oldLabel.setBounds(305, 495, 40, 40);
 		oldLabel.addMouseListener(commonMouseListener);
 		oldLabel.setVisible(false);
 		add(oldLabel);
-		
-		//투표 추가 버튼
+
+		// 투표 추가 버튼
 		voteAddLabel = createScaledImageLabel("TeamProject/vote_add.png", 40, 40);
 		voteAddLabel.setBounds(305, 675, 40, 40);
 		voteAddLabel.addMouseListener(commonMouseListener);
 		voteAddLabel.setVisible(false);
-		add(voteAddLabel); 
+		add(voteAddLabel);
 
 		// 🔹 배경 패널
 		JPanel panel = new JPanel() {
@@ -365,11 +400,11 @@ public class VoteMainScreen extends JFrame {
 				// 173x100으로 크기 조정
 				Image scaledImage = croppedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 				ImageIcon croppedIcon = new ImageIcon(scaledImage);
-				
+
 				imageLabel.setIcon(croppedIcon);
 				imageLabel.setPreferredSize(new Dimension(targetWidth, targetHeight));
 				imageLabel.setMaximumSize(new Dimension(targetWidth, targetHeight));
-				
+
 				imageLabel.setOpaque(false);
 			}
 			imageLabel.setBounds(0, 0, 176, 150);
