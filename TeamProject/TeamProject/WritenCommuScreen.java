@@ -168,6 +168,7 @@ public class WritenCommuScreen extends JFrame {
 
 		// 제목 텍스트 필드
 		TitleTArea = new JTextArea(cb.getComu_title());
+		TitleTArea.setFocusable(false);
 		TitleTArea.setBounds(5, 55, 330, 30);
 		TitleTArea.setEditable(false);
 		TitleTArea.setOpaque(false);
@@ -184,6 +185,7 @@ public class WritenCommuScreen extends JFrame {
 		ExplainTArea.setBounds(5, 105, 330, 100);
 		ExplainTArea.setEditable(false);
 		ExplainTArea.setLineWrap(true);
+		ExplainTArea.setFocusable(false);
 		ExplainTArea.setWrapStyleWord(true);
 		ExplainTArea.setBackground(Color.WHITE);
 		ExplainTArea
@@ -288,7 +290,7 @@ public class WritenCommuScreen extends JFrame {
 		modifyLabel.addMouseListener(commonMouseListener);
 		panel.add(modifyLabel); // 🔹 패널에 추가
 		
-		CommentTField.requestFocus();
+		CommentTField.requestFocus(true);
 
 		setVisible(true);
 	}
@@ -333,7 +335,12 @@ public class WritenCommuScreen extends JFrame {
 			textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 			textPanel.setBackground(Color.WHITE);
 
-			JLabel titleLabel = new JLabel(cmb.getCmt_content());
+			JTextArea titleLabel = new JTextArea(cmb.getCmt_content());
+			titleLabel.setEditable(false);
+			titleLabel.setLineWrap(true);
+			titleLabel.setFocusable(false);
+			titleLabel.setWrapStyleWord(true);
+			titleLabel.setBackground(Color.WHITE);
 			textPanel.add(titleLabel);
 			textPanel.add(Box.createVerticalStrut(10)); // 10px 간격
 			contentPanel.add(textPanel, BorderLayout.CENTER);
