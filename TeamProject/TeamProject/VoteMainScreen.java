@@ -94,14 +94,26 @@ public class VoteMainScreen extends JFrame {
 				} else if (source == popularLabel) {
 					System.out.println("인기순 버튼 클릭됨");
 					vlist = mgr.popVote();
+					popularLabel.setVisible(false);
+					newLabel.setVisible(false);
+					oldLabel.setVisible(false);
+					voteAddLabel.setVisible(false);
 					addVote();
 				} else if (source == newLabel) {
 					System.out.println("최신순 버튼 클릭됨");
 					vlist = mgr.newVote();
+					popularLabel.setVisible(false);
+					newLabel.setVisible(false);
+					oldLabel.setVisible(false);
+					voteAddLabel.setVisible(false);
 					addVote();
 				} else if (source == oldLabel) {
 					System.out.println("오래된순 버튼 클릭됨");
 					vlist = mgr.oldVote();
+					popularLabel.setVisible(false);
+					newLabel.setVisible(false);
+					oldLabel.setVisible(false);
+					voteAddLabel.setVisible(false);
 					addVote();
 				} else if (source == voteAddLabel) {
 					System.out.println("투표 추가 버튼 클릭됨!");
