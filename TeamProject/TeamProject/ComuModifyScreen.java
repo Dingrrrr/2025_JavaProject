@@ -34,6 +34,7 @@ public class ComuModifyScreen extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		bean = new ComuBean();
 		mgr = new TPMgr();
+		imageBytes = cb.getComu_image();
 
 		try {
 			image = ImageIO.read(new File("TeamProject/pet_add_frame.png")); // 투명 PNG 불러오기
