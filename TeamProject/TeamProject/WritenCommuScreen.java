@@ -6,6 +6,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -21,7 +23,8 @@ public class WritenCommuScreen extends JFrame {
 	private JLabel closeLabel, modifyLabel, grayFrameLabel;
 	private JLabel TitleLabel, ExplainLabel, PhotoLabel, commentLabel, useridLabel;
 	private JLabel commentSeparatorLine;
-	private JTextArea ExplainTArea, CommentTArea, TitleTArea;
+	private JTextArea ExplainTArea, TitleTArea;
+	private JTextField CommentTField;
 	private JPanel CommuPanel;
 	private JScrollPane scrollPane, scrollPane1; // 스크롤 패널
 	private JButton SendButton;
@@ -66,7 +69,7 @@ public class WritenCommuScreen extends JFrame {
 					new ComuModifyScreen(preFrame, WritenCommuScreen.this, cb);
 				} else if (source == SendButton) {
 					System.out.println("전송버튼 클릭됨");
-					mgr.addCmt(cb.getPost_id(), StaticData.user_id, CommentTArea.getText().trim());
+					mgr.addCmt(cb.getPost_id(), StaticData.user_id, CommentTField.getText().trim());
 					dispose();
 					preFrame.setVisible(true);
 					new WritenCommuScreen(preFrame, cb);
@@ -75,26 +78,39 @@ public class WritenCommuScreen extends JFrame {
 		};
 
 		// 댓글 텍스트필드
-		CommentTArea = new JTextArea();
-		CommentTArea.setBounds(15, 560, 290, 40);
-		CommentTArea.setText("");
-		CommentTArea.setLineWrap(true);
-		CommentTArea.setWrapStyleWord(true);
-		CommentTArea.setBackground(Color.WHITE);
+		CommentTField = new JTextField();
+		CommentTField.setBounds(15, 560, 290, 40);
+		CommentTField.setText("");
+		CommentTField.setOpaque(false);
+		CommentTField.setBackground(Color.WHITE);
+		CommentTField.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15)));
+		CommentTField.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("전송버튼 클릭됨");
+				mgr.addCmt(cb.getPost_id(), StaticData.user_id, CommentTField.getText().trim());
+				dispose();
+				preFrame.setVisible(true);
+				new WritenCommuScreen(preFrame, cb);
+			}
+		});
+		add(CommentTField);
 
-		JScrollPane scrollPane = new JScrollPane(CommentTArea);
-		scrollPane.setBounds(15, 560, 290, 40); // 텍스트 영역 크기와 위치 설정
-		scrollPane.setBackground(Color.WHITE);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane
-				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15))); // 내부
-																														// 여백
-																														// (위,
-																														// 왼쪽,
-																														// 아래,
-																														// 오른쪽)
 
-		add(scrollPane); // JScrollPane을 프레임에 추가
+//		JScrollPane scrollPane = new JScrollPane(CommentTField);
+//		scrollPane.setBounds(15, 560, 290, 40); // 텍스트 영역 크기와 위치 설정
+//		scrollPane.setBackground(Color.WHITE);
+//		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+//		scrollPane
+//				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(10, 15, 10, 15))); // 내부
+//																														// 여백
+//																														// (위,
+//																														// 왼쪽,
+//																														// 아래,
+//																														// 오른쪽)
+
+//		add(scrollPane); // JScrollPane을 프레임에 추가
 
 		// 전송 버튼
 		SendButton = new RoundedButton("전송");
@@ -167,6 +183,8 @@ public class WritenCommuScreen extends JFrame {
 		ExplainTArea = new JTextArea(cb.getComu_content());
 		ExplainTArea.setBounds(5, 105, 330, 100);
 		ExplainTArea.setEditable(false);
+		ExplainTArea.setLineWrap(true);
+		ExplainTArea.setWrapStyleWord(true);
 		ExplainTArea.setBackground(Color.WHITE);
 		ExplainTArea
 				.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(20), new EmptyBorder(5, 10, 5, 10)));
@@ -269,6 +287,8 @@ public class WritenCommuScreen extends JFrame {
 		modifyLabel.setBounds(280, 7, 30, 30);
 		modifyLabel.addMouseListener(commonMouseListener);
 		panel.add(modifyLabel); // 🔹 패널에 추가
+		
+		CommentTField.requestFocus();
 
 		setVisible(true);
 	}
